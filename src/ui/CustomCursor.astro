@@ -21,17 +21,30 @@ const classes = [
   function moveCustomCursor() {
     const cursor = document.querySelector('.js-custom-cursor');
   
-    if(!cursor) {
+    if (!cursor) {
       return;
     }
+
+    /* const MediaQueryHover = window.matchMedia('(hover: hover) and (pointer: fine)');
+    
+    MediaQueryHover.addEventListener('change', (mqEvent) => {
+      if (mqEvent.matches) {
+        
+      }
+      else {
+        
+      }
+    }); */
     
     const cursorWidth = cursor.offsetWidth;
     const cursorHeight = cursor.offsetHeight;
     let mouseX = 0;
     let mouseY = 0;
-    let cursorX = 0;
-    let cursorY = 0;
+    let cursorX = window.innerWidth * 0.5 - cursorWidth * 0.5;
+    let cursorY = window.innerHeight * 0.5 - cursorHeight * 0.5;
 
+    cursor.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
+    
     document.addEventListener('mousemove', (event) => {
       mouseX = event.clientX;
       mouseY = event.clientY;
@@ -46,15 +59,13 @@ const classes = [
       requestAnimationFrame(cursorAnimate);
     }
     
-    cursorAnimate();
+    document.addEventListener('mousemove', cursorAnimate, { once: true });
 
     const scrollSections = document.querySelectorAll('.js-scroll-section');
     const writeSections = document.querySelectorAll('.js-write-section');
     const readSections = document.querySelectorAll('.js-read-section');
     
     scrollSections.forEach((scrollSection) => {
-      scrollSection.style.cursor = 'none';
-
       scrollSection.addEventListener('mouseenter', () => {
         cursor.classList.add('js-cursor-scroll');
       });
@@ -65,8 +76,6 @@ const classes = [
     });
 
     writeSections.forEach((writeSection) => {
-      writeSection.style.cursor = 'none';
-
       writeSection.addEventListener('mouseenter', () => {
         cursor.classList.add('js-cursor-write');
       });
@@ -77,8 +86,6 @@ const classes = [
     });
 
     readSections.forEach((readSection) => {
-      readSection.style.cursor = 'none';
-
       readSection.addEventListener('mouseenter', () => {
         cursor.classList.add('js-cursor-read');
       });
