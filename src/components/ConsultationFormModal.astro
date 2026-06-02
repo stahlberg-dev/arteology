@@ -1,0 +1,37 @@
+---
+import BaseModal from '../ui/BaseModal.astro';
+import BaseButton from '../ui/BaseButton.astro';
+
+const {
+  class: className,
+  ...attrs
+} = Astro.props;
+
+const classes = ['consultation-form-modal', className];
+---
+
+<BaseModal
+  class:list={classes}
+  name="consultation-modal"
+  theme="light"
+  size="sm"
+  {...attrs}
+>
+  <h2 class="consultation-form-modal__title">
+    Конфиденциальная консультация
+  </h2>
+</BaseModal>
+
+<style lang="scss" is:global>
+  .consultation-form-modal {
+    $element: &;
+
+    &__title {
+      max-width: calc(100% - #{rem(60)});
+
+      @media #{$tablet} {
+        max-width: calc(100% - #{rem(90)});
+      }
+    }
+  }
+</style>

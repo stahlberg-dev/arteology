@@ -1,0 +1,95 @@
+---
+const {
+  tag = 'button',
+  class: className,
+  href,
+  type,
+  theme = 'light',
+  text,
+  disabled,
+  ...attrs
+} = Astro.props;
+
+const ButtonTag = href ? 'a' : tag;
+
+const classes = [
+  'base-button',
+  `base-button_theme_${theme}`,
+  className,
+];
+
+const buttonAttributes = {
+  class: classes.join(' '),
+  href: href || undefined,
+  type: ButtonTag === 'button' ? type || 'button' : undefined,
+  disabled: ButtonTag === 'button' && disabled ? true : undefined,
+  ['aria-disabled']: ButtonTag !== 'button' && disabled ? true : undefined,
+  ...attrs,
+};
+---
+
+<ButtonTag {...buttonAttributes}>
+  {text && <span class="base-button__text">{text}</span>}
+</ButtonTag>
+
+<style lang="scss" is:global>
+  .base-button {
+    $element: &;
+
+    @include resetbtn;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: rem(300);
+    height: rem(60);
+    padding: rem(8);
+    transition:
+      background-color $default-transition,
+      color $default-transition;
+
+    &_theme_light {
+      background-color: $light;
+      color: $primary;
+
+      @media #{$is-hover} {
+        &:hover {
+          background-color: $dark;
+          color: $light;
+        }
+      }
+
+      &:active,
+      &:focus-visible {
+        background-color: $dark;
+        color: $light;
+      }
+    }
+
+    &_theme_dark {
+      background-color: $dark;
+      color: $light;
+
+      @media #{$is-hover} {
+        &:hover {
+          background-color: $primary;
+        }
+      }
+
+      &:active,
+      &:focus-visible {
+        background-color: $primary;
+      }
+    }
+
+    &:disabled,
+    &[aria-disabled='true'] {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    &__text {
+      @include text2-desktop;
+    }
+  }
+</style>

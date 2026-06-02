@@ -1,0 +1,156 @@
+---
+import BaseButton from '../ui/BaseButton.astro';
+
+const { class: className, ...attrs } = Astro.props;
+
+const classes = ['infrastructure-section', 'js-write-section', className];
+---
+
+<section
+  class:list={classes}
+  data-modal-open="consultation-modal"
+  {...attrs}
+>
+  <div class="infrastructure-section__container">
+    <h2 class="infrastructure-section__title js-infrastructure-title">
+      Профессиональная инфраструктура<br>для&nbsp;коллекционеров
+    </h2>
+
+    <p class="infrastructure-section__text js-infrastructure-text">
+      Мы создаем надежную инфраструктуру
+      для&nbsp;владения предметами искусства.
+      <br><br>Arteology объединяет академическую экспертизу,
+      финансовую аналитику и&nbsp;юридическую чистоту
+      для&nbsp;защиты интересов частных инвесторов,
+      коллекционеров и&nbsp;Family&nbsp;Offices.
+    </p>
+
+    <BaseButton
+      class="infrastructure-section__button js-infrastructure-button"
+      text="написать нам"
+    />
+  </div>
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { SplitText } from 'gsap/SplitText';
+
+  function infrastructureSectionAnimation() {
+    gsap.registerPlugin(ScrollTrigger, SplitText);
+
+    const mm = gsap.matchMedia();
+
+    function sectionAnimations() {
+      const splitTitle = SplitText.create('.js-infrastructure-title', { type: 'chars,words' });
+      const splitText = SplitText.create('.js-infrastructure-text', { type: 'words,lines' });
+  
+      gsap.from(splitTitle.chars, {
+        opacity: 0,
+        x: '3rem',
+        y: '-2rem',
+        duration: 0.4,
+        ease: 'power4.out',
+        stagger: 0.05,
+        scrollTrigger: {
+          trigger: '.js-infrastructure-title',
+          start: "bottom bottom",
+        },
+      });
+  
+      gsap.from(splitText.lines, {
+        opacity: 0,
+        y: '5rem',
+        duration: 1,
+        ease: 'power4.out',
+        stagger: 0.07,
+        scrollTrigger: {
+          trigger: '.js-infrastructure-text',
+          start: "bottom bottom",
+        },
+      });
+  
+      gsap.from('.js-infrastructure-button', {
+        opacity: 0,
+        y: '3rem',
+        duration: 1,
+        ease: 'power4.out',
+        scrollTrigger: {
+          trigger: '.js-infrastructure-button',
+          start: "bottom bottom",
+        },
+      });
+
+      return () => {
+        splitTitle.revert();
+        splitText.revert();
+      };
+    }
+
+    mm.add('(max-width: 767.98px)', sectionAnimations);
+
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimations);
+
+    mm.add('(min-width: 1200px)', sectionAnimations);
+  }
+
+  infrastructureSectionAnimation();
+</script>
+
+<style lang="scss" is:global>
+  .infrastructure-section {
+    $element: &;
+
+    padding: rem(80) 0 0;
+    background-color: $dark;
+    color: $light;
+
+    @media #{$tablet} {
+      padding: rem(80) 0;
+    }
+
+    @media #{$desktop-sm} {
+      padding: rem(120) 0;
+    }
+
+    &__container {
+      @include base-container;
+    }
+
+    &__title {
+      @media #{$tablet} {
+        max-width: rem(860);
+      }
+    }
+
+    &__text {
+      margin-top: rem(60);
+      
+      @media #{$tablet} {
+        margin-top: rem(72);
+        margin-left: rem(490);
+        max-width: rem(444);
+      }
+
+      @media #{$desktop-sm} {
+        margin-left: rem(698);
+      }
+    }
+
+    &__button {
+      margin-top: rem(60);
+      width: 100%;
+      
+      @media #{$tablet} {
+        margin-top: rem(72);
+        margin-left: rem(490);
+        width: rem(190);
+      }
+
+      @media #{$desktop-sm} {
+        display: none;
+      }
+    }
+  }
+</style>

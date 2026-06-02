@@ -1,0 +1,383 @@
+---
+import BaseIcon from '../ui/BaseIcon.astro';
+
+const { 
+  class: className,
+  name,
+  theme = 'light',
+  size = 'sm',
+  ...attrs
+} = Astro.props;
+
+const classes = [
+  'base-modal',
+  `base-modal_theme_${theme}`,
+  `base-modal_size_${size}`,
+  className
+];
+---
+
+<div
+  class:list={classes}
+  data-modal={name}
+  {...attrs}
+>
+  <div class="base-modal__container-wrapper">
+    <div class="base-modal__container">
+      <button
+        class="base-modal__close-button"
+        type="button"
+        data-modal-close={name}
+      >
+        <BaseIcon
+          class="base-modal__close-button-icon"
+          name="close"
+        />
+      </button>
+      
+      <div class="base-modal__content">
+        <slot />
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { Popup } from '../scripts/helpers/commonPopup.js';
+
+  function baseModalInit(
+    modalAttributeName,
+    invokerAttributeName,
+    closerAttributeName,
+    modalAnimationTime
+  ) {
+    const modals = document.querySelectorAll(`[${modalAttributeName}]`);
+
+    if (!modals.length) {
+      return;
+    }
+
+    const modalHandler = new Popup({
+      animationTime: modalAnimationTime,
+    });
+
+    function resetForms(modalElement) {
+      const modalForms = modalElement?.querySelectorAll('form') ?? [];
+
+      setTimeout(() => {
+        modalForms.forEach(modalForm => {
+          modalForm.reset();
+        });
+      }, modalAnimationTime);
+    }
+
+    modals.forEach(modal => {
+      const modalName = modal.getAttribute(modalAttributeName);
+
+      if (!modalName) {
+        return;
+      }
+
+      const invokers = document.querySelectorAll(`[${invokerAttributeName}="${modalName}"]`);
+      const closers = document.querySelectorAll(`[${closerAttributeName}="${modalName}"]`);
+
+      invokers.forEach(invoker => {
+        invoker.addEventListener('click', () => {
+          modalHandler.open(modal);
+        });
+      });
+
+      closers.forEach(closer => {
+        closer.addEventListener('click', () => {
+          modalHandler.close(modal, () => resetForms(modal));
+        });
+      });
+
+      modal.addEventListener('click', event => {
+        if (event.target?.parentElement === modal) {
+          modalHandler.close(modal, () => resetForms(modal));
+        }
+      });
+
+      modal.addEventListener('open-modal', () => {
+        modalHandler.open(modal);
+      });
+
+      modal.addEventListener('close-modal', () => {
+        modalHandler.close(modal, () => resetForms(modal));
+      });
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key !== 'Escape') {
+        return;
+      }
+
+      modals.forEach(modal => {
+        modalHandler.close(modal, () => resetForms(modal));
+      });
+    });
+  }
+
+  baseModalInit('data-modal', 'data-modal-open', 'data-modal-close', 300);
+</script>
+
+<style lang="scss" is:global>
+  .base-modal {
+    $element: &;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    width: 100vw;
+    height: 100vh;
+    background-color: $dark-30;
+    opacity: 0;
+    overflow-y: scroll;
+    pointer-events: none;
+    transition: opacity 0.3s ease 0.15s;
+    will-change: opacity;
+
+    &.popup-active {
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity $default-transition;
+    }
+
+    &__container-wrapper {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: rem(20) rem(20) 0;
+
+      #{$element}_size_sm & {
+        @media #{$tablet} {
+          align-items: center;
+          height: auto;
+          min-height: 100%;
+          padding: rem(32);
+        }
+      }
+
+      #{$element}_size_lg & {
+        @media #{$tablet} {
+          padding: rem(32) rem(32) 0;
+        }
+
+        @media #{$desktop-sm} {
+          padding: rem(72) rem(32) 0;
+        }
+      }
+    }
+
+    &__container {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border-top-left-radius: rem(12);
+      border-top-right-radius: rem(12);
+      width: 100%;
+      max-height: 100%;
+      padding: rem(12) rem(12) 0;
+      transform: translateY(100%);
+      transition: transform 0.5s ease;
+      will-change: transform;
+
+      #{$element}_theme_light & {
+        background-color: $light;
+        color: $dark;
+      }
+
+      #{$element}_theme_primary & {
+        background-color: $primary;
+        color: $light;
+      }
+
+      #{$element}_theme_secondary & {
+        background-color: $secondary;
+        color: $light;
+      }
+
+      #{$element}_size_sm & {
+        @media #{$tablet} {
+          border-radius: rem(12);
+          width: rem(738);
+          max-height: none;
+          padding: rem(60);
+          transform: scale(0);
+        }
+      }
+
+      #{$element}_size_lg & {
+        @media #{$tablet} {
+          border-top-left-radius: rem(12);
+          border-top-right-radius: rem(12);
+          padding: rem(32) rem(32) 0;
+        }
+      }
+
+      #{$element}.popup-active & {
+        transform: none;
+      }
+    }
+
+    &__content {
+      flex: 1;
+      min-height: 0;
+      padding-bottom: rem(24);
+      overflow-y: auto;
+      //scrollbar-width: thin;
+      //scrollbar-color: $dark transparent;
+
+      &::-webkit-scrollbar {
+        width: rem(4);
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: rem(12);
+
+        #{$element}_theme_light & {
+          background-color: $dark;
+        }
+
+        #{$element}_theme_primary &,
+        #{$element}_theme_secondary & {
+          background-color: $light;
+        }
+      }
+
+      #{$element}_size_sm & {
+        @media #{$tablet} {
+          padding-bottom: 0;
+          overflow: visible;
+        }
+      }
+
+      #{$element}_size_lg & {
+        @media #{$tablet} {
+          padding-bottom: rem(40);
+        }
+
+        @media #{$desktop-sm} {
+          padding-bottom: rem(72);
+        }
+      }
+    }
+
+    &__close-button {
+      @include resetbtn;
+
+      position: absolute;
+      top: rem(12);
+      right: rem(12);
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      border: 1px solid;
+      width: rem(44);
+      height: rem(44);
+      transition:
+        border-color $default-transition,
+        background-color $default-transition,
+        color $default-transition;
+
+      @media #{$tablet} {
+        top: rem(60);
+        right: rem(60);
+        width: rem(72);
+        height: rem(72);
+      }
+
+      #{$element}_theme_light & {
+        border-color: $dark;
+        background-color: $light;
+        color: $dark;
+
+        @media #{$is-hover} {
+          &:hover {
+            background-color: $dark;
+            color: $light;
+          }
+        }
+
+        &:active,
+        &:focus-visible {
+          background-color: $dark;
+          color: $light;
+        }
+      }
+
+      #{$element}_theme_primary & {
+        border-color: $light;
+        background-color: $primary;
+        color: $light;
+
+        @media #{$is-hover} {
+          &:hover {
+            background-color: $light;
+            color: $primary;
+          }
+        }
+
+        &:active,
+        &:focus-visible {
+          background-color: $light;
+          color: $primary;
+        }
+      }
+
+      #{$element}_theme_secondary & {
+        border-color: $light;
+        background-color: $secondary;
+        color: $light;
+
+        @media #{$is-hover} {
+          &:hover {
+            background-color: $light;
+            color: $primary;
+          }
+        }
+
+        &:active,
+        &:focus-visible {
+          background-color: $light;
+          color: $primary;
+        }
+      }
+
+      #{$element}_size_sm & {
+        @media #{$tablet} {
+          top: rem(60);
+          right: rem(60);
+        }
+      }
+
+      #{$element}_size_lg & {
+        @media #{$tablet} {
+          top: rem(32);
+          right: rem(32);
+        }
+      }
+    }
+
+    &__close-button-icon {
+      width: rem(24);
+      height: rem(24);
+
+      @media #{$tablet} {
+        width: rem(36);
+        height: rem(36);
+      }
+    }
+  }
+</style>

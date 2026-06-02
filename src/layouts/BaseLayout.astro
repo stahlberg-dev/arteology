@@ -1,0 +1,147 @@
+---
+import { BASE } from '../scripts/helpers/constants.js';
+import '../styles/main.scss';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SubmitModal from '../components/SubmitModal.astro';
+import ConsultationFormModal from '../components/ConsultationFormModal.astro';
+import CustomCursor from '../ui/CustomCursor.astro';
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width"
+    />
+    <meta
+      name="description"
+      content="Артеология - искусство как финансовый актив."
+    />
+    <meta
+      name="generator"
+      content={Astro.generator}
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href={`${BASE}favicon/favicon-96x96.png`}
+      sizes="96x96"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href={`${BASE}favicon/favicon.svg`}
+    />
+    <link
+      rel="shortcut icon"
+      href={`${BASE}favicon/favicon.ico`}
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href={`${BASE}favicon/apple-touch-icon.png`}
+    />
+    <link
+      rel="manifest"
+      href={`${BASE}favicon/site.webmanifest`}
+    />
+    <link
+      rel="preload"
+      href={`${BASE}fonts/geologica/Geologica-ExtraLight.woff2`}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href={`${BASE}fonts/bitter/Bitter-SemiBold.woff2`}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href={`${BASE}fonts/bitter/Bitter-Regular.woff2`}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <title>АРТЕОЛОГИЯ</title>
+  </head>
+
+  <body>
+    <div class="page-layout">
+      <Header class="page-layout__header" />
+
+      <div
+        id="smooth-wrapper"
+        class="page-layout__smooth-wrapper js-fixed-element"
+      >
+        <div
+          id="smooth-content"
+          class="page-layout__smooth-content"
+        >
+          <main class="page-layout__main">
+            <slot />
+          </main>
+
+          <!-- <Footer class="page-layout__footer" /> -->
+        </div>
+      </div>
+
+      <ConsultationFormModal />
+
+      <SubmitModal
+        type="success"
+      />
+
+      <SubmitModal
+        type="error"
+      />
+
+      <CustomCursor />
+    </div>
+  </body>
+</html>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { ScrollSmoother } from 'gsap/ScrollSmoother';
+
+  function baseLayoutScroll() {
+    gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+  
+    ScrollSmoother.create({
+      wrapper: '#smooth-wrapper',
+      content: '#smooth-content',
+      smooth: 2,
+      effects: true,
+      smoothTouch: 0.3,
+    });
+
+    window.addEventListener('load', () => {
+      ScrollTrigger.refresh();
+    });
+
+    window.addEventListener('resize', () => {
+      ScrollTrigger.refresh();
+    });
+  }
+
+  baseLayoutScroll();
+</script>
+
+<style lang="scss" is:global>
+  .page-layout {
+    $element: &;
+
+    &__main {
+      width: 100%;
+      background-color: $dark;
+    }
+  }
+</style>

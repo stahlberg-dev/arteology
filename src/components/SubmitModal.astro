@@ -1,0 +1,78 @@
+---
+import BaseModal from '../ui/BaseModal.astro';
+import BaseButton from '../ui/BaseButton.astro';
+
+const {
+  class: className,
+  type = 'success',
+  ...attrs
+} = Astro.props;
+
+const modalName = type === 'error' ? 'error-modal' : 'success-modal';
+
+const modalTheme = type === 'error' ? 'secondary' : 'primary';
+
+const modalTitle = type === 'error'
+  ? 'К сожалению,<br>возникла ошибка'
+  : 'Ваш запрос<br>был отправлен';
+
+const modalText = type === 'error'
+  ? `Ваш запрос не&nbsp;был отправлен. 
+    Возможно серверу нужно время, чтобы немного отдохнуть.
+    Попробуйте еще раз позже.`
+  : `Спасибо за&nbspваш запрос.
+    Мы уже начали его обрабатывать и&nbspсвяжемся
+    с&nbspвами в&nbspближайшее время.`;
+
+const classes = ['submit-modal', className];
+---
+
+<BaseModal
+  class:list={classes}
+  name={modalName}
+  theme={modalTheme}
+  size="sm"
+  {...attrs}
+>
+  <h2 class="submit-modal__title" set:html={modalTitle} />
+  
+  <p class="submit-modal__text" set:html={modalText} />
+
+  <BaseButton
+    class="submit-modal__modal-button"
+    text={type === 'error' ? 'Отправить снова' : 'Спасибо, ясно'}
+    {...(type === 'error' && { ['data-modal-open']: 'consultation-modal' })}
+    {...(type === 'success' && { ['data-modal-close']: modalName })}
+  />
+</BaseModal>
+
+<style lang="scss" is:global>
+  .submit-modal {
+    $element: &;
+
+    &__title {
+      max-width: calc(100% - #{rem(60)});
+
+      @media #{$tablet} {
+        max-width: calc(100% - #{rem(90)});
+      }
+    }
+
+    &__text {
+      margin-top: rem(48);
+
+      @media #{$tablet} {
+        margin-top: rem(72);
+      }
+    }
+
+    &__modal-button {
+      margin-top: rem(48);
+      width: 100%;
+
+      @media #{$tablet} {
+        margin-top: rem(72);
+      }
+    }
+  }
+</style>

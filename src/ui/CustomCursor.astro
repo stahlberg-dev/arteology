@@ -1,0 +1,174 @@
+---
+const { class: className, ...attrs } = Astro.props;
+
+const classes = [
+  'custom-cursor',
+  'js-custom-cursor',
+  className,
+];
+---
+
+<div
+  class:list={classes}
+  {...attrs}
+>
+  <span class="custom-cursor__text custom-cursor__text_type_scroll">Scroll</span>
+  <span class="custom-cursor__text custom-cursor__text_type_write">Написать</span>
+  <span class="custom-cursor__text custom-cursor__text_type_read">Читать</span>
+</div>
+
+<script>
+  function moveCustomCursor() {
+    const cursor = document.querySelector('.js-custom-cursor');
+  
+    if(!cursor) {
+      return;
+    }
+    
+    const cursorWidth = cursor.offsetWidth;
+    const cursorHeight = cursor.offsetHeight;
+    let mouseX = 0;
+    let mouseY = 0;
+    let cursorX = 0;
+    let cursorY = 0;
+
+    document.addEventListener('mousemove', (event) => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
+    });
+    
+    function cursorAnimate() {
+      cursorX += (mouseX - cursorX - cursorWidth * 0.5) * 0.7;
+      cursorY += (mouseY - cursorY - cursorHeight * 0.5) * 0.7;
+      
+      cursor.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
+      
+      requestAnimationFrame(cursorAnimate);
+    }
+    
+    cursorAnimate();
+
+    const scrollSections = document.querySelectorAll('.js-scroll-section');
+    const writeSections = document.querySelectorAll('.js-write-section');
+    const readSections = document.querySelectorAll('.js-read-section');
+    
+    scrollSections.forEach((scrollSection) => {
+      scrollSection.style.cursor = 'none';
+
+      scrollSection.addEventListener('mouseenter', () => {
+        cursor.classList.add('js-cursor-scroll');
+      });
+      
+      scrollSection.addEventListener('mouseleave', () => {
+        cursor.classList.remove('js-cursor-scroll');
+      });
+    });
+
+    writeSections.forEach((writeSection) => {
+      writeSection.style.cursor = 'none';
+
+      writeSection.addEventListener('mouseenter', () => {
+        cursor.classList.add('js-cursor-write');
+      });
+      
+      writeSection.addEventListener('mouseleave', () => {
+        cursor.classList.remove('js-cursor-write');
+      });
+    });
+
+    readSections.forEach((readSection) => {
+      readSection.style.cursor = 'none';
+
+      readSection.addEventListener('mouseenter', () => {
+        cursor.classList.add('js-cursor-read');
+      });
+      
+      readSection.addEventListener('mouseleave', () => {
+        cursor.classList.remove('js-cursor-read');
+      });
+    });
+  }
+
+  moveCustomCursor();
+</script>
+
+<style lang="scss" is:global>
+  .custom-cursor {
+    $element: &;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: rem(4);
+    border-radius: 50%;
+    border: 1px solid;
+    width: rem(140);
+    height: rem(140);
+    opacity: 0;
+    transition:
+      transform 0.15s ease,
+      border-color $default-transition,
+      background-color $default-transition,
+      color $default-transition;
+
+    &.js-cursor-scroll {
+      @media #{$is-hover} {
+        border-color: $light;
+        background-color: transparent;
+        color: $light;
+        opacity: 1;
+        mix-blend-mode: difference;
+      }
+    }
+
+    &.js-cursor-write,
+    &.js-cursor-read {
+      @media #{$is-hover} {
+        border-color: $primary;
+        background-color: $primary;
+        color: $light;
+        opacity: 1;
+      }
+    }
+
+    &::after {
+      content: "";
+      transform: translateY(-150%);
+      border-radius: 50%;
+      width: rem(6);
+      height: rem(6);
+      background-color: $light;
+    }
+
+
+    &__text {
+      @include text1;
+
+      display: none;
+      flex-shrink: 0;
+
+      &_type_scroll {
+        #{$element}.js-cursor-scroll & {
+          display: block;
+        }
+      }
+
+      &_type_write {
+        #{$element}.js-cursor-write & {
+          display: block;
+        }
+      }
+
+      &_type_read {
+        #{$element}.js-cursor-read & {
+          display: block;
+        }
+      }
+    }
+  }
+</style>

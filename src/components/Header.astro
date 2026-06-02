@@ -1,0 +1,201 @@
+---
+import BaseIcon from '../ui/BaseIcon.astro';
+
+const { class: className, ...attrs } = Astro.props;
+
+const classes = [
+  'header',
+  'js-header',
+  'js-fixed-element',
+  className
+];
+---
+
+<header
+  class:list={classes}
+  {...attrs}
+>
+  <div class="header__container">
+    <a
+      href="/"
+      class="header__logo"
+    >
+      <BaseIcon
+        class="header__logo-icon"
+        name="logo-word"
+      />
+    </a>
+
+    <button
+      class="header__button"
+      type="button"
+      data-modal-open="consultation-modal"
+    >
+      <span class="header__button-text">написать нам</span>
+
+      <BaseIcon
+        class="header__button-icon"
+        name="envelope"
+      />
+    </button>
+  </div>
+</header>
+
+<script>
+  import { throttle } from '../scripts/helpers/utils.js';
+
+  function showHideHeader() {
+    const header = document.querySelector('.js-header');
+
+    if (!header) {
+      return;
+    }
+
+    let lastScrollY = window.scrollY;
+    const throttledHeaderTreatment = throttle(() => {
+      const currentScrollY = window.scrollY;
+  
+      if (currentScrollY < 30) {
+        return;
+      }
+  
+      const scrollShift = currentScrollY - lastScrollY;
+      
+      if (scrollShift > 5) {
+        header.classList.add('js-header-hidden');
+      }
+      else if(scrollShift < -5) {
+        header.classList.remove('js-header-hidden');
+      }
+      
+      lastScrollY = currentScrollY;
+    }, 100);
+  
+    window.addEventListener('scroll', throttledHeaderTreatment);
+  }
+
+  showHideHeader();
+</script>
+
+<style lang="scss" is:global>
+  .header {
+    $element: &;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background-color: $dark;
+    will-change: transform;
+    transition: transform 0.6s ease-out;
+
+    &.js-header-hidden {
+      transform: translateY(-105%);
+    }
+
+    &__container {
+      @include base-container;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: rem(64);
+      padding-top: rem(20);
+      padding-bottom: rem(16);
+
+      @media #{$tablet} {
+        padding-top: rem(32);
+        padding-bottom: rem(24);
+      }
+    }
+
+    &__logo {
+      @include reseta;
+
+      flex-shrink: 0;
+      color: $light;
+    }
+
+    &__logo-icon {
+      display: block;
+      width: rem(93);
+      height: rem(21);
+
+      @media #{$tablet} {
+        width: rem(149);
+        height: rem(34);
+      }
+    }
+
+    &__button {
+      @include resetbtn;
+
+      display: flex;
+      align-items: flex-start;
+      gap: rem(4);
+      position: relative;
+      flex-shrink: 0;
+      color: $light;
+      transition: color $default-transition;
+
+      @media #{$is-hover} {
+        &:hover {
+          color: $primary;
+        }
+      }
+
+      &:active,
+      &:focus-visible {
+        color: $primary;
+      }
+
+      &::after {
+        display: none;
+        flex-shrink: 0;
+        border-radius: 50%;
+        width: rem(6);
+        height: rem(6);
+        background-color: $light;
+        content: '';
+        transition: background-color $default-transition;
+
+        @media #{$tablet} {
+          display: block;
+        }
+      }
+
+      @media #{$is-hover} {
+        &:hover::after {
+          background-color: $primary;
+        }
+      }
+
+      &:active::after,
+      &:focus-visible::after {
+        background-color: $primary;
+      }
+    }
+
+    &__button-text {
+      @include text1;
+
+      display: none;
+      text-transform: uppercase;
+
+      @media #{$tablet} {
+        display: block;
+      }
+    }
+
+    &__button-icon {
+      display: block;
+      width: rem(24);
+      height: rem(24);
+
+      @media #{$tablet} {
+        display: none;
+      }
+    }
+  }
+</style>

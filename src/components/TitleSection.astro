@@ -1,0 +1,489 @@
+---
+import { BASE } from '../scripts/helpers/constants.js';
+
+const { class: className, ...attrs } = Astro.props;
+
+const classes = [
+  'title-section',
+  'js-title-section',
+  'js-scroll-section',
+  className,
+];
+---
+
+<section
+  class:list={classes}
+  {...attrs}
+>
+  <div class="title-section__container">
+    <div 
+      class="title-section__marquee-container
+      title-section__marquee-container_position_top"
+    >
+      <div class="title-section__marquee-track title-section__marquee-track_part_first">
+        <img
+          class="title-section__marquee-item"
+          src={`${BASE}images/title-section/slogan.svg`}
+          alt="фото"
+          loading="lazy"
+        />
+        <img
+          class="title-section__marquee-item"
+          src={`${BASE}images/title-section/slogan.svg`}
+          alt="фото"
+          loading="lazy"
+        />
+      </div>
+      <div class="title-section__marquee-track title-section__marquee-track_part_second">
+        <img
+          class="title-section__marquee-item"
+          src={`${BASE}images/title-section/slogan.svg`}
+          alt="фото"
+          loading="lazy"
+        />
+        <img
+          class="title-section__marquee-item"
+          src={`${BASE}images/title-section/slogan.svg`}
+          alt="фото"
+          loading="lazy"
+        />
+      </div>
+    </div>
+
+    <div 
+      class="title-section__marquee-container
+      title-section__marquee-container_position_bottom"
+    >
+      <div class="title-section__marquee-track title-section__marquee-track_part_first">
+        <img
+          class="title-section__marquee-item"
+          src={`${BASE}images/title-section/slogan.svg`}
+          alt="фото"
+          loading="lazy"
+        />
+        <img
+          class="title-section__marquee-item"
+          src={`${BASE}images/title-section/slogan.svg`}
+          alt="фото"
+          loading="lazy"
+        />
+      </div>
+      <div class="title-section__marquee-track title-section__marquee-track_part_second">
+        <img
+          class="title-section__marquee-item"
+          src={`${BASE}images/title-section/slogan.svg`}
+          alt="фото"
+          loading="lazy"
+        />
+        <img
+          class="title-section__marquee-item"
+          src={`${BASE}images/title-section/slogan.svg`}
+          alt="фото"
+          loading="lazy"
+        />
+      </div>
+    </div>
+
+    <div class="title-section__title-wrapper">
+      <picture class="title-section__title-image-wrapper js-title-image-wrapper">
+        <source
+          srcset={`${BASE}images/title-section/frame-desktop.webp`}
+          media="(min-width: 768px)"
+        />
+      
+        <img
+          class="title-section__title-image"
+          src={`${BASE}images/title-section/frame-mobile.webp`}
+          alt="фото"
+          loading="lazy"
+        />
+      </picture>
+
+      <h1 class="title-section__title js-title">
+        Управление арт капиталом
+      </h1>
+    </div>
+  </div>
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { SplitText } from 'gsap/SplitText';
+  import { lockBody, unlockBody } from '../scripts/helpers/lockFunctions.js';
+
+  function titleSectionAnimation() {
+    gsap.registerPlugin(ScrollTrigger, SplitText);
+
+    const mm = gsap.matchMedia();
+    const fixedElements = document.querySelectorAll('.js-fixed-element');
+
+    mm.add('(max-width: 767.98px)', () => {
+      const split = SplitText.create('.js-title', { type: 'chars,words' });
+
+      const tl = gsap.timeline(
+        {
+          onStart: () => {
+            lockBody(fixedElements);
+          },
+          onComplete: () => {
+            unlockBody(fixedElements);
+
+            const scrollTl = gsap.timeline({
+              scrollTrigger: {
+                trigger: '.js-title-section',
+                start: "20% top",
+                end: '60% top',
+                scrub: true,
+              }
+            });
+        
+            scrollTl.to('.js-title-image-wrapper', { 
+              opacity: 0,
+              scale: 1.4,
+              z: 100,
+              ease: 'power3',
+            }, 0)
+            .to(split.chars, {
+              scale: 'random(2, 3)',
+              x: 'random(-200, 200)',
+              y: 'random(-200, 200)',
+              z: 'random(100, 200)',
+              rotationX: 'random(-180, 180)',
+              rotationY: 'random(-180, 180)',
+              opacity: 0,
+              ease: 'power4.out',
+            }, 0);
+          }
+        }
+      );
+      
+      tl.from('.js-title-image-wrapper', {
+        scale: 0,
+        z: -100,
+        duration: 1,
+        ease: 'power3.out',
+      }, 0)
+      .from(split.chars, {
+        scale: 'random(2, 5)',
+        x: 'random(-200, 200)',
+        y: 'random(-200, 200)',
+        z: 'random(100, 200)',
+        rotationX: 'random(-180, 180)',
+        rotationY: 'random(-180, 180)',
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power4.out',
+        stagger: 0.05,
+      }, '-=0.5');
+
+      return () => {
+        split.revert();
+      };
+    });
+
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', () => {
+      const split = SplitText.create('.js-title', { type: 'chars,words' });
+
+      const tl = gsap.timeline(
+        {
+          onStart: () => {
+            lockBody(fixedElements);
+          },
+          onComplete: () => {
+            unlockBody(fixedElements);
+
+            const scrollTl = gsap.timeline({
+              scrollTrigger: {
+                trigger: '.js-title-section',
+                start: "20% top",
+                end: '60% top',
+                scrub: true,
+              }
+            });
+        
+            scrollTl.to('.js-title-image-wrapper', { 
+              opacity: 0,
+              scale: 1.5,
+              z: 150,
+              ease: 'power3',
+            }, 0)
+            .to(split.chars, {
+              scale: 'random(2, 3)',
+              x: 'random(-400, 400)',
+              y: 'random(-400, 400)',
+              z: 'random(200, 400)',
+              rotationX: 'random(-180, 180)',
+              rotationY: 'random(-180, 180)',
+              opacity: 0,
+              ease: 'power4.out',
+            }, 0);
+          }
+        }
+      );
+      
+      tl.from('.js-title-image-wrapper', {
+        scale: 0,
+        z: -200,
+        duration: 1,
+        ease: 'power4.out',
+      }, 0)
+      .from(split.chars, {
+        scale: 'random(2, 5)',
+        x: 'random(-400, 400)',
+        y: 'random(-400, 400)',
+        z: 'random(200, 400)',
+        rotationX: 'random(-180, 180)',
+        rotationY: 'random(-180, 180)',
+        opacity: 0,
+        duration: 0.7,
+        ease: 'power4.out',
+        stagger: 0.05,
+      }, '-=0.5');
+
+      return () => {
+        split.revert();
+      };
+    });
+
+    mm.add('(min-width: 1200px)', () => {
+      const split = SplitText.create('.js-title', { type: 'chars,words' });
+
+      const tl = gsap.timeline(
+        {
+          onStart: () => {
+            lockBody(fixedElements);
+          },
+          onComplete: () => {
+            unlockBody(fixedElements);
+
+            const scrollTl = gsap.timeline({
+              scrollTrigger: {
+                trigger: '.js-title-section',
+                start: "20% top",
+                end: '60% top',
+                scrub: true,
+              }
+            });
+        
+            scrollTl.to('.js-title-image-wrapper', { 
+              opacity: 0,
+              scale: 1.5,
+              z: 150,
+              ease: 'power3',
+            }, 0)
+            .to(split.chars, {
+              scale: 'random(2, 3)',
+              x: 'random(-400, 400)',
+              y: 'random(-400, 400)',
+              z: 'random(200, 400)',
+              rotationX: 'random(-180, 180)',
+              rotationY: 'random(-180, 180)',
+              opacity: 0,
+              ease: 'power4.out',
+            }, 0);
+          }
+        }
+      );
+      
+      tl.from('.js-title-image-wrapper', {
+        scale: 0,
+        z: -200,
+        duration: 1,
+        ease: 'power4.out',
+      }, 0)
+      .from(split.chars, {
+        scale: 'random(2, 5)',
+        x: 'random(-400, 400)',
+        y: 'random(-400, 400)',
+        z: 'random(200, 400)',
+        rotationX: 'random(-180, 180)',
+        rotationY: 'random(-180, 180)',
+        opacity: 0,
+        duration: 0.7,
+        ease: 'power4.out',
+        stagger: 0.05,
+      }, '-=0.5');
+      
+      return () => {
+        split.revert();
+      };
+    });
+  }
+
+  titleSectionAnimation();
+</script>
+
+<style lang="scss" is:global>
+  .title-section {
+    $element: &;
+
+    background-color: $dark;
+
+    &__container {
+      @include large-container;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      min-height: 100vh;
+      padding: calc(#{var(--header-height)} + #{var(--container-padding)}) var(--container-padding);
+    }
+
+		&__marquee-container {
+      position: absolute;
+      left: 0;
+      display: flex;
+      width: 100%;
+      opacity: 0.1;
+      overflow: hidden;
+
+      &_position_top {
+        top: calc(#{var(--header-height)} + #{rem(30)});
+        
+        @media #{$tablet} {
+          top: auto;
+          bottom: calc(50% + #{rem(70)});
+        }
+      }
+
+      &_position_bottom {
+        bottom: calc(#{var(--header-height)} + #{rem(30)});
+        
+        @media #{$tablet} {
+          top: calc(50% + #{rem(70)});
+          bottom: auto;
+        }
+      }
+		}
+
+    &__marquee-track {
+      $duration: 60s;
+
+      display: flex;
+      gap: rem(40);
+      flex-shrink: 0;
+      padding: 0 rem(20);
+      will-change: transform;
+
+      @media #{$tablet} {
+        gap: rem(80);
+        padding: 0 rem(40);
+      }
+
+      &_part_first {
+        #{$element}__marquee-container_position_top & {
+          animation: marquee-first $duration infinite linear calc(-1 * $duration) reverse;
+        }
+
+        #{$element}__marquee-container_position_bottom & {
+          animation: marquee-first $duration infinite linear calc(-1 * $duration);
+        }
+      }
+
+      &_part_second {
+        #{$element}__marquee-container_position_top & {
+          animation: marquee-second $duration infinite linear calc(-0.5 * $duration) reverse;
+        }
+
+        #{$element}__marquee-container_position_bottom & {
+          animation: marquee-second $duration infinite linear calc(-0.5 * $duration);
+        }
+      }
+
+      @keyframes marquee-first {
+        0% {
+          transform: translateX(100%);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+
+      @keyframes marquee-second {
+        0% {
+          transform: translateX(0%);
+        }
+        100% {
+          transform: translateX(-200%);
+        }
+      }
+    }
+
+		&__marquee-item {
+      flex-shrink: 0;
+      width: rem(700);
+
+      @media #{$tablet} {
+        width: rem(1476);
+      }
+		}
+
+    &__title-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      width: rem(320);
+      height: rem(370);
+      perspective: 500px;
+      transform-style: preserve-3d;
+
+      @media #{$tablet} {
+        width: rem(670);
+        height: rem(556);
+        perspective: 1000px;
+      }
+    }
+
+    &__title-image-wrapper {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+
+      &::before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        height: 90%;
+        background-color: $dark;
+      }
+    }
+
+    &__title-image {
+      display: block;
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &__title {
+      position: relative;
+      z-index: 2;
+      flex-shrink: 0;
+      width: rem(194);
+      color: $light;
+      text-align: center;
+
+      @media #{$tablet} {
+        width: rem(440);
+      }
+
+      div {
+        transform-style: preserve-3d;
+      }
+    }
+  }
+</style>
