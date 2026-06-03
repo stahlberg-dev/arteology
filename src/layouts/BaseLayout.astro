@@ -107,41 +107,15 @@ import CustomCursor from '../ui/CustomCursor.astro';
   </body>
 </html>
 
-<script>
-  import gsap from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  import { ScrollSmoother } from 'gsap/ScrollSmoother';
-
-  function baseLayoutScroll() {
-    gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
-  
-    ScrollSmoother.create({
-      wrapper: '#smooth-wrapper',
-      content: '#smooth-content',
-      smooth: 2,
-      effects: true,
-    });
-
-    window.addEventListener('load', () => {
-      ScrollTrigger.refresh();
-    });
-
-    window.addEventListener('resize', () => {
-      ScrollTrigger.refresh();
-    });
-  }
-
-  baseLayoutScroll();
-</script>
-
 <style lang="scss" is:global>
   .page-layout {
     $element: &;
 
+    overflow: hidden;
+    
     &__main {
       width: 100%;
       background-color: $dark;
-      overflow: hidden;
     }
   }
 </style>

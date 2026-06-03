@@ -16,4 +16,5 @@ export const getMediaQueries = () => ({
     `(min-width: ${BREAKPOINTS_MIN.TABLET}px) and (max-width: ${BREAKPOINTS_MAX.TABLET}px)`
   ),
   mobile: window.matchMedia(`(max-width: ${BREAKPOINTS_MAX.MOBILE}px)`),
+  isHover: window.matchMedia('(hover: hover) and (pointer: fine)'),
 });
