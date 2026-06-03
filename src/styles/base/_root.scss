@@ -42,8 +42,8 @@ html {
 body {
   @include text2;
 
-  color: $dark;
-  background-color: $light;
+  color: $light;
+  background-color: $dark;
 
   &.locked {
     overflow: hidden;

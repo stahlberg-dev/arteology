@@ -33,7 +33,9 @@ class ScrollSmootherController {
 
       this.smoother.smooth(mqEvent.matches ? 2 : 0.1);
       this.smoother.refresh();
-      ScrollTrigger.refresh(true);
+      setTimeout(() => {
+        ScrollTrigger.refresh(true);
+      }, 100);
     });
   }
 }
