@@ -120,7 +120,6 @@ import CustomCursor from '../ui/CustomCursor.astro';
       content: '#smooth-content',
       smooth: 2,
       effects: true,
-      smoothTouch: 0.1,
     });
 
     window.addEventListener('load', () => {
@@ -142,6 +141,7 @@ import CustomCursor from '../ui/CustomCursor.astro';
     &__main {
       width: 100%;
       background-color: $dark;
+      overflow: hidden;
     }
   }
 </style>
