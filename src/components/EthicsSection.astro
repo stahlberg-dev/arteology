@@ -1,0 +1,441 @@
+---
+import { BASE } from '../scripts/helpers/constants.js';
+import BaseIcon from '../ui/BaseIcon.astro';
+
+const { class: className, ...attrs } = Astro.props;
+
+const classes = ['ethics-section', className];
+---
+
+<section
+  class:list={classes}
+  {...attrs}
+>
+  <img
+    class="ethics-section__word js-ethics-word"
+    src={`${BASE}images/ethics-section/ethics-word.svg`}
+    alt="Этика"
+    loading="lazy"
+  />
+
+  <div class="ethics-section__container">
+    <div class="ethics-section__logo js-ethics-logo">
+      <img
+        class="ethics-section__logo-circle"
+        src={`${BASE}images/ethics-section/ethics-circle.svg`}
+        alt="рамка"
+        loading="lazy"
+      />
+
+      <BaseIcon
+        class="ethics-section__logo-icon"
+        name="logo-letter"
+      />
+    </div>
+
+    <div class="ethics-section__info">
+      <h2 class="ethics-section__title js-ethics-title">
+        Кодекс этики
+      </h2>
+
+      <div class="ethics-section__info-item ethics-section__info-item_position_top">
+        <h3 class="ethics-section__subtitle js-ethics-subtitle">
+          Принцип чистого листа
+        </h3>
+        
+        <p class="ethics-section__text js-ethics-text">
+          Отсутствие корпоративного стока и&nbsp;собственных
+          арт-активов на&nbsp;балансе исключает конфликт интересов.
+          Это гарантирует абсолютную объективность
+          наших инвестиционных и&nbsp;эстетических рекомендаций.
+        </p>
+      </div>
+
+      <div class="ethics-section__info-bottom">
+        <div class="ethics-section__info-item ethics-section__info-item_position_center">
+          <h3 class="ethics-section__subtitle js-ethics-subtitle">
+            Институциональная прозрачность
+          </h3>
+
+          <p class="ethics-section__text js-ethics-text">
+            Кристальная ясность ценообразования и&nbsp;полная открытость
+            структуры комиссионных. Вы полностью контролируете финансовую
+            и&nbsp;юридическую архитектуру каждой сделки.
+          </p>
+        </div>
+
+        <div class="ethics-section__info-item ethics-section__info-item_position_bottom">
+          <h3 class="ethics-section__subtitle js-ethics-subtitle">
+            Фидуциарный стандарт
+          </h3>
+
+          <p class="ethics-section__text js-ethics-text">
+            Мы выступаем на вашей стороне и&nbsp;действуем исключительно
+            в&nbsp;интересах доверителя, обеспечивая защиту
+            капитала и&nbsp;ювелирно оптимизируя транзакционные издержки.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="ethics-section__image-wrapper js-ethics-image">
+      <picture class="ethics-section__photo-wrapper js-ethics-photo">
+        <source
+          srcset={`${BASE}images/ethics-section/ethics-image-desktop.webp`}
+          media="(min-width: 768px)"
+        />
+      
+        <img
+          class="ethics-section__photo"
+          src={`${BASE}images/ethics-section/ethics-image-mobile.webp`}
+          alt="фото"
+          loading="lazy"
+        />
+      </picture>
+
+      <div class="ethics-section__image-ball js-ethics-image-ball"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { SplitText } from 'gsap/SplitText';
+  import { layoutScrollSmoother } from '../scripts/helpers/layoutScrollSmoother.js';
+
+  function ethicsSectionAnimation() {
+    gsap.registerPlugin(ScrollTrigger, SplitText);
+
+    layoutScrollSmoother.smoother?.effects('.js-ethics-word', {
+      speed: 1.8,
+      lag: 0.5,
+    });
+
+    layoutScrollSmoother.smoother?.effects('.js-ethics-logo', {
+      speed: 1.2,
+      lag: 0.5,
+    });
+
+    layoutScrollSmoother.smoother?.effects('.js-ethics-photo', {
+      speed: 'auto',
+      lag: 0.1,
+    });
+
+    layoutScrollSmoother.smoother?.effects('.js-ethics-image-ball', {
+      speed: 0.9,
+      lag: 0.1,
+    });
+
+    const mm = gsap.matchMedia();
+    const subtitles = document.querySelectorAll('.js-ethics-subtitle');
+    const texts = document.querySelectorAll('.js-ethics-text');
+
+    function sectionAnimations() {
+      const splitTitle = SplitText.create('.js-ethics-title', { type: 'chars,words' });
+      const splitSubtitleInstances = [];
+      const splitTextInstances = [];
+
+
+      gsap.from(splitTitle.chars, {
+        opacity: 0,
+        x: '3rem',
+        y: '-2rem',
+        duration: 0.4,
+        ease: 'power4.out',
+        stagger: 0.05,
+        scrollTrigger: {
+          trigger: '.js-ethics-title',
+          start: "bottom bottom",
+        },
+      });
+  
+      subtitles.forEach((item) => {
+        const splitSubtitle = SplitText.create(item, { type: 'words,lines' });
+        splitSubtitleInstances.push(splitSubtitle);
+
+        gsap.from(splitSubtitle.lines, {
+          opacity: 0,
+          y: '5rem',
+          duration: 1,
+          ease: 'power4.out',
+          stagger: 0.07,
+          scrollTrigger: {
+            trigger: item,
+            start: "bottom bottom",
+          },
+        });
+      });
+
+      texts.forEach((item) => {
+        const splitText = SplitText.create(item, { type: 'words,lines' });
+        splitTextInstances.push(splitText);
+
+        gsap.from(splitText.lines, {
+          opacity: 0,
+          y: '5rem',
+          duration: 1,
+          ease: 'power4.out',
+          stagger: 0.07,
+          scrollTrigger: {
+            trigger: item,
+            start: "bottom bottom",
+          },
+        });
+      });
+
+      return () => {
+        splitTitle.revert();
+
+        splitSubtitleInstances.forEach((item) => {
+          item.revert();
+        });
+
+        splitTextInstances.forEach((item) => {
+          item.revert();
+        });
+      };
+    }
+
+    mm.add('(max-width: 767.98px)', sectionAnimations);
+
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimations);
+
+    mm.add('(min-width: 1200px)', sectionAnimations);
+  }
+
+  ethicsSectionAnimation();
+</script>
+
+<style lang="scss" is:global>
+  .ethics-section {
+    $element: &;
+
+    position: relative;
+    padding: rem(60) 0 rem(34);
+    background-color: $light;
+    color: $dark;
+
+    @media #{$tablet} {
+      padding: rem(80) 0;
+    }
+
+    @media #{$desktop-sm} {
+      padding: rem(120) 0;
+    }
+
+    &__word {
+      display: block;
+      position: absolute;
+      top: 10%;
+      right: var(--container-padding);
+      width: rem(48);
+      opacity: 0.12;
+
+      @media #{$tablet} {
+        top: 17%;
+        width: rem(68);
+      }
+
+      @media #{$desktop-lg} {
+        top: 30%;
+        right: calc(50% - 960px + #{var(--container-padding)});
+      }
+    }
+
+    &__container {
+      @include base-container;
+
+      position: relative;
+      display: flex;
+      flex-direction: column;
+
+      @media #{$desktop-sm} {
+        flex-direction: row;
+        gap: rem(20);
+      }
+    }
+
+    &__logo {
+      display: none;
+
+      @media #{$tablet} {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: rem(140);
+        left: rem(194);
+        width: rem(540);
+        height: rem(540);
+        background-color: transparent;
+      }
+
+      @media #{$desktop-sm} {
+        top: rem(120);
+        left: rem(216);
+      }
+    }
+
+    &__logo-circle {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      animation: rotate 50s linear infinite;
+
+      @keyframes rotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    }
+
+    &__logo-icon {
+      position: relative;
+      z-index: 1;
+      width: rem(70);
+      height: rem(75);
+      color: $dark-12;
+    }
+
+    &__title {
+      @media #{$tablet} {
+        margin-left: rem(164);
+      }
+
+      @media #{$desktop-sm} {
+        margin-left: rem(232);
+      }
+    }
+
+    &__info-bottom {
+      @media #{$tablet} {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: rem(184);
+        margin-top: rem(200);
+      }
+
+      @media #{$desktop-sm} {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: rem(8);
+        margin-top: rem(66);
+      }
+		}
+
+		&__info-item {
+      padding: rem(48) 0;
+
+      @media #{$tablet} {
+        width: rem(470);
+        padding: 0;
+      }
+
+      @media #{$desktop-sm} {
+        width: rem(446);
+      }
+
+			&_position_top {
+        @media #{$tablet} {
+          margin-top: rem(80);
+          margin-left: rem(164);
+        }
+
+        @media #{$desktop-sm} {
+          margin-top: rem(48);
+          margin-left: rem(464);
+        }
+			}
+
+			&_position_center {
+        @media #{$tablet} {
+          flex-shrink: 0;
+        }
+			}
+
+      &_position_bottom {
+        @media #{$desktop-sm} {
+          margin-left: rem(464);
+        }
+      }
+		}
+
+		&__text {
+      @include text2;
+
+      margin-top: rem(20);
+
+      @media #{$tablet} {
+        margin-top: rem(24);
+      }
+		}
+
+		&__image-wrapper {
+      position: relative;
+      flex-shrink: 0;
+      width: 100%;
+      height: rem(440);
+      overflow: hidden;
+
+      @media #{$tablet} {
+        display: none;
+      }
+
+      @media #{$desktop-sm} {
+        display: block;
+        width: rem(304);
+        height: rem(380);
+      }
+		}
+
+		&__photo-wrapper {
+      display: block;
+      position: absolute;
+      bottom: rem(-40);
+      width: 100%;
+      height: rem(520);
+      object-fit: cover;
+
+      @media #{$desktop-sm} {
+        bottom: rem(-64);
+        height: rem(508);
+      }
+		}
+
+		&__photo {
+      display: block;
+      width: 100%;
+      height: rem(520);
+
+      @media #{$desktop-sm} {
+        height: rem(508);
+      }
+		}
+
+		&__image-ball {
+      position: absolute;
+      top: rem(40);
+      left: rem(124);
+      z-index: 1;
+      width: rem(142);
+      height: rem(142);
+      border-radius: 50%;
+      background-color: $secondary;
+      mix-blend-mode: hard-light;
+
+      @media #{$desktop-sm} {
+        top: rem(20);
+        left: rem(132);
+        width: rem(137);
+        height: rem(137);
+      }
+		}
+  }
+</style>

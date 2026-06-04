@@ -1,4 +1,4 @@
-import { lockBody, unlockBody } from './lockFunctions.js';
+import { layoutScrollSmoother } from './layoutScrollSmoother.js';
 
 export class Popup {
   constructor(config) {
@@ -11,9 +11,8 @@ export class Popup {
     }
 
     const activePopups = document.querySelectorAll('.popup-active');
-    const fixedElements = document.querySelectorAll('.js-fixed-element');
 
-    lockBody(fixedElements, this.animationTime);
+    layoutScrollSmoother.smoother.paused(true);
 
     activePopups.forEach(activePopup => {
       activePopup.classList.remove('popup-active');
@@ -43,8 +42,7 @@ export class Popup {
 
     currentPopup.classList.remove('popup-active');
 
-    const fixedElements = document.querySelectorAll('.js-fixed-element');
-    unlockBody(fixedElements, this.animationTime);
+    layoutScrollSmoother.smoother.paused(false);
 
     callBacks.forEach(callBack => {
       if (typeof callBack === 'function') {

@@ -26,7 +26,7 @@ const classes = ['partners-section', className];
     <div class="partners-section__bottom">
       <div class="partners-section__info">
         <h3 class="partners-section__info-title js-partners-subtitle">
-          аккредитованный провайдер арт-экспертизы
+          аккредитованный провайдер арт- экспертизы
           для&nbsp;клиентов сегмента HNWI
           и&nbsp;Family&nbsp;Offices банка&nbsp;ВТБ
         </h3>
@@ -69,11 +69,11 @@ const classes = ['partners-section', className];
 
       gsap.from(splitTitle.chars, {
         opacity: 0,
-        x: '3rem',
-        y: '-2rem',
-        duration: 0.4,
+        // x: '3rem',
+        // y: '-2rem',
+        duration: 0.07,
         ease: 'power4.out',
-        stagger: 0.05,
+        stagger: 0.07,
         scrollTrigger: {
           trigger: '.js-partners-title',
           start: "bottom bottom",
@@ -106,9 +106,9 @@ const classes = ['partners-section', className];
 
       gsap.from('.js-vtb-logo', {
         opacity: 0,
-        y: '5rem',
+        y: '3rem',
         duration: 1,
-        delay: 1,
+        delay: 0.5,
         ease: 'power4.out',
         scrollTrigger: {
           trigger: '.js-vtb-logo',
