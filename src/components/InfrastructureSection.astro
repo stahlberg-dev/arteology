@@ -106,6 +106,7 @@ const classes = ['infrastructure-section', 'js-write-section', className];
     background-color: $dark;
     color: $light;
     cursor: none;
+    pointer-events: none;
 
     @media #{$tablet} {
       padding: rem(80) 0;
@@ -113,6 +114,10 @@ const classes = ['infrastructure-section', 'js-write-section', className];
 
     @media #{$desktop-sm} {
       padding: rem(120) 0;
+    }
+
+    @media #{$is-hover} {
+      pointer-events: auto;
     }
 
     &__container {
@@ -142,6 +147,7 @@ const classes = ['infrastructure-section', 'js-write-section', className];
     &__button {
       margin-top: rem(60);
       width: 100%;
+      pointer-events: auto;
       
       @media #{$tablet} {
         margin-top: rem(72);
@@ -150,6 +156,10 @@ const classes = ['infrastructure-section', 'js-write-section', className];
       }
 
       @media #{$desktop-sm} {
+        margin-left: rem(698);
+      }
+
+      @media #{$is-hover} {
         display: none;
       }
     }

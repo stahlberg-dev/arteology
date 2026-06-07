@@ -2,11 +2,12 @@
 import { BASE } from '../scripts/helpers/constants.js';
 const { class: className, ...attrs } = Astro.props;
 
-const classes = ['partners-section', className];
+const classes = ['partners-section', 'js-write-section', className];
 ---
 
 <section
   class:list={classes}
+  data-modal-open="consultation-modal"
   {...attrs}
 >
   <div class="partners-section__container">
@@ -39,14 +40,23 @@ const classes = ['partners-section', className];
         </p>
       </div>
 
-      <picture class="partners-section__image-wrapper js-partners-image">
-        <img
-          class="partners-section__image"
-          src={`${BASE}images/partners-section/partners-image.webp`}
-          alt="изображение"
-          loading="lazy"
-        />
-      </picture>
+      <div class="partners-section__image-wrapper">
+        <picture class="partners-section__photo-wrapper js-partners-photo">
+          <source
+            srcset={`${BASE}images/partners-section/partners-image-desktop.webp`}
+            media="(min-width: 768px)"
+          />
+
+          <img
+            class="partners-section__photo"
+            src={`${BASE}images/partners-section/partners-image-mobile.webp`}
+            alt="изображение"
+            loading="lazy"
+          />
+        </picture>
+
+        <div class="partners-section__image-ball js-partners-image-ball"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -55,25 +65,35 @@ const classes = ['partners-section', className];
   import gsap from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
   import { SplitText } from 'gsap/SplitText';
+  import { layoutScrollSmoother } from '../scripts/helpers/layoutScrollSmoother.js';
 
   function partnersSectionAnimation() {
     gsap.registerPlugin(ScrollTrigger, SplitText);
 
+    layoutScrollSmoother.smoother?.effects('.js-partners-photo', {
+      speed: 0.93,
+      lag: 0.1,
+    });
+
+    layoutScrollSmoother.smoother?.effects('.js-partners-image-ball', {
+      speed: 1.03,
+      lag: 0.1,
+    });
+
     const mm = gsap.matchMedia();
-    let splitTitle, splitSubitle, splitText;
 
     function sectionAnimations() {
-      splitTitle = SplitText.create('.js-partners-title', { type: 'chars,words' });
-      splitSubitle = SplitText.create('.js-partners-subtitle', { type: 'words,lines' });
-      splitText = SplitText.create('.js-partners-text', { type: 'words,lines' });
+      const splitTitle = SplitText.create('.js-partners-title', { type: 'chars,words' });
+      const splitSubitle = SplitText.create('.js-partners-subtitle', { type: 'words,lines' });
+      const splitText = SplitText.create('.js-partners-text', { type: 'words,lines' });
 
       gsap.from(splitTitle.chars, {
         opacity: 0,
-        // x: '3rem',
-        // y: '-2rem',
-        duration: 0.07,
+        x: '3rem',
+        y: '-2rem',
+        duration: 0.4,
         ease: 'power4.out',
-        stagger: 0.07,
+        stagger: 0.05,
         scrollTrigger: {
           trigger: '.js-partners-title',
           start: "bottom bottom",
@@ -115,67 +135,19 @@ const classes = ['partners-section', className];
           start: "bottom-=3rem bottom",
         },
       });
+
+      return () => {
+        splitTitle.revert();
+        splitSubitle.revert();
+        splitText.revert();
+      };
     }
     
-    mm.add('(max-width: 767.98px)', () => {
-      sectionAnimations();
+    mm.add('(max-width: 767.98px)', sectionAnimations);
 
-      gsap.from('.js-partners-image', {
-        opacity: 0,
-        duration: 2,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '.js-partners-image',
-          start: "top+=30% bottom",
-        },
-      });
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimations);
 
-      return () => {
-        splitTitle.revert();
-        splitSubitle.revert();
-        splitText.revert();
-      };
-    });
-
-    mm.add('(min-width: 768px) and (max-width: 1199.98px)', () => {
-      sectionAnimations();
-
-      gsap.from('.js-partners-image', {
-        opacity: 0,
-        duration: 3,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '.js-partners-image',
-          start: "bottom bottom",
-        },
-      });
-
-      return () => {
-        splitTitle.revert();
-        splitSubitle.revert();
-        splitText.revert();
-      };
-    });
-
-    mm.add('(min-width: 1200px)', () => {
-      sectionAnimations();
-
-      gsap.from('.js-partners-image', {
-        opacity: 0,
-        duration: 3,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '.js-partners-image',
-          start: "bottom bottom",
-        },
-      });
-
-      return () => {
-        splitTitle.revert();
-        splitSubitle.revert();
-        splitText.revert();
-      };
-    });
+    mm.add('(min-width: 1200px)', sectionAnimations);
   }
 
   partnersSectionAnimation();
@@ -188,23 +160,23 @@ const classes = ['partners-section', className];
     padding: rem(80) 0;
     background-color: $dark;
     color: $light;
+    cursor: none;
+    pointer-events: none;
+
+    @media #{$tablet} {
+      padding: rem(80) 0;
+    }
 
     @media #{$desktop-sm} {
       padding: rem(120) 0;
     }
 
+    @media #{$is-hover} {
+      pointer-events: auto;
+    }
+
     &__container {
       @include base-container;
-
-      @media #{$tablet} {
-        padding-top: rem(80);
-        padding-bottom: rem(80);
-      }
-
-      @media #{$desktop-sm} {
-        padding-top: rem(120);
-        padding-bottom: 0;
-      }
     }
 
 		&__top {
@@ -283,31 +255,6 @@ const classes = ['partners-section', className];
       }
 		}
 
-		&__image-wrapper {
-      flex-shrink: 0;
-      width: 100%;
-      height: rem(440);
-
-      @media #{$tablet} {
-        width: rem(306);
-        height: rem(342);
-      }
-
-      @media #{$desktop-sm} {
-        margin-top: rem(186);
-        width: rem(304);
-        height: rem(382);
-      }
-		}
-
-		&__image {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top center;
-		}
-
     &__text {
       margin-top: rem(60);
       
@@ -321,5 +268,62 @@ const classes = ['partners-section', className];
         margin-left: rem(698);
       }
     }
+
+		&__image-wrapper {
+      position: relative;
+      flex-shrink: 0;
+      width: 100%;
+      height: rem(440);
+      overflow: hidden;
+
+      @media #{$tablet} {
+        width: rem(304);
+        height: rem(342);
+      }
+
+      @media #{$desktop-sm} {
+        margin-top: rem(186);
+        height: rem(382);
+      }
+		}
+
+		&__photo-wrapper {
+      display: block;
+      position: absolute;
+      top: rem(-80);
+      width: 100%;
+      height: rem(600);
+      object-fit: cover;
+
+      @media #{$tablet} {
+        top: rem(-72);
+        height: rem(526);
+      }
+		}
+
+		&__photo {
+      display: block;
+      width: 100%;
+      height: 100%;
+		}
+
+		&__image-ball {
+      position: absolute;
+      top: rem(158);
+      left: rem(14);
+      z-index: 1;
+      width: rem(187);
+      height: rem(187);
+      border-radius: 50%;
+      background-color: $secondary;
+      mix-blend-mode: hard-light;
+
+      @media #{$tablet} {
+        top: rem(152);
+        left: rem(30);
+        width: rem(163);
+        height: rem(163);
+      }
+		}
   }
 </style>

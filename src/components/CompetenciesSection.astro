@@ -1,0 +1,191 @@
+---
+import { BASE } from '../scripts/helpers/constants.js';
+import ScrollAccordion from '../components/ScrollAccordion.astro';
+
+const { class: className, ...attrs } = Astro.props;
+
+const classes = [
+  'competencies-section',
+  'js-scroll-section',
+  'js-scroll-accordion-container',
+  className
+];
+
+const accordionList = [
+  {
+    title: 'Приобретение и продажа',
+    text: `
+			Доступ к&nbsp;закрытым (off-market) сделкам, разработка
+      аукционных стратегий и&nbsp;проведение Private&nbsp;Sales.
+      Полное сопровождение транзакций.
+		`,
+  },
+  {
+    title: 'Инвестиции и стратегия',
+    text: `
+			Формирование арт-портфеля с&nbsp;учетом риск-профиля,
+      требований к&nbsp;ликвидности и&nbsp;горизонтов планирования.
+      Интеграция искусства в&nbsp;общую архитектуру капитала.
+		`,
+  },
+  {
+    title: 'Оценка и аналитика',
+    text: `
+			Независимая оценка по&nbsp;международным стандартам.
+      Анализ справедливой стоимости для&nbsp;страхования,
+      кредитования под&nbsp;залог и&nbsp;управленческого учета.
+		`,
+  },
+  {
+    title: 'Управление коллекций',
+    text: `
+			Системное администрирование: цифровая
+      каталогизация, профессиональная логистика,
+      безопасное хранение и&nbsp;правовое сопровождение.
+		`,
+  },
+  {
+    title: 'Культурный код',
+    text: `
+			Формирование собраний музейного уровня, которые
+      становятся историей семьи и&nbsp;частью культурного наследия.
+		`,
+  },
+  {
+    title: 'Корпоративные коллекции',
+    text: `
+			Искусство как&nbsp;часть культуры бизнеса
+      и&nbsp;инструмент коммуникации бренда.
+		`,
+  },
+];
+---
+
+<section
+  class:list={classes}
+  {...attrs}
+>
+  <img
+    class="competencies-section__word js-competencies-word"
+    src={`${BASE}images/competencies-section/competencies-word.svg`}
+    alt="Компетенции"
+    loading="lazy"
+  />
+
+  <div class="competencies-section__title-container">
+    <h2 class="competencies-section__title js-competencies-title">
+      Ключевые<br>компетенции
+    </h2>
+  </div>
+
+  <ScrollAccordion
+    class="competencies-section__accordion"
+    accordion-list={accordionList}
+  />
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { SplitText } from 'gsap/SplitText';
+  import { layoutScrollSmoother } from '../scripts/helpers/layoutScrollSmoother.js';
+
+  function competenciesSectionAnimation() {
+    gsap.registerPlugin(ScrollTrigger, SplitText);
+
+    layoutScrollSmoother.smoother?.effects('.js-competencies-word', {
+      speed: 1.2,
+      lag: 0.3,
+    });
+
+    const mm = gsap.matchMedia();
+
+    function sectionAnimations() {
+      const splitTitle = SplitText.create('.js-competencies-title', { type: 'chars,words' });
+
+      gsap.from(splitTitle.chars, {
+        opacity: 0,
+        x: '3rem',
+        y: '-2rem',
+        duration: 0.4,
+        ease: 'power4.out',
+        stagger: 0.05,
+        scrollTrigger: {
+          trigger: '.js-competencies-title',
+          start: "bottom bottom",
+        },
+      });
+
+      return () => {
+        splitTitle.revert();
+      };
+    }
+    
+    mm.add('(max-width: 767.98px)', sectionAnimations);
+
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimations);
+
+    mm.add('(min-width: 1200px)', sectionAnimations);
+  }
+
+  competenciesSectionAnimation();
+</script>
+
+<style lang="scss" is:global>
+  .competencies-section {
+    $element: &;
+
+    position: relative;
+    padding: rem(80) 0;
+    background-color: $dark;
+    color: $light;
+    cursor: none;
+
+    @media #{$desktop-sm} {
+      padding: rem(120) 0;
+    }
+
+    &__word {
+      display: block;
+      position: absolute;
+      top: 20%;
+      right: var(--container-padding);
+      z-index: 1;
+      width: rem(48);
+      opacity: 0.1;
+
+      @media #{$tablet} {
+        top: 25%;
+        width: rem(68);
+      }
+
+      @media #{$desktop-lg} {
+        right: calc(50% - 960px + #{var(--container-padding)});
+      }
+    }
+
+    &__title-container {
+      @include base-container;
+    }
+
+		&__title {
+      @include h3;
+
+      @media #{$desktop-sm} {
+        margin-left: rem(232);
+      }
+		}
+
+		&__accordion {
+      margin-top: rem(56);
+
+      @media #{$tablet} {
+        margin-top: rem(80);
+      }
+
+      @media #{$desktop-sm} {
+        margin-top: rem(120);
+      }
+		}
+  }
+</style>

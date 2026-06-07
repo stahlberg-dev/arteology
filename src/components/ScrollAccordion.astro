@@ -1,0 +1,298 @@
+---
+const { 
+  class: className,
+  'accordion-list': accordionList,
+  ...attrs
+} = Astro.props;
+
+const validAccordionList = Array.isArray(accordionList) ? accordionList : [];
+
+const classes = ['scroll-accordion', className];
+
+const formatNumber = (num) => {
+  return String(num + 1).padStart(2, '0');
+};
+---
+
+{
+  validAccordionList.length > 0 && (
+    <div 
+      class:list={classes}
+      {...attrs}
+    >
+      <div class="scroll-accordion__container js-scroll-accordion">
+        {accordionList.map((item, index) => (
+          <div class="scroll-accordion__item js-scroll-accordion-item">
+            <div class="scroll-accordion__item-number">{formatNumber(index)}</div>
+            <div class="scroll-accordion__item-label">{item.title}</div>
+            <div class="scroll-accordion__item-content">
+              <p 
+                class="scroll-accordion__item-text js-scroll-accordion-item-text"
+                set:html={item.text}
+              />
+              <h3 class="scroll-accordion__item-title">{item.title}</h3>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { SplitText } from 'gsap/SplitText';
+  import { throttle } from '../scripts/helpers/utils.js';
+
+  function scrollAccordionAnimation() {
+    const accordions = document.querySelectorAll('.js-scroll-accordion');
+
+    if (!accordions.length) {
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger, SplitText);
+
+    const mm = gsap.matchMedia();
+
+    function desktopAccordionAnimation() {
+      accordions.forEach((accordion) => {
+        const accordionItems = gsap.utils.toArray('.js-scroll-accordion-item', accordion);
+        const accordionContainer = accordion.closest('.js-scroll-accordion-container') ?? accordion;
+        const totalItems = accordionItems.length;
+
+        gsap.to(accordionItems, {
+          scrollTrigger: {
+            trigger: accordionContainer,
+            start: 'bottom bottom',
+            end: () => `${window.innerWidth * 0.3 * totalItems}px`,
+            pin: true,
+            onUpdate: throttle((self) => {
+              const progress = self.progress;
+              const currentIndex = Math.floor(progress * totalItems);
+
+              accordionItems.forEach((item, index) => {
+                if (index < currentIndex && index < totalItems - 1) {
+                  item.classList.add('js-scroll-accordion-item-modified');
+                } 
+                else {
+                  item.classList.remove('js-scroll-accordion-item-modified');
+                }
+              });
+            }, 100),
+          }
+        });
+      });
+    }
+    
+    mm.add('(max-width: 767.98px)', () => {
+      const allSplitTexts = [];
+
+      accordions.forEach((accordion) => {
+        const accordionContainer = accordion.closest('.js-scroll-accordion-container') ?? accordion;
+        const accordionItems = gsap.utils.toArray('.js-scroll-accordion-item', accordion);
+        const accordionTexts = gsap.utils.toArray('.js-scroll-accordion-item-text', accordion);
+
+        accordionItems.forEach((accordionItem) => {
+          accordionItem.classList.remove('js-scroll-accordion-item-modified');
+        });
+
+        const masterTimeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: accordionContainer,
+            start: 'top 60%',
+            end: 'bottom 40%',
+            scrub: 1,
+          }
+        });
+
+        const splitTexts = accordionTexts.map((accordionText) => {
+          return SplitText.create(accordionText, { type: 'words' });
+        });
+        allSplitTexts.concat(splitTexts);
+
+        accordionTexts.forEach((accordionText, index) => {   
+          if (index > 0) {
+            const prevText = accordionTexts[index - 1];
+
+            masterTimeline.to(prevText, {
+              height: 0,
+              paddingTop: 0,
+              duration: 0.8,
+              ease: 'power1',
+            }, `position-${index}+=0.5`);
+          }
+          
+          masterTimeline.from(splitTexts[index].words, {
+            scale: 1.3,
+            y: '-1rem',
+            opacity: 0,
+            duration: 0.05,
+            stagger: {
+              amount: 0.8,
+            }
+          }, `position-${index}+=0.4`)
+          .from(accordionText, {
+            height: 0,
+            paddingTop: 0,
+            duration: 0.8,
+            ease: 'power1',
+          }, `position-${index}+=0.5`);
+        });
+      });
+
+      return () => {
+        allSplitTexts.forEach((split) => split.revert());
+      };
+    });
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', desktopAccordionAnimation);
+    mm.add('(min-width: 1200px)', desktopAccordionAnimation);
+  }
+
+  scrollAccordionAnimation();
+</script>
+
+<style lang="scss" is:global>
+  .scroll-accordion {
+    $element: &;
+
+    @include large-container;
+
+    overflow: hidden;
+
+    &__container {
+      @include base-container;
+
+      display: flex;
+      flex-direction: column;
+
+      @media #{$tablet} {
+        flex-direction: row;
+      }
+    }
+
+		&__item {
+      position: relative;
+      flex-shrink: 0;
+      border-bottom: 1px solid $light-30;
+      padding: rem(24) 0 rem(23);
+      background-color: $dark;
+      transition: flex-basis 0.7s ease-in-out;
+
+      @media #{$tablet} {
+        position: relative;
+        flex-basis: rem(522);
+        border-bottom: none;
+        border-right: 1px solid $light-30;
+        height: rem(480);
+        padding: 0;
+        overflow: hidden;
+      }
+
+      &:first-child {
+        @media #{$tablet} {
+          flex-basis: rem(498);
+        }
+      }
+
+      &.js-scroll-accordion-item-modified {
+        @media #{$tablet} {
+          flex-basis: rem(97);
+        }
+      }
+		}
+
+		&__item-number {
+      @include h4;
+
+      @media #{$tablet} {
+        position: absolute;
+        top: 0;
+        left: rem(24);
+        transition: left 0.7s ease-in;
+      }
+
+      .js-scroll-accordion-item-modified & {
+        @media #{$tablet} {
+          left: rem(34);
+        }
+      }
+		}
+
+		&__item-label {
+      @include h4;
+
+      display: none;
+
+      @media #{$tablet} {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        padding: rem(48) rem(30) 0;
+        writing-mode: sideways-lr;
+        opacity: 0;
+        transition: opacity 0.7s ease-in;
+      }
+
+      .js-scroll-accordion-item-modified & {
+        @media #{$tablet} {
+          opacity: 1;
+          transition: opacity 0.7s ease-in 0.3s;
+        }
+      }
+		}
+
+		&__item-content {
+      display: flex;
+      flex-direction: column-reverse;
+      margin-top: rem(12);
+      transition: opacity $default-transition 0.7s;
+
+      @media #{$tablet} {
+        justify-content: flex-start;
+        margin-top: 0;
+        height: 100%;
+        padding: rem(48) rem(8) 0 rem(24);
+      }
+
+      #{$element}__item:first-child & {
+        @media #{$tablet} {
+          padding-left: 0;
+        }
+      }
+
+      .js-scroll-accordion-item-modified & {
+        @media #{$tablet} {
+          opacity: 0;
+          transition: opacity $default-transition;
+        }
+      }
+		}
+
+		&__item-title {
+      @include h4-mobile;
+
+      
+      @media #{$tablet} {
+        @include h3;
+
+        width: rem(490);
+      }
+		}
+
+		&__item-text {
+      @include text2;
+
+      flex-shrink: 0;
+      padding-top: rem(24);
+      overflow: hidden;
+
+      @media #{$tablet} {
+        width: rem(490);
+      }
+		}
+  }
+</style>
