@@ -1,0 +1,308 @@
+---
+import { BASE } from '../scripts/helpers/constants.js';
+
+const { class: className, ...attrs } = Astro.props;
+
+const classes = ['philosophy-section', className];
+
+const infoList = [
+  {
+    title: 'Абсолютная независимость',
+    text: `
+			Мы не&nbsp;являемся арт-дилерами и&nbsp;не&nbsp;владеем собственным стоком.
+      Мы не&nbsp;продаем «своё»&nbsp;— мы&nbsp;анализируем глобальный рынок,
+      чтобы найти лучшее для&nbsp;вас.
+		`,
+  },
+  {
+    title: 'Бескомпромиссный Due&nbsp;Diligence',
+    text: `
+			Провенанс и&nbsp;чистота титула важнее громких имен.
+      Актив проходит жесткую проверку до&nbsp;того,&nbsp;как&nbsp;вы
+      увидите предложение.
+		`,
+  },
+  {
+    title: 'Конфиденциальность: Discretion&nbsp;is&nbsp;paramount',
+    text: `
+			Ваши транзакции,
+      структура активов и&nbsp;личные данные
+      остаются в&nbsp;строгом&nbsp;контуре&nbsp;тишины.
+		`,
+  },
+  {
+    title: 'Вход&nbsp;в&nbsp;мир&nbsp;искусства требует&nbsp;проводника',
+    text: `
+			Мы работаем с&nbsp;теми, кто уже&nbsp;состоялся
+      в&nbsp;бизнесе и&nbsp;готов оставить след&nbsp;в&nbsp;истории.
+		`,
+  },
+];
+---
+
+<section
+  class:list={classes}
+  {...attrs}
+>
+  <img
+    class="philosophy-section__word js-philosophy-word"
+    src={`${BASE}images/philosophy-section/philosophy-word.svg`}
+    alt="Философия"
+    loading="lazy"
+  />
+
+  <div class="philosophy-section__container">
+    <h2 class="philosophy-section__title js-philosophy-title">
+      Тонкая навигация там, где нет&nbsp;очевидных правил.
+      Решения зависят от&nbsp;контекста, репутации,
+      доступа<br class="philosophy-section__title-br-desktop">и&nbsp;доверия
+    </h2>
+    
+    <div class="philosophy-section__image-wrapper">
+      <picture class="philosophy-section__photo-wrapper js-philosophy-photo">
+        <source
+          srcset={`${BASE}images/philosophy-section/philosophy-image-desktop.webp`}
+          media="(min-width: 1200px)"
+        />
+
+        <source
+          srcset={`${BASE}images/philosophy-section/philosophy-image-tablet.webp`}
+          media="(min-width: 768px) and (max-width: 1199.98px)"
+        />
+      
+        <img
+          class="philosophy-section__photo"
+          src={`${BASE}images/philosophy-section/philosophy-image-mobile.webp`}
+          alt="фото"
+          loading="lazy"
+        />
+      </picture>
+
+      <div class="philosophy-section__image-ball js-philosophy-image-ball"></div>
+    </div>
+
+    <div class="philosophy-section__info">
+      {infoList.map((item) => (
+        <div class="philosophy-section__info-item js-philosophy-info-item">
+          <h3 
+            class="philosophy-section__info-item-title js-philosophy-info-item-title"
+            set:html={item.title}
+          />
+
+          <p 
+            class="philosophy-section__info-item-text js-philosophy-info-item-text"
+            set:html={item.text}
+          />
+        </div>
+        ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap, ScrollTrigger, SplitText, } from '../scripts/helpers/gsap.js';
+  import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
+
+  function philosophySectionAnimation() {
+    gsap.registerPlugin(ScrollTrigger, SplitText);
+
+    layoutScrollSmoother.smoother?.effects('.js-philosophy-word', {
+      speed: 1.4,
+      lag: 0.5,
+    });
+
+    layoutScrollSmoother.smoother?.effects('.js-philosophy-photo', {
+      speed: 1.04,
+      lag: 0.1,
+    });
+
+    layoutScrollSmoother.smoother?.effects('.js-philosophy-image-ball', {
+      speed: 0.9,
+      lag: 0.1,
+    });
+
+    const mm = gsap.matchMedia();
+
+    function sectionAnimations() {
+      const splitTitle = SplitText.create('.js-philosophy-title', { type: 'lines' });
+
+      gsap.from(splitTitle.lines, {
+        opacity: 0,
+        y: '5rem',
+        duration: 1.5,
+        ease: 'power4.out',
+        stagger: 0.15,
+        scrollTrigger: {
+          trigger: '.js-philosophy-title',
+          start: "bottom bottom",
+        },
+      });
+
+      return () => {
+        splitTitle.revert();
+      };
+    }
+
+    mm.add('(max-width: 767.98px)', sectionAnimations);
+
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimations);
+
+    mm.add('(min-width: 1200px)', sectionAnimations);
+  }
+
+  philosophySectionAnimation();
+</script>
+
+<style lang="scss" is:global>
+  .philosophy-section {
+    $element: &;
+
+    position: relative;
+    padding: rem(60) 0 ;
+    background-color: $light;
+    color: $dark;
+
+    @media #{$tablet} {
+      padding: rem(80) 0;
+    }
+
+    @media #{$desktop-sm} {
+      padding: rem(120) 0;
+    }
+
+    &__word {
+      display: block;
+      position: absolute;
+      top: 5%;
+      right: var(--container-padding);
+      z-index: 1;
+      width: rem(48);
+      opacity: 0.12;
+
+      @media #{$tablet} {
+        top: 10%;
+        width: rem(68);
+      }
+
+      @media #{$desktop-lg} {
+        right: calc(50% - 960px + #{var(--container-padding)});
+      }
+    }
+
+    &__container {
+      @include base-container;
+    }
+
+    &__title {
+      @media #{$desktop-sm} {
+        max-width: rem(972);
+      }
+    }
+
+    &__title-br-desktop {
+      display: none;
+
+      @media #{$tablet} {
+        display: inline;
+      }
+    }
+
+		&__info-item {
+      display: flex;
+      flex-direction: column;
+      gap: rem(20);
+      padding: rem(48) 0;
+      border-bottom: 1px solid $dark;
+
+      @media #{$tablet} {
+        flex-direction: row;
+        align-items: center;
+        padding: rem(52) 0;
+      }
+
+      @media #{$desktop-sm} {
+        gap: rem(160);
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+		}
+
+		&__info-item-title {
+      @include h4;
+
+      flex-shrink: 0;
+
+      @media #{$tablet} {
+        width: rem(306);
+      }
+		}
+
+		&__info-item-text {
+      @include text2;
+
+      @media #{$tablet} {
+        flex-grow: 1;
+      }
+
+      @media #{$desktop-sm} {
+        flex-grow: 0;
+        max-width: rem(788);
+      }
+		}
+
+		&__image-wrapper {
+      position: relative;
+      margin-top: rem(48);
+      width: 100%;
+      height: rem(176);
+      overflow: hidden;
+
+      @media #{$tablet} {
+        margin-top: rem(52);
+      }
+		}
+
+		&__photo-wrapper {
+      display: block;
+      position: absolute;
+      bottom: rem(-60);
+      width: 100%;
+      height: rem(296);
+      object-fit: cover;
+		}
+
+		&__photo {
+      display: block;
+      width: 100%;
+      height: 100%;
+		}
+
+		&__image-ball {
+      position: absolute;
+      top: rem(20);
+      left: rem(266);
+      z-index: 1;
+      width: rem(78);
+      height: rem(78);
+      border-radius: 50%;
+      background-color: $secondary;
+      mix-blend-mode: hard-light;
+
+      @media #{$tablet} {
+        top: rem(-40);
+        left: rem(660);
+        width: rem(150);
+        height: rem(150);
+      }
+
+      @media #{$desktop-sm} {
+        top: rem(-40);
+        left: rem(870);
+        width: rem(164);
+        height: rem(164);
+      }
+		}
+  }
+</style>

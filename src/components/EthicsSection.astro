@@ -96,10 +96,8 @@ const classes = ['ethics-section', className];
 </section>
 
 <script>
-  import gsap from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  import { SplitText } from 'gsap/SplitText';
-  import { layoutScrollSmoother } from '../scripts/helpers/layoutScrollSmoother.js';
+  import { gsap, ScrollTrigger, SplitText, } from '../scripts/helpers/gsap.js';
+  import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
 
   function ethicsSectionAnimation() {
     gsap.registerPlugin(ScrollTrigger, SplitText);

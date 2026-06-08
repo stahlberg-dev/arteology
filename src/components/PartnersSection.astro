@@ -62,10 +62,8 @@ const classes = ['partners-section', 'js-write-section', className];
 </section>
 
 <script>
-  import gsap from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  import { SplitText } from 'gsap/SplitText';
-  import { layoutScrollSmoother } from '../scripts/helpers/layoutScrollSmoother.js';
+  import { gsap, ScrollTrigger, SplitText, } from '../scripts/helpers/gsap.js';
+  import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
 
   function partnersSectionAnimation() {
     gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -309,7 +307,7 @@ const classes = ['partners-section', 'js-write-section', className];
 
 		&__image-ball {
       position: absolute;
-      top: rem(158);
+      top: rem(120);
       left: rem(14);
       z-index: 1;
       width: rem(187);
@@ -319,7 +317,7 @@ const classes = ['partners-section', 'js-write-section', className];
       mix-blend-mode: hard-light;
 
       @media #{$tablet} {
-        top: rem(152);
+        top: rem(120);
         left: rem(30);
         width: rem(163);
         height: rem(163);

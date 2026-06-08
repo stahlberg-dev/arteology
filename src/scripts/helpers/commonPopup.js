@@ -1,4 +1,4 @@
-import { layoutScrollSmoother } from './layoutScrollSmoother.js';
+import { layoutScrollSmoother } from '../layoutScrollSmoother.js';
 
 export class Popup {
   constructor(config) {

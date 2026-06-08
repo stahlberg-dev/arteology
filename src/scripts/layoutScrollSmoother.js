@@ -1,7 +1,5 @@
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { getMediaQueries } from './constants.js';
+import { gsap, ScrollTrigger, ScrollSmoother, } from './helpers/gsap.js';
+import { getMediaQueries } from './helpers/constants.js';
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
