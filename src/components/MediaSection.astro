@@ -1,0 +1,311 @@
+---
+import { BASE } from '../scripts/helpers/constants.js';
+
+const { class: className, ...attrs } = Astro.props;
+
+const classes = ['media-section', className];
+
+const mediaList = [
+  {
+    logoUrl: `${BASE}images/media-section/logo-rbk.svg`,
+    linkText: `Арт&nbsp;как&nbsp;актив: зачем девелоперам и&nbsp;бизнесу художники`,
+    linkUrl: `
+      https://companies.rbc.ru/news/hcmNqCHcJB/art-kak-aktiv-zachem-developeram-i-biznesu-hudozhniki/
+    `,
+    smallLogo: true,
+  },
+  {
+    logoUrl: `${BASE}images/media-section/logo-skolkovo.svg`,
+    linkText: `Российский арт-рынок: новые стратегии для&nbsp;роста и&nbsp;развития`,
+    linkUrl: `
+      https://www.skolkovo.ru/notes/rossijskij-art-rynok-novye-strategii-dlya-rosta-i-razvitiya/
+    `,
+  },
+  {
+    logoUrl: `${BASE}images/media-section/logo-pravo.svg`,
+    linkText: `
+      Право и&nbsp;искусство: две важные составляющие общественной жизни,
+      которые имеют долгую историю взаимодействия.
+    `,
+    linkUrl: `https://pravo.hse.ru/lawandart/`,
+  },
+  {
+    logoUrl: `${BASE}images/media-section/logo-a.svg`,
+    linkText: `
+      Александр Балашов: «Если говорить о&nbsp;„большом Cеребряном веке“,
+      для&nbsp;меня это пик цивилизации»
+    `,
+    linkUrl: `https://www.theartnewspaper.ru/posts/20240115-qwad/`,
+  },
+  {
+    logoUrl: `${BASE}images/media-section/logo-hj.svg`,
+    linkText: `Александр Балашов: консервативное искусство`,
+    linkUrl: `https://moscowartmagazine.com/issue/48/article/973`,
+  },
+];
+---
+
+<section class:list={classes} {...attrs}>
+  <img
+    class="media-section__word js-media-word"
+    src={`${BASE}images/media-section/media-word.svg`}
+    alt="Сми о нас"
+    loading="lazy"
+  />
+
+  <div class="media-section__container">
+    {
+      mediaList.map((item) => (
+        <a 
+          class="media-section__link js-media-link" 
+          href={item.linkUrl}
+          target="_blank"
+        >
+          <span class="media-section__link-logo-wrapper js-media-link-logo">
+            <img
+              class:list={
+                [
+                  'media-section__link-logo',
+                  {
+                    ['media-section__link-logo_small']: item.smallLogo,
+                  }
+                ]
+              }
+              src={item.logoUrl}
+              alt="логотип"
+              loading="lazy"
+            />
+          </span>
+
+          <span 
+            class="media-section__link-text js-media-link-text"
+            set:html={item.linkText}
+          />
+        </a>
+      ))
+    }
+  </div>
+</section>
+
+<script>
+  import { gsap, ScrollTrigger, SplitText } from '../scripts/helpers/gsap.js';
+  import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
+
+  function mediaSectionAnimation() {
+    gsap.registerPlugin(ScrollTrigger, SplitText);
+
+    layoutScrollSmoother.smoother?.effects('.js-media-word', {
+      speed: 1.4,
+      lag: 0.5,
+    });
+
+    const mm = gsap.matchMedia();
+
+    function sectionAnimations() {
+      const mediaLinks = document.querySelectorAll('.js-media-link');
+      const splitTexts = [];
+
+      mediaLinks.forEach((mediaLink) => {
+        const logo = mediaLink.querySelector('.js-media-link-logo');
+        const text = mediaLink.querySelector('.js-media-link-text');
+
+        if (!logo || !text) {
+          return;
+        }
+
+        const splitText = SplitText.create(text, {
+          type: 'words,chars',
+          reduceWhiteSpace: false,
+        });
+
+        splitTexts.push(splitText);
+
+        const mediaLinkTimeLine = gsap.timeline({
+          scrollTrigger: {
+            trigger: mediaLink,
+            start: 'bottom bottom-=10%',
+          },
+        });
+
+        mediaLinkTimeLine.from(logo, {
+          opacity: 0,
+          y: '3rem',
+          duration: 1,
+          ease: 'power4.out',
+        }, 0)
+        .from( splitText.chars, {
+          opacity: 0,
+          duration: 0.01,
+          ease: 'power4.out',
+          stagger: 0.02,
+        }, 0.5)
+        .from(mediaLink, {
+          '--x-scale': '0%',
+          duration: 2.5,
+          ease: 'power1.out',
+        }, 0);
+      });
+
+      return () => {
+        splitTexts.forEach((splitText) => splitText.revert());
+      };
+    }
+
+    mm.add('(max-width: 767.98px)', sectionAnimations);
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimations);
+    mm.add('(min-width: 1200px)', sectionAnimations);
+  }
+
+  mediaSectionAnimation();
+</script>
+
+<style lang="scss" is:global>
+  .media-section {
+    $element: &;
+
+    position: relative;
+    padding: rem(60) 0;
+    background-color: $light;
+    color: $dark;
+
+    @media #{$tablet} {
+      padding: rem(80) 0;
+    }
+
+    @media #{$desktop-sm} {
+      padding: rem(120) 0;
+    }
+
+    &__word {
+      display: block;
+      position: absolute;
+      top: 10%;
+      right: var(--container-padding);
+      z-index: 1;
+      width: rem(48);
+      opacity: 0.12;
+
+      @media #{$tablet} {
+        top: 15%;
+        width: rem(68);
+      }
+
+      @media #{$desktop-lg} {
+        right: calc(50% - 960px + #{var(--container-padding)});
+      }
+    }
+
+    &__container {
+      @include base-container;
+    }
+
+		&__link {
+      --x-scale: 100%;
+
+      @include reseta;
+
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: rem(20);
+      padding: rem(48) 0;
+
+      @media #{$tablet} {
+        flex-direction: row;
+        align-items: center;
+        padding: rem(52) 0;
+        width: rem(796);
+      }
+
+      @media #{$desktop-sm} {
+        width: rem(910);
+      }
+
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        transform: scaleX(var(--x-scale));
+        transform-origin: center center;
+        background-color: $dark;
+
+        @media #{$tablet} {
+          transform-origin: left center;
+        }
+      }
+
+      &:last-child::after {
+        display: none;
+      }
+		}
+
+		&__link-logo-wrapper {
+      flex-shrink: 0;
+      width: 100%;
+
+      @media #{$tablet} {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: rem(212);
+        height: rem(72);
+      }
+		}
+
+		&__link-logo {
+      height: rem(48);
+      transition: 
+        filter $default-transition,
+        opacity $default-transition;
+
+      &_small {
+        height: rem(32);
+      }
+
+      @media #{$is-hover} {
+        filter: grayscale(1);
+        opacity: 0.7;
+        
+        #{$element}__link:hover & {
+          filter: grayscale(0);
+          opacity: 1;
+        }
+      }
+
+      #{$element}__link:active &,
+      #{$element}__link:focus-visible & {
+        filter: grayscale(0);
+        opacity: 1;
+      }
+		}
+
+		&__link-text {
+      @include text2;
+
+      transition: color $default-transition;
+
+      @media #{$tablet} {
+        flex-grow: 1;
+      }
+
+      @media #{$desktop-sm} {
+        padding-right: rem(24);
+      }
+
+      @media #{$is-hover} {
+        #{$element}__link:hover & {
+          color: $primary;
+        }
+      }
+
+      #{$element}__link:active &,
+      #{$element}__link:focus-visible & {
+        color: $primary;
+      }
+		}
+  }
+</style>

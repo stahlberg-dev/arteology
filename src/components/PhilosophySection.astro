@@ -7,7 +7,7 @@ const classes = ['philosophy-section', className];
 
 const infoList = [
   {
-    title: 'Абсолютная<br>независимость',
+    title: 'Абсолютная независимость',
     text: `
 			Мы не&nbsp;являемся арт-дилерами и&nbsp;не&nbsp;владеем собственным стоком.
       Мы не&nbsp;продаем «своё»&nbsp;— мы&nbsp;анализируем глобальный рынок,
@@ -15,7 +15,7 @@ const infoList = [
 		`,
   },
   {
-    title: 'Бескомпромиссный<br>Due&nbsp;Diligence',
+    title: 'Бескомпромиссный Due&nbsp;Diligence',
     text: `
 			Провенанс и&nbsp;чистота титула важнее громких имен.
       Актив проходит жесткую проверку до&nbsp;того,&nbsp;как&nbsp;вы
@@ -23,15 +23,15 @@ const infoList = [
 		`,
   },
   {
-    title: 'Конфиденциальность:<br>Discretion&nbsp;is&nbsp;paramount',
+    title: 'Конфиденциальность: Discretion&nbsp;is&nbsp;paramount',
     text: `
 			Ваши транзакции,
       структура активов и&nbsp;личные данные
-      остаются <span>в&nbsp;строгом&nbsp;контуре&nbsp;тишины.</span>
+      остаются в&nbsp;строгом&nbsp;контуре&nbsp;тишины.
 		`,
   },
   {
-    title: 'Вход&nbsp;в&nbsp;мир&nbsp;искусства<br>требует&nbsp;проводника',
+    title: 'Вход&nbsp;в&nbsp;мир&nbsp;искусства требует&nbsp;проводника',
     text: `
 			Мы работаем с&nbsp;теми, кто уже&nbsp;состоялся
       в&nbsp;бизнесе и&nbsp;готов оставить след&nbsp;в&nbsp;истории.
@@ -125,7 +125,10 @@ const infoList = [
     const mm = gsap.matchMedia();
 
     function sectionAnimations() {
-      const splitTitle = SplitText.create('.js-philosophy-title', { type: 'lines' });
+      const splitTitle = SplitText.create('.js-philosophy-title', {
+        type: 'lines',
+        reduceWhiteSpace: false,
+      });
 
       gsap.from(splitTitle.lines, {
         opacity: 0,
@@ -151,8 +154,14 @@ const infoList = [
           return;
         }
 
-        const splitInfoItemTitle = SplitText.create(infoItemTitle, { type: 'lines' });
-        const splitInfoItemText = SplitText.create(infoItemText, { type: 'chars,words,lines' });
+        const splitInfoItemTitle = SplitText.create(infoItemTitle, {
+          type: 'lines',
+          reduceWhiteSpace: false,
+        });
+        const splitInfoItemText = SplitText.create(infoItemText, {
+          type: 'words,chars',
+          reduceWhiteSpace: false,
+        });
 
         splitInfoItemTitles.push(splitInfoItemTitle);
         splitInfoItemTexts.push(splitInfoItemText);
@@ -319,7 +328,7 @@ const infoList = [
 
       @media #{$desktop-sm} {
         flex-grow: 0;
-        max-width: rem(788);
+        max-width: rem(800);
       }
 		}
 

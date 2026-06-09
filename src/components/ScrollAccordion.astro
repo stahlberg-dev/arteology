@@ -124,9 +124,9 @@ const formatNumber = (num) => {
           
           masterTimeline.from(splitTexts[index].words, {
             opacity: 0,
-            duration: 0.05,
+            duration: 0.02,
             stagger: {
-              amount: 0.8,
+              amount: 1,
             }
           }, `position-${index}+=0.4`)
           .from(accordionText, {
