@@ -29,7 +29,7 @@ class ScrollSmootherController {
     MediaQueryHover.addEventListener('change', (mqEvent) => {
       if (!this.smoother) return;
 
-      this.smoother.smooth(mqEvent.matches ? 2 : 0.1);
+      this.smoother.smooth(mqEvent.matches ? 2 : 0.001);
       this.smoother.refresh();
       setTimeout(() => {
         ScrollTrigger.refresh(true);

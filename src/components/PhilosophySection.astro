@@ -307,19 +307,17 @@ const infoList = [
     &__word {
       display: block;
       position: absolute;
-      top: 15%;
+      top: 20%;
       right: var(--container-padding);
       z-index: 1;
       width: rem(48);
       opacity: 0.12;
 
       @media #{$tablet} {
-        top: 10%;
         width: rem(68);
       }
 
       @media #{$desktop-lg} {
-        top: 15%;
         right: calc(50% - 960px + #{var(--container-padding)});
       }
     }
@@ -330,10 +328,6 @@ const infoList = [
 
     &__title {
       @media #{$tablet} {
-        width: rem(990);
-      }
-
-      @media #{$desktop-sm} {
         width: rem(990);
       }
     }
