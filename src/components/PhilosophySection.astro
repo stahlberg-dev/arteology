@@ -7,7 +7,7 @@ const classes = ['philosophy-section', className];
 
 const infoList = [
   {
-    title: 'Абсолютная независимость',
+    title: 'Абсолютная<br>независимость',
     text: `
 			Мы не&nbsp;являемся арт-дилерами и&nbsp;не&nbsp;владеем собственным стоком.
       Мы не&nbsp;продаем «своё»&nbsp;— мы&nbsp;анализируем глобальный рынок,
@@ -15,7 +15,7 @@ const infoList = [
 		`,
   },
   {
-    title: 'Бескомпромиссный Due&nbsp;Diligence',
+    title: 'Бескомпромиссный<br>Due&nbsp;Diligence',
     text: `
 			Провенанс и&nbsp;чистота титула важнее громких имен.
       Актив проходит жесткую проверку до&nbsp;того,&nbsp;как&nbsp;вы
@@ -23,7 +23,7 @@ const infoList = [
 		`,
   },
   {
-    title: 'Конфиденциальность: Discretion&nbsp;is&nbsp;paramount',
+    title: 'Конфиденциальность:<br>Discretion&nbsp;is&nbsp;paramount',
     text: `
 			Ваши транзакции,
       структура активов и&nbsp;личные данные
@@ -31,7 +31,7 @@ const infoList = [
 		`,
   },
   {
-    title: 'Вход&nbsp;в&nbsp;мир&nbsp;искусства требует&nbsp;проводника',
+    title: 'Вход&nbsp;в&nbsp;мир&nbsp;искусства<br>требует&nbsp;проводника',
     text: `
 			Мы работаем с&nbsp;теми, кто уже&nbsp;состоялся
       в&nbsp;бизнесе и&nbsp;готов оставить след&nbsp;в&nbsp;истории.
@@ -82,7 +82,7 @@ const infoList = [
       <div class="philosophy-section__image-ball js-philosophy-image-ball"></div>
     </div>
 
-    <div class="philosophy-section__info">
+    <div class="philosophy-section__info js-pholosophy-info">
       {infoList.map((item) => (
         <div class="philosophy-section__info-item js-philosophy-info-item">
           <h3 
@@ -123,6 +123,7 @@ const infoList = [
     });
 
     const mm = gsap.matchMedia();
+    const info = document.querySelector('.js-pholosophy-info');
 
     function sectionAnimations() {
       const splitTitle = SplitText.create('.js-philosophy-title', {
@@ -142,7 +143,11 @@ const infoList = [
         },
       });
 
-      const infoItems = document.querySelectorAll('.js-philosophy-info-item');
+      if (!info) {
+        return;
+      }
+
+      const infoItems = info.querySelectorAll('.js-philosophy-info-item');
       const splitInfoItemTitles = [];
       const splitInfoItemTexts = [];
 
@@ -201,7 +206,78 @@ const infoList = [
       };
     }
 
-    mm.add('(max-width: 767.98px)', sectionAnimations);
+    mm.add('(max-width: 767.98px)', () => {
+      const splitTitle = SplitText.create('.js-philosophy-title', {
+        type: 'lines',
+        reduceWhiteSpace: false,
+      });
+
+      gsap.from(splitTitle.lines, {
+        opacity: 0,
+        y: '5rem',
+        duration: 1,
+        ease: 'power4.out',
+        stagger: 0.1,
+        scrollTrigger: {
+          trigger: '.js-philosophy-title',
+          start: "bottom bottom",
+        },
+      });
+
+      if (!info) {
+        return;
+      }
+
+      const infoTexts = gsap.utils.toArray('.js-philosophy-info-item-text', info);
+
+      const infoTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: info,
+          start: 'top 60%',
+          end: 'bottom 40%',
+          scrub: 1,
+        }
+      });
+
+      const splitInfoTexts = infoTexts.map((infoText) => {
+        return SplitText.create(infoText, { 
+          type: 'words',
+          reduceWhiteSpace: false,
+        });
+      });
+
+      infoTexts.forEach((infoText, index) => {   
+        if (index > 0) {
+          const prevText = infoTexts[index - 1];
+
+          infoTimeline.to(prevText, {
+            height: 0,
+            paddingTop: 0,
+            duration: 0.8,
+            ease: 'power1',
+          }, `position-${index}+=0.5`);
+        }
+        
+        infoTimeline.from(splitInfoTexts[index].words, {
+          opacity: 0,
+          duration: 0.02,
+          stagger: {
+            amount: 1,
+          }
+        }, `position-${index}+=0.4`)
+        .from(infoText, {
+          height: 0,
+          paddingTop: 0,
+          duration: 0.8,
+          ease: 'power1',
+        }, `position-${index}+=0.5`);
+      });
+
+      return () => {
+        splitTitle.revert();
+        splitInfoTexts.forEach((splitInfoText) => splitInfoText.revert());
+      };
+    });
 
     mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimations);
 
@@ -231,7 +307,7 @@ const infoList = [
     &__word {
       display: block;
       position: absolute;
-      top: 7%;
+      top: 15%;
       right: var(--container-padding);
       z-index: 1;
       width: rem(48);
@@ -274,7 +350,6 @@ const infoList = [
       position: relative;
       display: flex;
       flex-direction: column;
-      gap: rem(20);
       padding: rem(48) 0;
 
       @media #{$tablet} {
@@ -296,7 +371,6 @@ const infoList = [
         width: 100%;
         height: 1px;
         transform: scaleX(var(--x-scale));
-        transform-origin: center center;
         background-color: $dark;
 
         @media #{$tablet} {
@@ -322,13 +396,17 @@ const infoList = [
 		&__info-item-text {
       @include text2;
 
+      padding-top: rem(20);
+      overflow: hidden;
+
       @media #{$tablet} {
         flex-grow: 1;
+        padding-top: 0;
       }
 
       @media #{$desktop-sm} {
         flex-grow: 0;
-        max-width: rem(800);
+        max-width: rem(780);
       }
 		}
 

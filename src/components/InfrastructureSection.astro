@@ -100,8 +100,6 @@ const classes = ['infrastructure-section', 'js-write-section', className];
   .infrastructure-section {
     $element: &;
 
-    position: relative;
-    z-index: 1;
     padding: rem(80) 0 0;
     background-color: $dark;
     color: $light;
@@ -145,6 +143,8 @@ const classes = ['infrastructure-section', 'js-write-section', className];
     }
 
     &__button {
+      position: relative;
+      z-index: 2;
       margin-top: rem(60);
       width: 100%;
       pointer-events: auto;

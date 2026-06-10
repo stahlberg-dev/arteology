@@ -17,7 +17,7 @@ class ScrollSmootherController {
       content: this.smoothContent,
       smooth: 2,
       effects: true,
-      smoothTouch: 0.1,
+      smoothTouch: 0.001,
     });
   }
 

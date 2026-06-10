@@ -8,7 +8,8 @@ const classes = ['media-section', className];
 const mediaList = [
   {
     logoUrl: `${BASE}images/media-section/logo-rbk.svg`,
-    linkText: `Арт&nbsp;как&nbsp;актив: зачем девелоперам и&nbsp;бизнесу художники`,
+    linkText: `Арт&nbsp;как&nbsp;актив: зачем девелоперам и&nbsp;бизнесу художники.
+      Арт-проекты&nbsp;— от&nbsp;временных выставок до&nbsp;постоянных инсталляций.`,
     linkUrl: `
       https://companies.rbc.ru/news/hcmNqCHcJB/art-kak-aktiv-zachem-developeram-i-biznesu-hudozhniki/
     `,
@@ -16,7 +17,8 @@ const mediaList = [
   },
   {
     logoUrl: `${BASE}images/media-section/logo-skolkovo.svg`,
-    linkText: `Российский арт-рынок: новые стратегии для&nbsp;роста и&nbsp;развития`,
+    linkText: `Российский арт-рынок: новые стратегии для&nbsp;роста и&nbsp;развития.
+      Права художников, прозрачность и цифровые решения.`,
     linkUrl: `
       https://www.skolkovo.ru/notes/rossijskij-art-rynok-novye-strategii-dlya-rosta-i-razvitiya/
     `,
@@ -25,21 +27,18 @@ const mediaList = [
     logoUrl: `${BASE}images/media-section/logo-pravo.svg`,
     linkText: `
       Право и&nbsp;искусство: две важные составляющие общественной жизни,
-      которые имеют долгую историю взаимодействия.
-    `,
+      которые имеют долгую историю взаимодействия.`,
     linkUrl: `https://pravo.hse.ru/lawandart/`,
   },
   {
     logoUrl: `${BASE}images/media-section/logo-a.svg`,
-    linkText: `
-      Александр Балашов: «Если говорить о&nbsp;„большом Cеребряном веке“,
-      для&nbsp;меня это пик цивилизации»
-    `,
+    linkText: `Александр Балашов: «Если говорить о&nbsp;„большом Cеребряном веке“,
+      для&nbsp;меня это пик цивилизации».`,
     linkUrl: `https://www.theartnewspaper.ru/posts/20240115-qwad/`,
   },
   {
     logoUrl: `${BASE}images/media-section/logo-hj.svg`,
-    linkText: `Александр Балашов: консервативное искусство`,
+    linkText: `Александр Балашов: консервативное искусство.`,
     linkUrl: `https://moscowartmagazine.com/issue/48/article/973`,
   },
 ];
@@ -258,6 +257,8 @@ const mediaList = [
 
 		&__link-logo {
       height: rem(48);
+      filter: grayscale(1);
+      opacity: 0.7;
       transition: 
         filter $default-transition,
         opacity $default-transition;
@@ -267,8 +268,6 @@ const mediaList = [
       }
 
       @media #{$is-hover} {
-        filter: grayscale(1);
-        opacity: 0.7;
         
         #{$element}__link:hover & {
           filter: grayscale(0);
