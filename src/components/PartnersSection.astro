@@ -62,12 +62,10 @@ const classes = ['partners-section', 'js-write-section', className];
 </section>
 
 <script>
-  import { gsap, ScrollTrigger, SplitText, } from '../scripts/helpers/gsap.js';
+  import { gsap, SplitText } from '../scripts/helpers/gsap.js';
   import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
 
   function partnersSectionAnimation() {
-    gsap.registerPlugin(ScrollTrigger, SplitText);
-
     layoutScrollSmoother.smoother?.effects('.js-partners-photo', {
       speed: 0.93,
       lag: 0.1,

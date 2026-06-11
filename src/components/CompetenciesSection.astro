@@ -85,12 +85,10 @@ const accordionList = [
 </section>
 
 <script>
-  import { gsap, ScrollTrigger, SplitText, } from '../scripts/helpers/gsap.js';
+  import { gsap, SplitText} from '../scripts/helpers/gsap.js';
   import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
 
   function competenciesSectionAnimation() {
-    gsap.registerPlugin(ScrollTrigger, SplitText);
-
     layoutScrollSmoother.smoother?.effects('.js-competencies-word', {
       speed: 1.2,
       lag: 0.1,

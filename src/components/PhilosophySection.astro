@@ -95,17 +95,16 @@ const infoList = [
             set:html={item.text}
           />
         </div>
-        ))}
+      ))}
     </div>
   </div>
 </section>
 
 <script>
-  import { gsap, ScrollTrigger, SplitText, } from '../scripts/helpers/gsap.js';
+  import { gsap, SplitText } from '../scripts/helpers/gsap.js';
   import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
 
   function philosophySectionAnimation() {
-    gsap.registerPlugin(ScrollTrigger, SplitText);
 
     layoutScrollSmoother.smoother?.effects('.js-philosophy-word', {
       speed: 1.4,

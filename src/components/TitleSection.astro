@@ -107,12 +107,10 @@ const classes = [
 </section>
 
 <script>
-  import { gsap, ScrollTrigger, SplitText, } from '../scripts/helpers/gsap.js';
+  import { gsap, SplitText } from '../scripts/helpers/gsap.js';
   import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
 
   function titleSectionAnimation() {
-    gsap.registerPlugin(ScrollTrigger, SplitText);
-
     const mm = gsap.matchMedia();
 
     mm.add('(max-width: 767.98px)', () => {
@@ -326,7 +324,6 @@ const classes = [
       align-items: center;
       position: relative;
       min-height: 100vh;
-      /* min-height: 100dvh; */
       padding: calc(#{var(--header-height)} + #{var(--container-padding)}) var(--container-padding);
     }
 

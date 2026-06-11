@@ -87,12 +87,10 @@ const mediaList = [
 </section>
 
 <script>
-  import { gsap, ScrollTrigger, SplitText } from '../scripts/helpers/gsap.js';
+  import { gsap, SplitText } from '../scripts/helpers/gsap.js';
   import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
 
   function mediaSectionAnimation() {
-    gsap.registerPlugin(ScrollTrigger, SplitText);
-
     layoutScrollSmoother.smoother?.effects('.js-media-word', {
       speed: 1.4,
       lag: 0.5,
@@ -123,6 +121,12 @@ const mediaList = [
           scrollTrigger: {
             trigger: mediaLink,
             start: 'bottom bottom-=10%',
+          },
+          onStart: () => {
+            mediaLink.style.pointerEvents = 'none';
+          },
+          onComplete: () => {
+            mediaLink.style.pointerEvents = 'auto';
           },
         });
 

@@ -33,11 +33,9 @@ const classes = ['infrastructure-section', 'js-write-section', className];
 </section>
 
 <script>
-  import { gsap, ScrollTrigger, SplitText, } from '../scripts/helpers/gsap.js';
+  import { gsap, SplitText } from '../scripts/helpers/gsap.js';
 
   function infrastructureSectionAnimation() {
-    gsap.registerPlugin(ScrollTrigger, SplitText);
-
     const mm = gsap.matchMedia();
 
     function sectionAnimations() {

@@ -40,7 +40,7 @@ const formatNumber = (num) => {
 }
 
 <script>
-  import { gsap, ScrollTrigger, SplitText, } from '../scripts/helpers/gsap.js';
+  import { gsap, SplitText } from '../scripts/helpers/gsap.js';
   import { throttle } from '../scripts/helpers/utils.js';
 
   function scrollAccordionAnimation() {
@@ -49,8 +49,6 @@ const formatNumber = (num) => {
     if (!accordions.length) {
       return;
     }
-
-    gsap.registerPlugin(ScrollTrigger, SplitText);
 
     const mm = gsap.matchMedia();
 

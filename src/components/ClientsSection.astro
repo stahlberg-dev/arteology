@@ -1,0 +1,504 @@
+---
+import { BASE } from '../scripts/helpers/constants.js';
+
+const { class: className, ...attrs } = Astro.props;
+
+const classes = ['clients-section', className];
+
+const cards = [
+  {
+    cardTitle: 'Private Clients &&nbsp;Collectors',
+    cardText: `
+			Мы берем на&nbsp;себя операционную рутину,
+      гарантируя конфиденциальность
+      и&nbsp;отсутствие давления при&nbsp;принятии решений.
+		`,
+    cardList: [
+      'Наследственное планирование',
+      'Структурирование филантропии',
+      'Синхронизация с&nbsp;налоговыми и&nbsp;юридическими консультантами семьи',
+    ],
+  },
+  {
+    cardTitle: 'Family Offices&nbsp;& Wealth Management',
+    cardText: `
+			Интеграция искусства в&nbsp;глобальную архитектуру семейного капитала.
+		`,
+    cardList: [
+      'Наследственное планирование',
+      'Структурирование филантропии',
+      'Синхронизация с&nbsp;налоговыми и&nbsp;юридическими консультантами семьи',
+    ],
+  },
+  {
+    cardTitle: 'Banks&nbsp;&&nbsp;Corporate Institutions',
+    cardText: `
+			Аутсорсинг арт-экспертизы.
+      Управление корпоративными коллекциями
+      и&nbsp;декорирование штаб-квартир.
+		`,
+    cardList: [
+      'Оценка залогов',
+      'Независимый Due Diligence для VIP-клиентов',
+      'Управление корпоративными коллекциями и&nbsp;декорирование штаб-квартир',
+    ],
+  },
+];
+---
+
+<section
+  class:list={classes}
+  {...attrs}
+>
+  <img
+    class="competencies-section__word js-clients-word"
+    src={`${BASE}images/clients-section/clients-word.svg`}
+    alt="Клиенты"
+    loading="lazy"
+  />
+
+  <div class="clients-section__container">
+    <div class="clients-section__cards">
+      {cards.map((card) => (
+        <div class="clients-section__card js-clients-section-card">
+          <div class="clients-section__card-background">
+            <span class="clients-section__card-border-left js-clients-section-card-bl"></span>
+            <span class="clients-section__card-border-right js-clients-section-card-br"></span>
+            <span class="clients-section__card-border-top js-clients-section-card-bt"></span>
+            <span class="clients-section__card-border-bottom js-clients-section-card-bb"></span>
+          </div>
+
+          <div class="clients-section__card-content js-clients-section-card-content">
+            <h3
+              class="clients-section__card-title js-clients-section-card-title"
+              set:html={card.cardTitle}
+            />
+
+            <div class="clients-section__card-body js-clients-section-card-body">
+              <p
+                class="clients-section__card-text js-clients-section-card-text"
+                set:html={card.cardText}
+              />
+              <ul class="clients-section__card-list js-clients-section-card-list">
+                {card.cardList?.length > 0 && (
+                  card.cardList.map((item) => (
+                    <li
+                      class="clients-section__card-list-item"
+                      set:html={item}
+                    />
+                  ))
+                )}
+              </ul>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from '../scripts/helpers/gsap.js';
+  import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
+
+  function clientsSectionAnimation() {
+    layoutScrollSmoother.smoother?.effects('.js-clients-word', {
+      speed: 1.4,
+      lag: 0.3,
+    });
+
+    const cards = document.querySelectorAll('.js-clients-section-card');
+    const mm = gsap.matchMedia();
+
+    function cardAnimations(desktopMode) {
+      cards.forEach((card, index) => {
+        const cardBorderLeft = card.querySelector('.js-clients-section-card-bl');
+        const cardBorderRight = card.querySelector('.js-clients-section-card-br');
+        const cardBorderTop = card.querySelector('.js-clients-section-card-bt');
+        const cardBorderBottom = card.querySelector('.js-clients-section-card-bb');
+        const cardContent = card.querySelector('.js-clients-section-card-content');
+        const cardTitle = card.querySelector('.js-clients-section-card-title');
+        const cardBody = card.querySelector('.js-clients-section-card-body');
+
+        if (
+          !cardBorderLeft
+          || !cardBorderRight
+          || !cardBorderTop
+          || !cardBorderBottom
+          || !cardContent
+          || !cardTitle
+          || !cardBody
+        ) {
+          return;
+        }
+
+        const cardTimeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            start: 'bottom bottom',
+          },
+          onStart: () => {
+            card.style.pointerEvents = 'none';
+          },
+          onComplete: () => {
+            card.style.pointerEvents = 'auto';
+          },
+        });
+
+        const animationTimeShift = desktopMode ? index % 4 * 0.5 : 0;
+
+        cardTimeline.from(cardBorderLeft, {
+          scaleY: 0,
+          duration: 0.5,
+          ease: 'power1.out',
+        }, 0 + animationTimeShift)
+        .from(cardBorderBottom, {
+          scaleX: 0,
+          duration: 0.5,
+          ease: 'power1.out',
+        }, 0 + animationTimeShift)
+        .from(cardBorderRight, {
+          scaleY: 0,
+          duration: 0.5,
+          ease: 'power1.out',
+        }, 0.5 + animationTimeShift)
+        .from(cardBorderTop, {
+          scaleX: 0,
+          duration: 0.5,
+          ease: 'power1.out',
+        }, 0.5 + animationTimeShift)
+        .from(cardContent, {
+          '--after-opacity': '0',
+          duration: 1,
+          ease: 'none',
+        }, 0 + animationTimeShift)
+        .from(cardTitle, {
+          opacity: 0,
+          duration: 1,
+          ease: 'none',
+        }, 0.5 + animationTimeShift)
+        .from(cardBody, {
+          opacity: 0,
+          duration: 1,
+          ease: 'none',
+        }, 1 + animationTimeShift);
+      });
+    }
+
+    mm.add('(max-width: 767.98px)', () => cardAnimations(false));
+
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', () => cardAnimations(false));
+
+    mm.add('(min-width: 1200px)', () => cardAnimations(true));
+  }
+
+  clientsSectionAnimation();
+</script>
+
+<style lang="scss" is:global>
+  .clients-section {
+    $element: &;
+
+    position: relative;
+    padding: rem(60) 0 rem(40);
+    background-color: $dark;
+    color: $light;
+
+    @media #{$tablet} {
+      padding: rem(80) 0;
+    }
+
+    @media #{$desktop-sm} {
+      padding: rem(120) 0;
+    }
+
+    &__word {
+      display: block;
+      position: absolute;
+      top: 30%;
+      right: var(--container-padding);
+      z-index: 1;
+      width: rem(48);
+      opacity: 0.1;
+
+      @media #{$tablet} {
+        top: 5%;
+        width: rem(68);
+      }
+
+      @media #{$desktop-lg} {
+        top: -10%;
+        right: calc(50% - 960px + #{var(--container-padding)});
+      }
+    }
+
+    &__container {
+      @include base-container;
+    }
+
+		&__cards {
+      display: flex;
+      flex-direction: column;
+      gap: rem(12);
+      width: 100%;
+
+      @media #{$tablet} {
+        gap: rem(20);
+        width: rem(798);
+      }
+
+      @media #{$desktop-sm} {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: rem(16);
+        width: 100%;
+      }
+		}
+    
+    &__card {
+      position: relative;
+      flex-shrink: 0;
+      overflow: hidden;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+
+      @media #{$desktop-sm} {
+        width: calc(25% - rem(12));
+        min-height: rem(494);
+      }
+    }
+
+    &__card-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+
+      &::after {
+        content: '';
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: -300%;
+        z-index: 2;
+        height: 300%;
+        aspect-ratio: 1 / 1;
+        border-radius: 50%;
+        background-color: $primary;
+        transform: scale(0, 0);
+        opacity: 0;
+        transition: 
+          transform 1.2s ease-in-out,
+          opacity 1.7s ease-in-out;
+
+        @media #{$desktop-sm} {
+          display: block;
+        }
+
+        #{$element}__card:hover & {
+          @media #{$desktop-sm} {
+            transform: scale(180%, 180%);
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    &__card-border-left {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 1px;
+      height: 100%;
+      transform-origin: bottom;
+      background-color: $light;
+    }
+
+    &__card-border-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 1;
+      width: 1px;
+      height: 100%;
+      transform-origin: bottom;
+      background-color: $light;
+    }
+
+    &__card-border-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 1px;
+      transform-origin: left;
+      background-color: $light;
+    }
+
+    &__card-border-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 1px;
+      transform-origin: left;
+      background-color: $light;
+    }
+
+    &__card-content {
+      --after-opacity: 1;
+
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: rem(48);
+      width: 100%;
+      height: 100%;
+      padding: rem(80) rem(16) rem(24);
+
+      @media #{$tablet} {
+        gap: rem(64);
+      }
+
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: rem(24);
+        left: rem(16);
+        z-index: 1;
+        width: rem(32);
+        height: rem(32);
+        border-radius: 50%;
+        background-color: $primary;
+        opacity: var(--after-opacity);
+        transition: background-color $default-transition 0.2s;
+
+        #{$element}__card:hover & {
+          @media #{$desktop-sm} {
+            background-color: $light;
+            transition: background-color $default-transition 0.7s;
+          }
+        }
+      }
+    }
+
+		&__card-title {
+      @include h4;
+
+      flex-shrink: 0;
+
+      @media #{$desktop-sm} {
+        padding-right: rem(40);
+      }
+		}
+
+    &__card-body {
+      display: flex;
+      flex-direction: column;
+      gap: rem(32);
+      flex-grow: 1;
+
+      @media #{$tablet} {
+        padding-right: rem(68);
+      }
+
+      @media #{$desktop-sm} {
+        position: relative;
+        justify-content: flex-end;
+        padding-right: 0;
+        overflow: hidden;
+      }
+    }
+
+		&__card-text {
+      @include text2;
+
+      @media #{$desktop-sm} {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        transition: 
+          bottom 0.6s ease-in-out,
+          opacity 0.6s ease-in-out;
+      }
+
+      #{$element}__card:hover & {
+        @media #{$desktop-sm} {
+          bottom: 101%;
+          opacity: 0;
+          transition: 
+            bottom 0.6s ease-in-out 0.3s,
+            opacity 0.6s ease-in-out 0.3s;
+        }
+      }
+		}
+
+		&__card-list {
+      @include resetul;
+
+      @media #{$desktop-sm} {
+        transform: translateY(101%);
+        opacity: 0;
+        transition: 
+          transform 0.6s ease-in-out,
+          opacity 0.6s ease-in-out;
+      }
+
+      #{$element}__card:hover & {
+        @media #{$desktop-sm} {
+          transform: translateY(0);
+          opacity: 1;
+          transition: 
+          transform 0.6s ease-in-out 0.3s,
+          opacity 0.6s ease-in-out 0.3s;
+        }
+      }
+		}
+
+		&__card-list-item {
+      @include resetli;
+      @include text2;
+
+      display: block;
+      position: relative;
+      margin-top: rem(12);
+      padding-left: rem(20);
+
+      @media #{$tablet} {
+        padding-left: rem(28);
+      }
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: rem(8);
+        left: rem(8);
+        width: rem(4);
+        height: rem(4);
+        border-radius: 50%;
+        background-color: $light;
+
+        @media #{$tablet} {
+          top: rem(10);
+          left: rem(10);
+          width: rem(6);
+          height: rem(6);
+        }
+      }
+		}
+  }
+</style>

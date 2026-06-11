@@ -110,11 +110,9 @@ const classes = ['footer', className];
 </footer>
 
 <script>
-  import { gsap, ScrollTrigger } from '../scripts/helpers/gsap.js';
+  import { gsap } from '../scripts/helpers/gsap.js';
 
   function footerAnimation() {
-    gsap.registerPlugin(ScrollTrigger);
-
     const mm = gsap.matchMedia();
 
     function sectionAnimations() {
