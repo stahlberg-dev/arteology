@@ -66,6 +66,9 @@ const cards = [
             <span class="clients-section__card-border-right js-clients-section-card-br"></span>
             <span class="clients-section__card-border-top js-clients-section-card-bt"></span>
             <span class="clients-section__card-border-bottom js-clients-section-card-bb"></span>
+            <svg class="clients-section__card-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <path class="js-card-overlay-path" fill="#87977a"></path>
+            </svg>
           </div>
 
           <div class="clients-section__card-content js-clients-section-card-content">
@@ -100,17 +103,24 @@ const cards = [
 <script>
   import { gsap } from '../scripts/helpers/gsap.js';
   import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
+  import { throttle } from '../scripts/helpers/utils.js';
 
-  function clientsSectionAnimation() {
-    layoutScrollSmoother.smoother?.effects('.js-clients-word', {
-      speed: 1.4,
-      lag: 0.3,
-    });
+  function clientsSectionAnimations() {
+    const clientsWord = document.querySelector('.js-clients-word');
 
-    const cards = document.querySelectorAll('.js-clients-section-card');
+    if (clientsWord && layoutScrollSmoother.smoother) {
+      layoutScrollSmoother.smoother.effects(clientsWord, {
+        speed: 1.4,
+        lag: 0.3,
+      });
+    }
+
+    const cards = gsap.utils.toArray('.js-clients-section-card');
     const mm = gsap.matchMedia();
 
-    function cardAnimations(desktopMode) {
+    function cardAnimationsHandler(desktopMode) {
+      const cleanups = [];
+
       cards.forEach((card, index) => {
         const cardBorderLeft = card.querySelector('.js-clients-section-card-bl');
         const cardBorderRight = card.querySelector('.js-clients-section-card-br');
@@ -119,6 +129,9 @@ const cards = [
         const cardContent = card.querySelector('.js-clients-section-card-content');
         const cardTitle = card.querySelector('.js-clients-section-card-title');
         const cardBody = card.querySelector('.js-clients-section-card-body');
+        const cardText = card.querySelector('.js-clients-section-card-text');
+        const cardList = card.querySelector('.js-clients-section-card-list');
+        const cardPath = card.querySelector('.js-card-overlay-path');
 
         if (
           !cardBorderLeft
@@ -128,6 +141,9 @@ const cards = [
           || !cardContent
           || !cardTitle
           || !cardBody
+          || !cardText
+          || !cardList
+          || !cardPath
         ) {
           return;
         }
@@ -141,58 +157,178 @@ const cards = [
             card.style.pointerEvents = 'none';
           },
           onComplete: () => {
-            card.style.pointerEvents = 'auto';
+            card.style.pointerEvents = '';
+            cardTimeline.scrollTrigger?.kill();
+            cardTimeline.kill();
+          },
+          onInterrupt: () => {
+            card.style.pointerEvents = '';
           },
         });
 
-        const animationTimeShift = desktopMode ? index % 4 * 0.5 : 0;
+        const animationTimeShift = desktopMode ? index % 4 * 1.2 : 0;
 
         cardTimeline.from(cardBorderLeft, {
           scaleY: 0,
-          duration: 0.5,
-          ease: 'power1.out',
-        }, 0 + animationTimeShift)
+          duration: 0.6,
+          ease: 'none',
+        }, 0.3 + animationTimeShift)
         .from(cardBorderBottom, {
           scaleX: 0,
-          duration: 0.5,
-          ease: 'power1.out',
-        }, 0 + animationTimeShift)
+          duration: 0.6,
+          ease: 'none',
+        }, 0.3 + animationTimeShift)
         .from(cardBorderRight, {
           scaleY: 0,
-          duration: 0.5,
-          ease: 'power1.out',
-        }, 0.5 + animationTimeShift)
+          duration: 0.6,
+          ease: 'none',
+        }, 0.9 + animationTimeShift)
         .from(cardBorderTop, {
           scaleX: 0,
-          duration: 0.5,
-          ease: 'power1.out',
-        }, 0.5 + animationTimeShift)
+          duration: 0.6,
+          ease: 'none',
+        }, 0.9 + animationTimeShift)
         .from(cardContent, {
           '--after-opacity': '0',
-          duration: 1,
+          duration: 0.9,
           ease: 'none',
         }, 0 + animationTimeShift)
         .from(cardTitle, {
           opacity: 0,
-          duration: 1,
+          duration: 1.2,
           ease: 'none',
-        }, 0.5 + animationTimeShift)
+        }, 0.3 + animationTimeShift)
         .from(cardBody, {
           opacity: 0,
-          duration: 1,
+          duration: 1.2,
           ease: 'none',
-        }, 1 + animationTimeShift);
+        }, 0.6 + animationTimeShift);
+
+        if (desktopMode) {
+          const numPoints = 7;
+          const delayPointsMax = 0.6;
+          const pointsDelay = [];
+          const points = [];
+          let isOpened = false;
+          let isHovered = false;
+          
+          let pathTimeLine = gsap.timeline({ 
+            onUpdate: render,
+            defaults: {
+              ease: "power2.inOut",
+              duration: 0.7,
+            }
+          });
+
+          for (let i = 0; i < numPoints; i++) {
+            points.push(0);
+          }
+  
+          toggle();
+
+          const throttledToggle = throttle(() => {
+            if (isOpened !== isHovered) {
+              isOpened = isHovered;
+
+              toggle();
+
+              gsap.to(cardContent, {
+                '--after-color': isOpened ? '#FFFFFF' : '#87977A',
+                duration: 0.3,
+                ease: 'power2.inOut',
+                delay: 0.3,
+              });
+
+              gsap.fromTo(cardText,
+              {
+                y: isOpened ? '0' : '101%',
+                opacity: isOpened ? '1' : '0',
+              },
+              {
+                y: isOpened ? '101%' : '0',
+                opacity: isOpened ? '0' : '1',
+                duration: 0.9,
+                ease: 'power2.inOut',
+              });
+
+              gsap.fromTo(cardList,
+              {
+                y: isOpened ? '-101%' : '0',
+                opacity: isOpened ? '0' : '1',
+              },
+              {
+                y: isOpened ? '0' : '-101%',
+                opacity: isOpened ? '1' : '0',
+                duration: 0.9,
+                ease: 'power2.inOut',
+              });
+            }
+          }, 800);
+
+          const onMouseEnter = () => {
+            isHovered = true;
+            throttledToggle();
+          };
+
+          const onMouseLeave = () => {
+            isHovered = false;
+            throttledToggle();
+          };
+
+          card.addEventListener('mouseenter', onMouseEnter);
+          card.addEventListener('mouseleave', onMouseLeave);
+  
+          function toggle() {
+            pathTimeLine.progress(0).clear();
+            
+            for (let i = 0; i < numPoints; i++) {
+              pointsDelay[i] = Math.random() * delayPointsMax;
+            }
+
+            for (let i = 0; i < numPoints; i++) {           
+              pathTimeLine.to(points, {
+                [i]: 100,
+              }, pointsDelay[i]);
+            }
+          }
+  
+          function render() {     
+            let d = "";
+            d += !isOpened ? `M 0 0 V ${points[0]} C` : `M 0 ${points[0]} C`;
+            
+            for (let i = 0; i < numPoints - 1; i++) {
+              let p = (i + 1) / (numPoints - 1) * 100;
+              let cp = p - (1 / (numPoints - 1) * 100) / 2;
+              d += ` ${cp} ${points[i]} ${cp} ${points[i+1]} ${p} ${points[i+1]}`;
+            }
+            
+            d += !isOpened ? ` V 100 H 0` : ` V 0 H 0`;
+            cardPath.setAttribute("d", d);
+          }
+
+          cleanups.push(() => {
+            card.removeEventListener('mouseenter', onMouseEnter);
+            card.removeEventListener('mouseleave', onMouseLeave);
+            pathTimeLine.kill();
+          });
+        }
       });
+
+      return () => {
+        cleanups.forEach((cleanup) => cleanup());
+      };
     }
 
-    mm.add('(max-width: 767.98px)', () => cardAnimations(false));
+    mm.add('(max-width: 767.98px)', () => cardAnimationsHandler(false));
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', () => cardAnimationsHandler(false));
+    mm.add('(min-width: 1200px)', () => cardAnimationsHandler(true));
 
-    mm.add('(min-width: 768px) and (max-width: 1199.98px)', () => cardAnimations(false));
-
-    mm.add('(min-width: 1200px)', () => cardAnimations(true));
+    document.addEventListener('astro:before-swap', () => {
+      mm.revert();
+    }, { once: true });
   }
 
-  clientsSectionAnimation();
+  clientsSectionAnimations();
 </script>
 
 <style lang="scss" is:global>
@@ -275,36 +411,6 @@ const cards = [
       z-index: 1;
       width: 100%;
       height: 100%;
-      overflow: hidden;
-
-      &::after {
-        content: '';
-        display: none;
-        position: absolute;
-        top: 50%;
-        left: -300%;
-        z-index: 2;
-        height: 300%;
-        aspect-ratio: 1 / 1;
-        border-radius: 50%;
-        background-color: $primary;
-        transform: scale(0, 0);
-        opacity: 0;
-        transition: 
-          transform 1.2s ease-in-out,
-          opacity 1.7s ease-in-out;
-
-        @media #{$desktop-sm} {
-          display: block;
-        }
-
-        #{$element}__card:hover & {
-          @media #{$desktop-sm} {
-            transform: scale(180%, 180%);
-            opacity: 1;
-          }
-        }
-      }
     }
 
     &__card-border-left {
@@ -351,8 +457,17 @@ const cards = [
       background-color: $light;
     }
 
+    &__card-overlay {
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+
     &__card-content {
       --after-opacity: 1;
+      --after-color: #{$primary};
 
       position: relative;
       z-index: 2;
@@ -378,16 +493,8 @@ const cards = [
         width: rem(32);
         height: rem(32);
         border-radius: 50%;
-        background-color: $primary;
+        background-color: var(--after-color);
         opacity: var(--after-opacity);
-        transition: background-color $default-transition 0.2s;
-
-        #{$element}__card:hover & {
-          @media #{$desktop-sm} {
-            background-color: $light;
-            transition: background-color $default-transition 0.7s;
-          }
-        }
       }
     }
 
@@ -426,19 +533,6 @@ const cards = [
         position: absolute;
         bottom: 0;
         left: 0;
-        transition: 
-          bottom 0.6s ease-in-out,
-          opacity 0.6s ease-in-out;
-      }
-
-      #{$element}__card:hover & {
-        @media #{$desktop-sm} {
-          bottom: 101%;
-          opacity: 0;
-          transition: 
-            bottom 0.6s ease-in-out 0.3s,
-            opacity 0.6s ease-in-out 0.3s;
-        }
       }
 		}
 
@@ -446,21 +540,8 @@ const cards = [
       @include resetul;
 
       @media #{$desktop-sm} {
-        transform: translateY(101%);
+        transform: translateY(-101%);
         opacity: 0;
-        transition: 
-          transform 0.6s ease-in-out,
-          opacity 0.6s ease-in-out;
-      }
-
-      #{$element}__card:hover & {
-        @media #{$desktop-sm} {
-          transform: translateY(0);
-          opacity: 1;
-          transition: 
-          transform 0.6s ease-in-out 0.3s,
-          opacity 0.6s ease-in-out 0.3s;
-        }
       }
 		}
 

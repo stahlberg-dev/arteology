@@ -110,13 +110,26 @@ const classes = [
   import { gsap, SplitText } from '../scripts/helpers/gsap.js';
   import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
 
-  function titleSectionAnimation() {
+  function titleSectionAnimations() {
     const mm = gsap.matchMedia();
+    let splitTitle;
 
-    mm.add('(max-width: 767.98px)', () => {
-      const split = SplitText.create('.js-title', { type: 'chars,words' });
+    function sectionAnimationsHandler(mode) {
+      const titleSection = document.querySelector('.js-title-section');
+      const titleImageWrapper = titleSection?.querySelector('.js-title-image-wrapper');
+      const title = titleSection?.querySelector('.js-title');
 
-      const tl = gsap.timeline(
+      if (
+        !titleSection
+        || !titleImageWrapper
+        || !title
+      ) {
+        return;
+      }
+
+      splitTitle = SplitText.create(title, { type: 'chars,words' });
+
+      const generalTimeLine = gsap.timeline(
         {
           onStart: () => {
             layoutScrollSmoother.smoother.paused(true);
@@ -124,26 +137,26 @@ const classes = [
           onComplete: () => {
             layoutScrollSmoother.smoother.paused(false);
 
-            const scrollTl = gsap.timeline({
+            const scrollTimeLine = gsap.timeline({
               scrollTrigger: {
-                trigger: '.js-title-section',
+                trigger: titleSection,
                 start: "20% top",
                 end: '80% top',
                 scrub: true,
               }
             });
         
-            scrollTl.to('.js-title-image-wrapper', { 
+            scrollTimeLine.to(titleImageWrapper, { 
               opacity: 0,
-              scale: 1.4,
-              z: 100,
+              scale: (mode === 'desktop') ? 1.5 : 1.4,
+              z: (mode === 'desktop') ? 150 : 100,
               ease: 'power3',
             }, 0)
-            .to(split.chars, {
+            .to(splitTitle.chars, {
               scale: 'random(2, 3)',
-              x: 'random(-200, 200)',
-              y: 'random(-200, 200)',
-              z: 'random(100, 200)',
+              x: (mode === 'desktop') ? 'random(-400, 400)' : 'random(-200, 200)',
+              y: (mode === 'desktop') ? 'random(-400, 400)' : 'random(-200, 200)',
+              z: (mode === 'desktop') ? 'random(200, 400)' : 'random(100, 200)',
               rotationX: 'random(-180, 180)',
               rotationY: 'random(-180, 180)',
               opacity: 0,
@@ -153,160 +166,56 @@ const classes = [
         }
       );
       
-      tl.from('.js-title-image-wrapper', {
+      generalTimeLine.from(titleImageWrapper, {
         scale: 0,
-        z: -100,
+        z: (mode === 'desktop') ? -200 : -100,
         duration: 1,
-        ease: 'power3.out',
+        ease: (mode === 'desktop') ? 'power4.out' : 'power3.out',
       }, 0)
-      .from(split.chars, {
+      .from(splitTitle.chars, {
         scale: 'random(2, 5)',
-        x: 'random(-200, 200)',
-        y: 'random(-200, 200)',
-        z: 'random(100, 200)',
+        x: (mode === 'desktop') ? 'random(-400, 400)' : 'random(-200, 200)',
+        y: (mode === 'desktop') ? 'random(-400, 400)' : 'random(-200, 200)',
+        z: (mode === 'desktop') ? 'random(200, 400)' : 'random(100, 200)',
         rotationX: 'random(-180, 180)',
         rotationY: 'random(-180, 180)',
         opacity: 0,
-        duration: 0.6,
+        duration: (mode === 'desktop') ? 0.7 : 0.6,
         ease: 'power4.out',
         stagger: 0.05,
       }, '-=0.5');
+    }
 
+    mm.add('(max-width: 767.98px)', () => {
+      sectionAnimationsHandler('mobile');
+      
       return () => {
-        split.revert();
+        splitTitle?.revert();
       };
     });
 
     mm.add('(min-width: 768px) and (max-width: 1199.98px)', () => {
-      const split = SplitText.create('.js-title', { type: 'chars,words' });
-
-      const tl = gsap.timeline(
-        {
-          onStart: () => {
-            layoutScrollSmoother.smoother.paused(true);
-          },
-          onComplete: () => {
-            layoutScrollSmoother.smoother.paused(false);
-
-            const scrollTl = gsap.timeline({
-              scrollTrigger: {
-                trigger: '.js-title-section',
-                start: "20% top",
-                end: '80% top',
-                scrub: true,
-              }
-            });
-        
-            scrollTl.to('.js-title-image-wrapper', { 
-              opacity: 0,
-              scale: 1.5,
-              z: 150,
-              ease: 'power3',
-            }, 0)
-            .to(split.chars, {
-              scale: 'random(2, 3)',
-              x: 'random(-400, 400)',
-              y: 'random(-400, 400)',
-              z: 'random(200, 400)',
-              rotationX: 'random(-180, 180)',
-              rotationY: 'random(-180, 180)',
-              opacity: 0,
-              ease: 'power4.out',
-            }, 0);
-          }
-        }
-      );
-      
-      tl.from('.js-title-image-wrapper', {
-        scale: 0,
-        z: -200,
-        duration: 1,
-        ease: 'power4.out',
-      }, 0)
-      .from(split.chars, {
-        scale: 'random(2, 5)',
-        x: 'random(-400, 400)',
-        y: 'random(-400, 400)',
-        z: 'random(200, 400)',
-        rotationX: 'random(-180, 180)',
-        rotationY: 'random(-180, 180)',
-        opacity: 0,
-        duration: 0.7,
-        ease: 'power4.out',
-        stagger: 0.05,
-      }, '-=0.5');
+      sectionAnimationsHandler('desktop');
 
       return () => {
-        split.revert();
+        splitTitle?.revert();
       };
     });
 
     mm.add('(min-width: 1200px)', () => {
-      const split = SplitText.create('.js-title', { type: 'chars,words' });
+      sectionAnimationsHandler('desktop');
 
-      const tl = gsap.timeline(
-        {
-          onStart: () => {
-            layoutScrollSmoother.smoother.paused(true);
-          },
-          onComplete: () => {
-            layoutScrollSmoother.smoother.paused(false);
-
-            const scrollTl = gsap.timeline({
-              scrollTrigger: {
-                trigger: '.js-title-section',
-                start: "20% top",
-                end: '80% top',
-                scrub: true,
-              }
-            });
-        
-            scrollTl.to('.js-title-image-wrapper', { 
-              opacity: 0,
-              scale: 1.5,
-              z: 150,
-              ease: 'power3',
-            }, 0)
-            .to(split.chars, {
-              scale: 'random(2, 3)',
-              x: 'random(-400, 400)',
-              y: 'random(-400, 400)',
-              z: 'random(200, 400)',
-              rotationX: 'random(-180, 180)',
-              rotationY: 'random(-180, 180)',
-              opacity: 0,
-              ease: 'power4.out',
-            }, 0);
-          }
-        }
-      );
-      
-      tl.from('.js-title-image-wrapper', {
-        scale: 0,
-        z: -200,
-        duration: 1,
-        ease: 'power4.out',
-      }, 0)
-      .from(split.chars, {
-        scale: 'random(2, 5)',
-        x: 'random(-400, 400)',
-        y: 'random(-400, 400)',
-        z: 'random(200, 400)',
-        rotationX: 'random(-180, 180)',
-        rotationY: 'random(-180, 180)',
-        opacity: 0,
-        duration: 0.7,
-        ease: 'power4.out',
-        stagger: 0.05,
-      }, '-=0.5');
-      
       return () => {
-        split.revert();
+        splitTitle?.revert();
       };
     });
+
+    document.addEventListener('astro:before-swap', () => {
+      mm.revert();
+    }, { once: true });
   }
 
-  titleSectionAnimation();
+  titleSectionAnimations();
 </script>
 
 <style lang="scss" is:global>

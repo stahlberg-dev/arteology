@@ -1,4 +1,5 @@
 ---
+import BaseTitle from '../ui/BaseTitle.astro';
 import BaseButton from '../ui/BaseButton.astro';
 
 const { class: className, ...attrs } = Astro.props;
@@ -12,9 +13,9 @@ const classes = ['infrastructure-section', 'js-write-section', className];
   {...attrs}
 >
   <div class="infrastructure-section__container">
-    <h2 class="infrastructure-section__title js-infrastructure-title">
-      Профессиональная инфраструктура<br>для&nbsp;коллекционеров
-    </h2>
+    <BaseTitle class="infrastructure-section__title">
+      Профессиональная инфраструктура для&nbsp;коллекционеров
+    </BaseTitle>
 
     <p class="infrastructure-section__text js-infrastructure-text">
       Мы создаем надежную инфраструктуру
@@ -35,63 +36,71 @@ const classes = ['infrastructure-section', 'js-write-section', className];
 <script>
   import { gsap, SplitText } from '../scripts/helpers/gsap.js';
 
-  function infrastructureSectionAnimation() {
+  function infrastructureSectionAnimations() {
     const mm = gsap.matchMedia();
 
-    function sectionAnimations() {
-      const splitTitle = SplitText.create('.js-infrastructure-title', { type: 'chars,words' });
-      const splitText = SplitText.create('.js-infrastructure-text', { type: 'words,lines' });
-  
-      gsap.from(splitTitle.chars, {
-        opacity: 0,
-        x: '3rem',
-        y: '-2rem',
-        duration: 0.4,
-        ease: 'power4.out',
-        stagger: 0.05,
-        scrollTrigger: {
-          trigger: '.js-infrastructure-title',
-          start: "bottom bottom",
-        },
+    function sectionAnimationsHandler() {
+      const button = document.querySelector('.js-infrastructure-button');
+
+      if (button) {
+        const tween = gsap.from(button, {
+          opacity: 0,
+          y: '5rem',
+          duration: 1,
+          ease: 'power4.out',
+          scrollTrigger: {
+            trigger: button,
+            start: 'bottom bottom',
+          },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+          },
+        });
+      }
+
+      const text = document.querySelector('.js-infrastructure-text');
+
+      if (!text) {
+        return;
+      }
+
+      const splitText = SplitText.create(text, { 
+        type: 'words,lines',
+        reduceWhiteSpace: false,
       });
   
-      gsap.from(splitText.lines, {
+      const tween = gsap.from(splitText.lines, {
         opacity: 0,
         y: '5rem',
         duration: 1,
         ease: 'power4.out',
         stagger: 0.07,
         scrollTrigger: {
-          trigger: '.js-infrastructure-text',
+          trigger: text,
           start: "bottom bottom",
         },
-      });
-  
-      gsap.from('.js-infrastructure-button', {
-        opacity: 0,
-        y: '5rem',
-        duration: 1,
-        ease: 'power4.out',
-        scrollTrigger: {
-          trigger: '.js-infrastructure-button',
-          start: "bottom bottom",
+        onComplete() {
+          tween.scrollTrigger?.kill();
+          tween.kill();
         },
       });
 
       return () => {
-        splitTitle.revert();
         splitText.revert();
       };
     }
 
-    mm.add('(max-width: 767.98px)', sectionAnimations);
+    mm.add('(max-width: 767.98px)', sectionAnimationsHandler);
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimationsHandler);
+    mm.add('(min-width: 1200px)', sectionAnimationsHandler);
 
-    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimations);
-
-    mm.add('(min-width: 1200px)', sectionAnimations);
+    document.addEventListener('astro:before-swap', () => {
+      mm.revert();
+    }, { once: true });
   }
 
-  infrastructureSectionAnimation();
+  infrastructureSectionAnimations();
 </script>
 
 <style lang="scss" is:global>

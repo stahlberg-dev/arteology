@@ -1,5 +1,7 @@
 ---
 import { BASE } from '../scripts/helpers/constants.js';
+import BaseTitle from '../ui/BaseTitle.astro';
+
 const { class: className, ...attrs } = Astro.props;
 
 const classes = ['partners-section', 'js-write-section', className];
@@ -12,9 +14,12 @@ const classes = ['partners-section', 'js-write-section', className];
 >
   <div class="partners-section__container">
     <div class="partners-section__top">
-      <h2 class="partners-section__title js-partners-title">
+      <BaseTitle 
+        class="partners-section__title"
+        size="sm"
+      >
         Официальный партнер ВТБ&nbsp;Private
-      </h2>
+      </BaseTitle>
 
       <img
         class="partners-section__vtb-logo js-vtb-logo"
@@ -65,88 +70,109 @@ const classes = ['partners-section', 'js-write-section', className];
   import { gsap, SplitText } from '../scripts/helpers/gsap.js';
   import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
 
-  function partnersSectionAnimation() {
-    layoutScrollSmoother.smoother?.effects('.js-partners-photo', {
-      speed: 0.93,
-      lag: 0.1,
-    });
+  function partnersSectionAnimations() {
+    const partnersPhoto = document.querySelector('.js-partners-photo');
+    const partnersImageBall = document.querySelector('.js-partners-image-ball');
 
-    layoutScrollSmoother.smoother?.effects('.js-partners-image-ball', {
-      speed: 1.03,
-      lag: 0.1,
-    });
+    if (partnersPhoto && partnersImageBall && layoutScrollSmoother.smoother) {
+      layoutScrollSmoother.smoother.effects(partnersPhoto, {
+        speed: 0.93,
+        lag: 0.1,
+      });
+  
+      layoutScrollSmoother.smoother.effects(partnersImageBall, {
+        speed: 1.03,
+        lag: 0.1,
+      });
+    }
 
     const mm = gsap.matchMedia();
 
-    function sectionAnimations() {
-      const splitTitle = SplitText.create('.js-partners-title', { type: 'chars,words' });
-      const splitSubitle = SplitText.create('.js-partners-subtitle', { type: 'words,lines' });
-      const splitText = SplitText.create('.js-partners-text', { type: 'words,lines' });
+    function sectionAnimationsHandler() {
+      const vtbLogo = document.querySelector('.js-vtb-logo');
+      const partnersSubtitle = document.querySelector('.js-partners-subtitle');
+      const partnersText = document.querySelector('.js-partners-text');
+      let splitSubtitle, splitText;
 
-      gsap.from(splitTitle.chars, {
-        opacity: 0,
-        x: '3rem',
-        y: '-2rem',
-        duration: 0.4,
-        ease: 'power4.out',
-        stagger: 0.05,
-        scrollTrigger: {
-          trigger: '.js-partners-title',
-          start: "bottom bottom",
-        },
-      });
+      if (vtbLogo) {
+        const tween = gsap.from(vtbLogo, {
+          opacity: 0,
+          y: '5rem',
+          duration: 1,
+          ease: 'power4.out',
+          scrollTrigger: {
+            trigger: vtbLogo,
+            start: "bottom bottom",
+          },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+          },
+        });
+      }
+
+      if (partnersSubtitle) {
+        splitSubtitle = SplitText.create(partnersSubtitle, { 
+          type: 'words,lines',
+          reduceWhiteSpace: false
+        });
   
-      gsap.from(splitSubitle.lines, {
-        opacity: 0,
-        y: '5rem',
-        duration: 1,
-        ease: 'power4.out',
-        stagger: 0.07,
-        scrollTrigger: {
-          trigger: '.js-partners-subtitle',
-          start: "bottom bottom",
-        },
-      });
+        const tween = gsap.from(splitSubtitle.lines, {
+          opacity: 0,
+          y: '5rem',
+          duration: 1,
+          ease: 'power4.out',
+          stagger: 0.07,
+          scrollTrigger: {
+            trigger: partnersSubtitle,
+            start: "bottom bottom",
+          },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+          },
+        });
+      }
 
-      gsap.from(splitText.lines, {
-        opacity: 0,
-        y: '5rem',
-        duration: 1,
-        ease: 'power4.out',
-        stagger: 0.07,
-        scrollTrigger: {
-          trigger: '.js-partners-text',
-          start: "bottom bottom",
-        },
-      });
-
-      gsap.from('.js-vtb-logo', {
-        opacity: 0,
-        y: '3rem',
-        duration: 1,
-        delay: 0.5,
-        ease: 'power4.out',
-        scrollTrigger: {
-          trigger: '.js-vtb-logo',
-          start: "bottom-=3rem bottom",
-        },
-      });
+      if (partnersText) {
+        splitText = SplitText.create(partnersText, { 
+          type: 'words,lines',
+          reduceWhiteSpace: false
+        });
+  
+        const tween = gsap.from(splitText.lines, {
+          opacity: 0,
+          y: '5rem',
+          duration: 1,
+          ease: 'power4.out',
+          stagger: 0.07,
+          scrollTrigger: {
+            trigger: partnersText,
+            start: "bottom bottom",
+          },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+          },
+        });
+      }
 
       return () => {
-        splitTitle.revert();
-        splitSubitle.revert();
-        splitText.revert();
+        splitSubtitle?.revert();
+        splitText?.revert();
       };
     }
     
-    mm.add('(max-width: 767.98px)', sectionAnimations);
+    mm.add('(max-width: 767.98px)', sectionAnimationsHandler);
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimationsHandler);
+    mm.add('(min-width: 1200px)', sectionAnimationsHandler);
 
-    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimations);
-
-    mm.add('(min-width: 1200px)', sectionAnimations);
+    document.addEventListener('astro:before-swap', () => {
+      mm.revert();
+    }, { once: true });
   }
 
-  partnersSectionAnimation();
+  partnersSectionAnimations();
 </script>
 
 <style lang="scss" is:global>
@@ -193,8 +219,6 @@ const classes = ['partners-section', 'js-write-section', className];
 
 		&__title {
       @media #{$tablet} {
-        @include h3;
-
         flex-shrink: 0;
         width: rem(460);
       }

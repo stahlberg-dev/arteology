@@ -104,7 +104,10 @@ const formatNumber = (num) => {
         });
 
         const splitTexts = accordionTexts.map((accordionText) => {
-          return SplitText.create(accordionText, { type: 'words' });
+          return SplitText.create(accordionText, { 
+            type: 'words',
+            reduceWhiteSpace: false,
+          });
         });
         allSplitTexts.concat(splitTexts);
 
@@ -142,8 +145,11 @@ const formatNumber = (num) => {
     });
 
     mm.add('(min-width: 768px) and (max-width: 1199.98px)', desktopAccordionAnimation);
-    
     mm.add('(min-width: 1200px)', desktopAccordionAnimation);
+
+    document.addEventListener('astro:before-swap', () => {
+      mm.revert();
+    }, { once: true });
   }
 
   scrollAccordionAnimation();

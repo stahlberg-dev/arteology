@@ -112,22 +112,32 @@ const classes = ['footer', className];
 <script>
   import { gsap } from '../scripts/helpers/gsap.js';
 
-  function footerAnimation() {
+  function footerAnimations() {
     const mm = gsap.matchMedia();
 
-    function sectionAnimations() {
-      gsap.from('.js-footer-logo', {
-        opacity: 0,
-        duration: 4,
-        ease: 'power4.out',
-        scrollTrigger: {
-          trigger: '.js-footer-logo',
-          start: "center bottom",
-        },
-      });
+    function footerAnimationsHandler() {
+      const footerLogo = document.querySelector('.js-footer-logo');
+      const footerInfo = document.querySelector('.js-footer-info');
+      const footerBottom = document.querySelector('.js-footer-bottom');
 
-      document.querySelectorAll('.js-footer-contact-item').forEach((item) => {
-        gsap.from(item, {
+      if (footerLogo) {
+        const tween = gsap.from(footerLogo, {
+          opacity: 0,
+          duration: 4,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: footerLogo,
+            start: "bottom bottom",
+          },
+            onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+          },
+        });
+      }
+
+      gsap.utils.toArray('.js-footer-contact-item').forEach((item) => {
+        const tween = gsap.from(item, {
           opacity: 0,
           y: '5rem',
           duration: 1,
@@ -136,37 +146,55 @@ const classes = ['footer', className];
             trigger: item,
             start: "bottom bottom",
           },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+          },
         });
       });
 
-      gsap.from('.js-footer-info', {
-        opacity: 0,
-        y: '5rem',
-        duration: 1,
-        ease: 'power4.out',
-        scrollTrigger: {
-          trigger: '.js-footer-info',
-          start: "center bottom",
-        },
-      });
+      if (footerInfo) {
+        const tween = gsap.from(footerInfo, {
+          opacity: 0,
+          y: '5rem',
+          duration: 1,
+          ease: 'power4.out',
+          scrollTrigger: {
+            trigger: footerInfo,
+            start: "center bottom",
+          },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+          },
+        });
+      }
 
-      gsap.from('.js-footer-bottom', {
-        opacity: 0,
-        y: '2rem',
-        duration: 1,
-        ease: 'power4.out',
-        scrollTrigger: {
-          trigger: '.js-footer-bottom',
-          start: "top bottom",
-        },
-      });
+      if (footerBottom) {
+        const tween = gsap.from(footerBottom, {
+          opacity: 0,
+          y: '2rem',
+          duration: 1,
+          ease: 'power4.out',
+          scrollTrigger: {
+            trigger: footerBottom,
+            start: "top bottom",
+          },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+          },
+        });
+      }
     }
+    
+    mm.add('(max-width: 767.98px)', footerAnimationsHandler);
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', footerAnimationsHandler);
+    mm.add('(min-width: 1200px)', footerAnimationsHandler);
 
-    mm.add('(max-width: 767.98px)', sectionAnimations);
-
-    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimations);
-
-    mm.add('(min-width: 1200px)', sectionAnimations);
+    document.addEventListener('astro:before-swap', () => {
+      mm.revert();
+    }, { once: true });
   }
   
   function setYear() {
@@ -179,7 +207,7 @@ const classes = ['footer', className];
     yearElement.textContent = String(new Date().getFullYear());
   }
   
-  footerAnimation();
+  footerAnimations();
   setYear();
 </script>
 

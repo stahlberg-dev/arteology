@@ -90,16 +90,20 @@ const mediaList = [
   import { gsap, SplitText } from '../scripts/helpers/gsap.js';
   import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
 
-  function mediaSectionAnimation() {
-    layoutScrollSmoother.smoother?.effects('.js-media-word', {
-      speed: 1.4,
-      lag: 0.5,
-    });
+  function mediaSectionAnimations() {
+    const mediaWord = document.querySelector('.js-media-word');
+
+    if (mediaWord && layoutScrollSmoother.smoother) {
+      layoutScrollSmoother.smoother.effects(mediaWord, {
+        speed: 1.4,
+        lag: 0.5,
+      });
+    }
 
     const mm = gsap.matchMedia();
 
-    function sectionAnimations() {
-      const mediaLinks = document.querySelectorAll('.js-media-link');
+    function sectionAnimationsHandler() {
+      const mediaLinks = gsap.utils.toArray('.js-media-link');
       const splitTexts = [];
 
       mediaLinks.forEach((mediaLink) => {
@@ -126,7 +130,12 @@ const mediaList = [
             mediaLink.style.pointerEvents = 'none';
           },
           onComplete: () => {
-            mediaLink.style.pointerEvents = 'auto';
+            mediaLink.style.pointerEvents = '';
+            mediaLinkTimeLine.scrollTrigger?.kill();
+            mediaLinkTimeLine.kill();
+          },
+          onInterrupt: () => {
+            mediaLink.style.pointerEvents = '';
           },
         });
 
@@ -154,12 +163,16 @@ const mediaList = [
       };
     }
 
-    mm.add('(max-width: 767.98px)', sectionAnimations);
-    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimations);
-    mm.add('(min-width: 1200px)', sectionAnimations);
+    mm.add('(max-width: 767.98px)', sectionAnimationsHandler);
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimationsHandler);
+    mm.add('(min-width: 1200px)', sectionAnimationsHandler);
+
+    document.addEventListener('astro:before-swap', () => {
+      mm.revert();
+    }, { once: true });
   }
 
-  mediaSectionAnimation();
+  mediaSectionAnimations();
 </script>
 
 <style lang="scss" is:global>

@@ -1,0 +1,123 @@
+---
+const {
+  tag = 'h2',
+  class: className,
+  'animation-type': animationType = 'char',
+  size = 'md',
+  ...attrs
+} = Astro.props;
+
+const allowedTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div'];
+const Tag = allowedTags.includes(tag) ? tag : 'h2';
+
+const classes = [
+  'base-title',
+  `base-title_size_${size}`,
+  `js-title-${animationType}-animation`,
+  className,
+];
+---
+
+<Tag
+  class:list={classes}
+  {...attrs}
+>
+  <slot />
+</Tag>
+
+<script>
+  import { gsap, SplitText } from '../scripts/helpers/gsap.js';
+
+  function titleAnimation() {
+    const mm = gsap.matchMedia();
+
+    function titleAnimationHandler() {
+      const splitTitles = [];
+
+      gsap.utils.toArray('.js-title-char-animation').forEach((title) => {
+        const splitTitle = SplitText.create(title, { 
+          type: 'chars,words',
+          reduceWhiteSpace: false,
+        });
+
+        splitTitles.push(splitTitle);
+
+        const tween = gsap.from(splitTitle.chars, {
+          opacity: 0,
+          x: '3rem',
+          y: '-2rem',
+          duration: 0.4,
+          ease: 'power4.out',
+          stagger: 0.05,
+          scrollTrigger: {
+            trigger: title,
+            start: "bottom bottom",
+          },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+          },
+        });
+      });
+
+      gsap.utils.toArray('.js-title-line-animation').forEach((title) => {
+        const splitTitle = SplitText.create(title, { 
+          type: 'words,lines',
+          reduceWhiteSpace: false,
+        });
+
+        splitTitles.push(splitTitle);
+
+        const tween = gsap.from(splitTitle.lines, {
+          opacity: 0,
+          y: '5rem',
+          duration: 1,
+          ease: 'power4.out',
+          stagger: 0.1,
+          scrollTrigger: {
+            trigger: title,
+            start: "bottom bottom",
+          },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+          },
+        });
+      });
+
+      return () => {
+        splitTitles.forEach((splitTitle) => splitTitle.revert());
+      };
+    }
+
+    mm.add('(max-width: 767.98px)', titleAnimationHandler);
+
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', titleAnimationHandler);
+
+    mm.add('(min-width: 1200px)', titleAnimationHandler);
+
+    document.addEventListener('astro:before-swap', () => {
+      mm.revert();
+    }, { once: true });
+  }
+
+  titleAnimation();
+</script>
+
+<style lang="scss" is:global>
+  .base-title {
+    $element: &;
+
+    &_size_md {
+      @include h2;
+    }
+
+    &_size_sm {
+      @include h2-mobile;
+
+      @media #{$tablet} {
+        @include h3-desktop;
+      }
+    }
+  }
+</style>

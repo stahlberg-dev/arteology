@@ -9,20 +9,20 @@ class ScrollSmootherController {
     this.init();
   }
 
-  createSmoother() {
+  createSmoother(isHoverMatched) {
     this.smoother = ScrollSmoother.create({
       wrapper: this.smoothWrapper,
       content: this.smoothContent,
-      smooth: 2,
+      smooth: isHoverMatched ? 2 : 0.001,
       effects: true,
       smoothTouch: 0.001,
     });
   }
 
   init() {
-    this.createSmoother();
-
     const MediaQueryHover = getMediaQueries().isHover;
+
+    this.createSmoother(MediaQueryHover.matches);
 
     MediaQueryHover.addEventListener('change', (mqEvent) => {
       if (!this.smoother) return;

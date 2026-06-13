@@ -1,6 +1,7 @@
 ---
 import { BASE } from '../scripts/helpers/constants.js';
 import BaseIcon from '../ui/BaseIcon.astro';
+import BaseTitle from '../ui/BaseTitle.astro';
 
 const { class: className, ...attrs } = Astro.props;
 
@@ -32,9 +33,9 @@ const classes = ['ethics-section', className];
     </div>
 
     <div class="ethics-section__info">
-      <h2 class="ethics-section__title js-ethics-title">
+      <BaseTitle class="ethics-section__title">
         Кодекс этики
-      </h2>
+      </BaseTitle>
 
       <div class="ethics-section__info-item ethics-section__info-item_position_top">
         <h3 class="ethics-section__subtitle js-ethics-subtitle">
@@ -99,105 +100,114 @@ const classes = ['ethics-section', className];
   import { gsap, SplitText } from '../scripts/helpers/gsap.js';
   import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
 
-  function ethicsSectionAnimation() {
-    layoutScrollSmoother.smoother?.effects('.js-ethics-word', {
-      speed: 1.4,
-      lag: 0.5,
-    });
+  function ethicsSectionAnimations() {
+    const ethicsWord = document.querySelector('.js-ethics-word');
+    const ethicsLogo = document.querySelector('.js-ethics-logo');
+    const ethicsPhoto = document.querySelector('.js-ethics-photo');
+    const ethicsImageBall = document.querySelector('.js-ethics-image-ball');
 
-    layoutScrollSmoother.smoother?.effects('.js-ethics-logo', {
-      speed: 1.2,
-      lag: 0.5,
-    });
+    if (ethicsPhoto && ethicsImageBall && layoutScrollSmoother.smoother) {
+      layoutScrollSmoother.smoother.effects(ethicsPhoto, {
+        speed: 1.04,
+        lag: 0.1,
+      });
 
-    layoutScrollSmoother.smoother?.effects('.js-ethics-photo', {
-      speed: 1.04,
-      lag: 0.1,
-    });
+      layoutScrollSmoother.smoother.effects(ethicsImageBall, {
+        speed: 0.9,
+        lag: 0.1,
+      });
+    }
 
-    layoutScrollSmoother.smoother?.effects('.js-ethics-image-ball', {
-      speed: 0.9,
-      lag: 0.1,
-    });
+    if (ethicsWord && layoutScrollSmoother.smoother) {
+      layoutScrollSmoother.smoother.effects(ethicsWord, {
+        speed: 1.4,
+        lag: 0.5,
+      });
+    }
+
+    if (ethicsLogo && layoutScrollSmoother.smoother) {
+      layoutScrollSmoother.smoother.effects(ethicsLogo, {
+        speed: 1.2,
+        lag: 0.5,
+      });
+    }
 
     const mm = gsap.matchMedia();
-    const subtitles = document.querySelectorAll('.js-ethics-subtitle');
-    const texts = document.querySelectorAll('.js-ethics-text');
 
-    function sectionAnimations() {
-      const splitTitle = SplitText.create('.js-ethics-title', { type: 'chars,words' });
-      const splitSubtitleInstances = [];
-      const splitTextInstances = [];
-
-
-      gsap.from(splitTitle.chars, {
-        opacity: 0,
-        x: '3rem',
-        y: '-2rem',
-        duration: 0.4,
-        ease: 'power4.out',
-        stagger: 0.05,
-        scrollTrigger: {
-          trigger: '.js-ethics-title',
-          start: "bottom bottom",
-        },
-      });
+    function sectionAnimationsHandler() {
+      const splitSubtitles = [];
+      const splitTexts = [];
   
-      subtitles.forEach((item) => {
-        const splitSubtitle = SplitText.create(item, { type: 'words,lines' });
-        splitSubtitleInstances.push(splitSubtitle);
+      gsap.utils.toArray('.js-ethics-subtitle').forEach((subtitle) => {
+        const splitSubtitle = SplitText.create(subtitle, {
+          type: 'words,lines',
+          reduceWhiteSpace: false,
+        });
+        splitSubtitles.push(splitSubtitle);
 
-        gsap.from(splitSubtitle.lines, {
+        const tween = gsap.from(splitSubtitle.lines, {
           opacity: 0,
           y: '5rem',
           duration: 1,
           ease: 'power4.out',
           stagger: 0.07,
           scrollTrigger: {
-            trigger: item,
+            trigger: subtitle,
             start: "bottom bottom",
+          },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
           },
         });
       });
 
-      texts.forEach((item) => {
-        const splitText = SplitText.create(item, { type: 'words,lines' });
-        splitTextInstances.push(splitText);
+      gsap.utils.toArray('.js-ethics-text').forEach((text) => {
+        const splitText = SplitText.create(text, { 
+          type: 'words,lines',
+          reduceWhiteSpace: false,
+        });
 
-        gsap.from(splitText.lines, {
+        splitTexts.push(splitText);
+
+        const tween = gsap.from(splitText.lines, {
           opacity: 0,
           y: '5rem',
           duration: 1,
           ease: 'power4.out',
           stagger: 0.07,
           scrollTrigger: {
-            trigger: item,
+            trigger: text,
             start: "bottom bottom",
+          },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
           },
         });
       });
 
       return () => {
-        splitTitle.revert();
-
-        splitSubtitleInstances.forEach((item) => {
-          item.revert();
+        splitSubtitles.forEach((splitSubtitle) => {
+          splitSubtitle.revert();
         });
 
-        splitTextInstances.forEach((item) => {
-          item.revert();
+        splitTexts.forEach((splitText) => {
+          splitText.revert();
         });
       };
     }
 
-    mm.add('(max-width: 767.98px)', sectionAnimations);
+    mm.add('(max-width: 767.98px)', sectionAnimationsHandler);
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimationsHandler);
+    mm.add('(min-width: 1200px)', sectionAnimationsHandler);
 
-    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimations);
-
-    mm.add('(min-width: 1200px)', sectionAnimations);
+    document.addEventListener('astro:before-swap', () => {
+      mm.revert();
+    }, { once: true });
   }
 
-  ethicsSectionAnimation();
+  ethicsSectionAnimations();
 </script>
 
 <style lang="scss" is:global>

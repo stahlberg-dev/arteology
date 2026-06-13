@@ -1,5 +1,6 @@
 ---
 import { BASE } from '../scripts/helpers/constants.js';
+import BaseTitle from '../ui/BaseTitle.astro';
 
 const { class: className, ...attrs } = Astro.props;
 
@@ -52,12 +53,15 @@ const infoList = [
   />
 
   <div class="philosophy-section__container">
-    <h2 class="philosophy-section__title js-philosophy-title">
+    <BaseTitle 
+      class="philosophy-section__title"
+      animation-type="line"
+    >
       Тонкая навигация там,&nbsp;где нет&nbsp;очевидных правил.
       Решения зависят от&nbsp;контекста, репутации,
       доступа
       <span class="philosophy-section__title-line">и&nbsp;доверия</span>
-    </h2>
+    </BaseTitle>
     
     <div class="philosophy-section__image-wrapper">
       <picture class="philosophy-section__photo-wrapper js-philosophy-photo">
@@ -82,7 +86,7 @@ const infoList = [
       <div class="philosophy-section__image-ball js-philosophy-image-ball"></div>
     </div>
 
-    <div class="philosophy-section__info js-pholosophy-info">
+    <div class="philosophy-section__info js-philosophy-info">
       {infoList.map((item) => (
         <div class="philosophy-section__info-item js-philosophy-info-item">
           <h3 
@@ -104,44 +108,34 @@ const infoList = [
   import { gsap, SplitText } from '../scripts/helpers/gsap.js';
   import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
 
-  function philosophySectionAnimation() {
+  function philosophySectionAnimations() {
+    const philosophyWord = document.querySelector('.js-philosophy-word');
+    const philosophyPhoto = document.querySelector('.js-philosophy-photo');
+    const philosophyImageBall = document.querySelector('.js-philosophy-image-ball');
 
-    layoutScrollSmoother.smoother?.effects('.js-philosophy-word', {
-      speed: 1.4,
-      lag: 0.5,
-    });
+    if (philosophyWord && layoutScrollSmoother.smoother) {
+      layoutScrollSmoother.smoother.effects(philosophyWord, {
+        speed: 1.4,
+        lag: 0.5,
+      });
+    }
 
-    layoutScrollSmoother.smoother?.effects('.js-philosophy-photo', {
-      speed: 1.04,
-      lag: 0.1,
-    });
+    if (philosophyPhoto && philosophyImageBall && layoutScrollSmoother.smoother) {
+      layoutScrollSmoother.smoother.effects(philosophyPhoto, {
+        speed: 1.04,
+        lag: 0.1,
+      });
 
-    layoutScrollSmoother.smoother?.effects('.js-philosophy-image-ball', {
-      speed: 0.9,
-      lag: 0.1,
-    });
+      layoutScrollSmoother.smoother.effects(philosophyImageBall, {
+        speed: 0.9,
+        lag: 0.1,
+      });
+    }
 
     const mm = gsap.matchMedia();
-    const info = document.querySelector('.js-pholosophy-info');
+    const info = document.querySelector('.js-philosophy-info');
 
-    function sectionAnimations() {
-      const splitTitle = SplitText.create('.js-philosophy-title', {
-        type: 'lines',
-        reduceWhiteSpace: false,
-      });
-
-      gsap.from(splitTitle.lines, {
-        opacity: 0,
-        y: '5rem',
-        duration: 1,
-        ease: 'power4.out',
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: '.js-philosophy-title',
-          start: "bottom bottom",
-        },
-      });
-
+    function sectionAnimationsHandler() {
       if (!info) {
         return;
       }
@@ -174,7 +168,11 @@ const infoList = [
           scrollTrigger: {
             trigger: infoItem,
             start: 'bottom bottom-=10%',
-          }
+          },
+          onComplete() {
+            infoItemTimeLine.scrollTrigger?.kill();
+            infoItemTimeLine.kill();
+          },
         });
 
         infoItemTimeLine.from(splitInfoItemTitle.lines, {
@@ -198,31 +196,12 @@ const infoList = [
       });
 
       return () => {
-        splitTitle.revert();
-
         splitInfoItemTitles.forEach((splitInfoItemTitle) => splitInfoItemTitle.revert());
         splitInfoItemTexts.forEach((splitInfoItemText) => splitInfoItemText.revert());
       };
     }
 
     mm.add('(max-width: 767.98px)', () => {
-      const splitTitle = SplitText.create('.js-philosophy-title', {
-        type: 'lines',
-        reduceWhiteSpace: false,
-      });
-
-      gsap.from(splitTitle.lines, {
-        opacity: 0,
-        y: '5rem',
-        duration: 1,
-        ease: 'power4.out',
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: '.js-philosophy-title',
-          start: "bottom bottom",
-        },
-      });
-
       if (!info) {
         return;
       }
@@ -273,17 +252,19 @@ const infoList = [
       });
 
       return () => {
-        splitTitle.revert();
         splitInfoTexts.forEach((splitInfoText) => splitInfoText.revert());
       };
     });
 
-    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimations);
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimationsHandler);
+    mm.add('(min-width: 1200px)', sectionAnimationsHandler);
 
-    mm.add('(min-width: 1200px)', sectionAnimations);
+    document.addEventListener('astro:before-swap', () => {
+      mm.revert();
+    }, { once: true });
   }
 
-  philosophySectionAnimation();
+  philosophySectionAnimations();
 </script>
 
 <style lang="scss" is:global>
@@ -348,6 +329,7 @@ const infoList = [
       @media #{$tablet} {
         flex-direction: row;
         align-items: center;
+        gap: rem(20);
         padding: rem(52) 0;
       }
 
