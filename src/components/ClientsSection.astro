@@ -241,7 +241,7 @@ const cards = [
 
               gsap.fromTo(cardText,
               {
-                y: isOpened ? '0' : '101%',
+                y: isOpened ? '0' : '-200%',
                 opacity: isOpened ? '1' : '0',
               },
               {
@@ -249,6 +249,7 @@ const cards = [
                 opacity: isOpened ? '0' : '1',
                 duration: 0.9,
                 ease: 'power2.inOut',
+                delay: isOpened ? 0 : 0.1,
               });
 
               gsap.fromTo(cardList,
@@ -257,7 +258,7 @@ const cards = [
                 opacity: isOpened ? '0' : '1',
               },
               {
-                y: isOpened ? '0' : '-101%',
+                y: isOpened ? '0' : '101%',
                 opacity: isOpened ? '1' : '0',
                 duration: 0.9,
                 ease: 'power2.inOut',
@@ -309,7 +310,23 @@ const cards = [
           cleanups.push(() => {
             card.removeEventListener('mouseenter', onMouseEnter);
             card.removeEventListener('mouseleave', onMouseLeave);
+
             pathTimeLine.kill();
+
+            points.fill(0);
+            isOpened = false;
+            isHovered = false;
+            cardPath.setAttribute('d', '');
+
+            gsap.killTweensOf([cardContent, cardText, cardList]);
+
+            gsap.set(cardContent, {
+              clearProps: '--after-color',
+            });
+
+            gsap.set([cardText, cardList], {
+              clearProps: 'transform,opacity',
+            });
           });
         }
       });
