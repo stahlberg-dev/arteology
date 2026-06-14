@@ -1,0 +1,793 @@
+---
+import { BASE } from '../scripts/helpers/constants.js';
+import BaseIcon from '../ui/BaseIcon.astro';
+import BaseTitle from '../ui/BaseTitle.astro';
+
+const { class: className, ...attrs } = Astro.props;
+
+const classes = ['expertise-section', className];
+---
+
+<section
+  class:list={classes}
+  {...attrs}
+>
+  <img
+    class="expertise-section__word js-expertise-word"
+    src={`${BASE}images/expertise-section/expertise-word.svg`}
+    alt="Экспертиза"
+    loading="lazy"
+  />
+
+  <div class="expertise-section__container">
+    <BaseTitle 
+      class="expertise-section__title"
+      animation-type="line"
+    >
+      Искусство требует баланса между эстетическим
+      выбором и&nbsp;профессиональной оценкой рисков
+    </BaseTitle>
+
+    <div class="expertise-section__info">
+      <p class="expertise-section__top-info-text js-expertise-text">
+        Мы сопровождаем решения об&nbsp;искусстве
+        через&nbsp;экспертизу и&nbsp;аналитику.
+      </p>
+
+      <div class="expertise-section__info-block">
+        <h3 class="expertise-section__info-subtitle js-expertise-subtitle">
+          Аналитика данных
+        </h3>
+
+        <p class="expertise-section__info-text js-expertise-text">
+          Оценка исторической ликвидности автора,
+          анализ публичных и&nbsp;приватных продаж,
+          расчет потенциала&nbsp;переоценки
+        </p>
+      </div>
+
+      <div class="expertise-section__info-block">
+        <h3 class="expertise-section__info-subtitle js-expertise-subtitle">
+          Юридическая защита
+        </h3>
+
+        <p class="expertise-section__info-text js-expertise-text">
+          Глубокая проверка титула (Title&nbsp;transfer)
+          и&nbsp;провенанса. Выявление скрытых обременений.
+        </p>
+      </div>
+
+      <div class="expertise-section__info-block">
+        <h3 class="expertise-section__info-subtitle js-expertise-subtitle">
+          Стратегия 
+        </h3>
+
+        <p class="expertise-section__info-text js-expertise-text">
+          Мы помогаем покупать не&nbsp;просто «картину»,
+          а&nbsp;значимое место в&nbsp;истории искусства.
+        </p>
+      </div>
+    </div>
+
+    <div class="expertise-section__image-wrapper">
+      <div class="expertise-section__image">
+        <div
+          class="expertise-section__image-block">
+          <div class="expertise-section__image-block-circle"></div>
+          <div class="expertise-section__image-block-circle"></div>
+
+          <div class="expertise-section__image-block-caption">
+            Анализ рынка
+          </div>
+        </div>
+
+        <BaseIcon
+          class="expertise-section__line"
+          name="dashed-line"
+        />
+
+        <div
+          class="expertise-section__image-block expertise-section__image-block_large">
+          <div class="expertise-section__image-block-circle"></div>
+          <div class="expertise-section__image-block-circle"></div>
+          <div class="expertise-section__image-block-circle"></div>
+
+          <div class="expertise-section__image-block-caption">
+            Оценка рисков
+          </div>
+        </div>
+
+        <BaseIcon
+          class="expertise-section__line"
+          name="dashed-line"
+        />
+
+        <div class="expertise-section__image-logo-block">
+          <BaseIcon
+            class="expertise-section__logo-icon"
+            name="logo-letter"
+          />
+
+          <div class="expertise-section__image-logo-block-layer">
+            <BaseIcon
+              class="expertise-section__circle-icon"
+              name="dashed-circle"
+            />
+
+            <div 
+              class="expertise-section__image-logo-block-label
+                expertise-section__image-logo-block-label_name_liquidity"
+            >
+              <div class="expertise-section__image-logo-block-label-text">
+                Ликвидность
+              </div>
+            </div>
+          </div>
+
+          <div class="expertise-section__image-logo-block-layer">
+            <BaseIcon
+              class="expertise-section__circle-icon"
+              name="dashed-circle"
+            />
+
+            <div 
+              class="expertise-section__image-logo-block-label
+                expertise-section__image-logo-block-label_name_diligence"
+            >
+              <div class="expertise-section__image-logo-block-label-text">
+                Due Diligence
+              </div>
+            </div>
+          </div>
+
+          <div class="expertise-section__image-logo-block-layer">
+            <BaseIcon
+              class="expertise-section__circle-icon"
+              name="dashed-circle"
+            />
+
+            <div 
+              class="expertise-section__image-logo-block-label
+                expertise-section__image-logo-block-label_name_cleanness"
+            >
+              <div class="expertise-section__image-logo-block-label-text">
+                Юридическая<br>чистота
+              </div>
+            </div>
+          </div>
+
+          <div class="expertise-section__image-logo-block-layer">
+            <BaseIcon
+              class="expertise-section__circle-icon"
+              name="dashed-circle"
+            />
+
+            <div 
+              class="expertise-section__image-logo-block-label
+                expertise-section__image-logo-block-label_name_financial"
+            >
+              <div class="expertise-section__image-logo-block-label-text">
+                Финансовая<br>модель
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <BaseIcon
+          class="expertise-section__line"
+          name="dashed-line"
+        />
+
+        <div
+          class="expertise-section__image-block expertise-section__image-block_large">
+          <div class="expertise-section__image-block-circle"></div>
+          <div class="expertise-section__image-block-circle"></div>
+          <div class="expertise-section__image-block-circle"></div>
+
+          <div class="expertise-section__image-block-caption">
+            Стратегия приобретения
+          </div>
+        </div>
+
+        <BaseIcon
+          class="expertise-section__line"
+          name="dashed-line"
+        />
+
+        <div class="expertise-section__image-block">
+          <div class="expertise-section__image-block-circle"></div>
+          <div class="expertise-section__image-block-circle"></div>
+
+          <div class="expertise-section__image-block-caption">
+            Управление активом
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap, SplitText } from '../scripts/helpers/gsap.js';
+  import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
+
+  function expertiseSectionAnimations() {
+    const expertiseWord = document.querySelector('.js-expertise-word');
+
+    if (expertiseWord && layoutScrollSmoother.smoother) {
+      layoutScrollSmoother.smoother.effects(expertiseWord, {
+        speed: 1.4,
+        lag: 0.5,
+      });
+    }
+
+    const mm = gsap.matchMedia();
+
+    function sectionAnimationsHandler() {
+      const splitTexts = [];
+
+      gsap.utils.toArray('.js-expertise-text').forEach((text) => {
+        const splitText = SplitText.create(text, { 
+          type: 'words,lines',
+          reduceWhiteSpace: false,
+        });
+
+        splitTexts.push(splitText);
+
+        const tween = gsap.from(splitText.lines, {
+          opacity: 0,
+          y: '5rem',
+          duration: 1,
+          ease: 'power4.out',
+          stagger: 0.07,
+          scrollTrigger: {
+            trigger: text,
+            start: "bottom bottom",
+          },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+          },
+        });
+      });
+
+      gsap.utils.toArray('.js-expertise-subtitle').forEach((subtitle) => {
+        const tween = gsap.from(subtitle, {
+          opacity: 0,
+          y: '5rem',
+          duration: 1,
+          ease: 'power4.out',
+          scrollTrigger: {
+            trigger: subtitle,
+            start: "bottom bottom",
+          },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+          },
+        });
+      });
+
+      return () => {
+        splitTexts.forEach((splitText) => {
+          splitText.revert();
+        });
+      };
+    }
+
+    mm.add('(max-width: 767.98px)', sectionAnimationsHandler);
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimationsHandler);
+    mm.add('(min-width: 1200px)', sectionAnimationsHandler);
+
+    document.addEventListener('astro:before-swap', () => {
+      mm.revert();
+    }, { once: true });
+  }
+
+  expertiseSectionAnimations();
+</script>
+
+<style lang="scss" is:global>
+  .expertise-section {
+    $element: &;
+
+    position: relative;
+    padding: 0 0 rem(80);
+    background-color: $dark;
+    color: $light;
+
+    @media #{$desktop-sm} {
+      padding: 0 0 rem(120);
+    }
+
+    &__word {
+      display: block;
+      position: absolute;
+      top: 10%;
+      right: var(--container-padding);
+      z-index: 1;
+      width: rem(48);
+      opacity: 0.12;
+
+      @media #{$tablet} {
+        top: 20%;
+        width: rem(68);
+      }
+
+      @media #{$desktop-lg} {
+        right: calc(50% - 960px + #{var(--container-padding)});
+      }
+    }
+
+    &__container {
+      @include base-container;
+    }
+
+    &__title {
+      @media #{$tablet} {
+        max-width: rem(860);
+      }
+    }
+
+		&__info {
+      margin-top: rem(60);
+
+      @media #{$tablet} {
+        margin-top: rem(80);
+        margin-left: rem(490);
+      }
+
+      @media #{$desktop-sm} {
+        margin-top: rem(72);
+        margin-left: rem(698);
+        max-width: rem(446);
+      }
+		}
+
+		&__top-info-text {
+      @include text1;
+		}
+
+		&__info-block {
+      margin-top: rem(48);
+
+      @media #{$tablet} {
+        margin-top: rem(40);
+      }
+		}
+
+		&__info-subtitle {
+      @include h4;
+		}
+
+		&__info-text {
+      @include text2;
+
+      margin-top: rem(16);
+		}
+
+		&__image-wrapper {
+      margin: rem(60) calc(-1 * var(--container-padding)) 0;
+      padding: 0 var(--container-padding) 0;
+      overflow: auto;
+      scrollbar-width: none;
+
+      @media #{$tablet} {
+        margin: rem(80) 0 0;
+        padding: 0;
+        overflow: visible;
+      }
+
+      @media #{$desktop-sm} {
+        margin: rem(120) 0 0;
+      }
+
+      &::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+      }
+		}
+
+		&__image {
+      display: flex;
+      align-items: center;
+      gap: rem(8);
+      width: max-content;
+      padding-right: rem(12);
+
+      @media #{$tablet} {
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 rem(20);
+      }
+
+      @media #{$desktop-sm} {
+        padding: 0 rem(8);
+      }
+		}
+
+		&__image-block {
+      position: relative;
+      flex-shrink: 0;
+      width: rem(56);
+      aspect-ratio: 1 / 1;
+      contain: layout style;
+      isolation: isolate;
+
+      @media #{$tablet} {
+        width: rem(64);
+      }
+
+      @media #{$desktop-sm} {
+        width: rem(92);
+      }
+
+			&_large {
+        width: rem(84);
+
+        @media #{$tablet} {
+          width: rem(100);
+        }
+
+        @media #{$desktop-sm} {
+          width: rem(140);
+        }
+			}
+		}
+
+		&__image-block-circle {
+      --delay-shift: -0.2s;
+
+      #{$element}__image-block:nth-child(3) & {
+        --delay-shift: -0.4s;
+      }
+
+      #{$element}__image-block:nth-child(7) & {
+        --delay-shift: -0.6s;
+      }
+
+      #{$element}__image-block:nth-child(9) & {
+        --delay-shift: -0.8s;
+      }
+
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 1px solid $light;
+      will-change: transform;
+
+      &:nth-child(3) {
+        animation: spin1 5s linear infinite calc(var(--delay-shift));
+      }
+
+      &:nth-child(2) {
+        animation: spin2 2.3s linear infinite calc(var(--delay-shift) - 1s);
+      }
+
+      &:nth-child(1) {
+        animation: spin3 3.6s linear infinite calc(var(--delay-shift) - 2s);
+      }
+
+      @keyframes spin1 {
+        from {
+          transform: rotate3d(0, 1, 0, 0deg);
+        }
+
+        to {
+          transform: rotate3d(0, 1, 0, 360deg);
+        }
+      }
+
+      @keyframes spin2 {
+        from {
+          transform: rotate3d(1, 1, 0, 120deg);
+        }
+
+        to {
+          transform: rotate3d(1, 1, 0, 480deg);
+        }
+      }
+
+      @keyframes spin3 {
+        from {
+          transform: rotate3d(-1, 1, 0, 60deg);
+        }
+
+        to {
+          transform: rotate3d(-1, 1, 0, 420deg);
+        }
+      }
+		}
+
+    &__image-block-caption {
+      @include text2;
+
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding-top: rem(12);
+      text-align: center;
+
+      @media #{$tablet} {
+        padding-top: rem(16);
+      }
+
+      @media #{$desktop-sm} {
+        max-width: rem(124);
+        padding-top: rem(24);
+      }
+    }
+
+
+		&__line {
+      flex-shrink: 0;
+      width: rem(46);
+      color: $light;
+
+      @media #{$tablet} {
+        width: rem(54);
+      }
+
+      @media #{$desktop-sm} {
+        width: rem(76);
+      }
+		}
+
+		&__image-logo-block {
+      position: relative;
+      flex-shrink: 0;
+      aspect-ratio: 1 / 1;
+      width: rem(264);
+      will-change: transform;
+      perspective: 1100px;
+      perspective-origin: center;
+      transform-style: preserve-3d;
+      contain: layout style;
+      isolation: isolate;
+
+      @media #{$tablet} {
+        width: rem(312);
+      }
+
+      @media #{$desktop-sm} {
+        width: rem(446);
+      }
+		}
+
+		&__logo-icon {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: rem(48);
+      aspect-ratio: 70 / 75;
+      color: $light-60;
+      opacity: 0.12;
+      animation: logo-animation 7s ease-in-out infinite;
+
+      @media #{$tablet} {
+        width: rem(56);
+      }
+
+      @media #{$desktop-sm} {
+        width: rem(70);
+      }
+
+      @keyframes logo-animation {
+        from {
+          transform: translate(-50%, -50%) scale(1);
+        }
+
+        50% {
+          transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        to {
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+		}
+
+		&__image-logo-block-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      will-change: transform;
+      transform-style: preserve-3d;
+
+      &:nth-child(2) {
+        animation: spin1 8s linear infinite;
+      }
+
+      &:nth-child(3) {
+        animation: spin2 7s linear infinite -1s;
+      }
+
+      &:nth-child(4) {
+        animation: spin3 6s linear infinite -2s;
+      }
+
+      &:nth-child(5) {
+        animation: spin4 5s linear infinite -4s;
+      }
+
+      @keyframes spin1 {
+        from {
+          transform: rotate3d(0, 1, 0, 0deg);
+        }
+
+        to {
+          transform: rotate3d(0, 1, 0, 360deg);
+        }
+      }
+
+      @keyframes spin2 {
+        from {
+          transform: rotate3d(-1, 1, 0, 120deg);
+        }
+
+        to {
+          transform: rotate3d(-1, 1, 0, 480deg);
+        }
+      }
+
+      @keyframes spin3 {
+        from {
+          transform: rotate3d(1, 1, 0, 60deg);
+        }
+
+        to {
+          transform: rotate3d(1, 1, 0, 420deg);
+        }
+      }
+
+      @keyframes spin4 {
+        from {
+          transform: rotate3d(1, 0, 0, 20deg);
+        }
+
+        to {
+          transform: rotate3d(1, 0, 0, 380deg);
+        }
+      }
+		}
+
+		&__circle-icon {
+      display: block;
+      width: 100%;
+      height: 100%;
+      color: $light;
+		}
+
+		&__image-logo-block-label {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: rem(6);
+      will-change: transform;
+
+      @media #{$desktop-sm} {
+        gap: rem(12);
+      }
+
+      &::before {
+        content: "";
+        flex-shrink: 0;
+        border-radius: 50%;
+        border: 1px solid $light;
+        width: rem(16);
+        height: rem(16);
+
+        @media #{$tablet} {
+          width: rem(20);
+          height: rem(20);
+        }
+
+        @media #{$desktop-sm} {
+          width: rem(28);
+          height: rem(28);
+        }
+      }
+      
+			&_name_liquidity {
+        top: 31%;
+        left: 0;
+        transform-origin: 8% center;
+        animation: label-liquidity 8s linear infinite;
+
+        &::before {
+          background-color: $primary;
+        }
+			}
+
+      &_name_diligence {
+        flex-direction: row-reverse;
+        top: 67.3%;
+        left: 64.6%;
+        transform-origin: 90% center;
+        animation: label-diligence 7s linear infinite -1s;
+
+        &::before {
+          background-color: $secondary;
+        }
+      }
+
+      &_name_cleanness {
+        top: 68.8%;
+        left: 3.8%;
+        transform-origin: 8% center;
+        animation: label-cleanness 6s linear infinite -2s;
+
+        &::before {
+          background-color: $secondary;
+        }
+      }
+
+      &_name_financial {
+        flex-direction: row-reverse;
+        top: 0%;
+        left: 43%;
+        transform-origin: center center;
+        animation: label-financial 5s linear infinite -4s;
+
+        &::before {
+          background-color: $primary;
+        }
+      }
+
+      @keyframes label-liquidity {
+        from {
+          transform: rotate3d(0, 1, 0, 0deg);
+        }
+
+        to {
+          transform: rotate3d(0, 1, 0, -360deg);
+        }
+      }
+
+      @keyframes label-diligence {
+        from {
+          transform: rotate3d(-1, 1, 0, -120deg);
+        }
+
+        to {
+          transform: rotate3d(-1, 1, 0, -480deg);
+        }
+      }
+
+      @keyframes label-cleanness {
+        from {
+          transform: rotate3d(1, 1, 0, -60deg);
+        }
+
+        to {
+          transform: rotate3d(1, 1, 0, -420deg);
+        }
+      }
+
+      @keyframes label-financial {
+        from {
+          transform: rotate3d(1, 0, 0, -20deg);
+        }
+
+        to {
+          transform: rotate3d(1, 0, 0, -380deg);
+        }
+      }
+		}
+
+		&__image-logo-block-label-text {
+      @include text2;
+
+      flex-shrink: 0;
+		}
+  }
+</style>

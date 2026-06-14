@@ -110,7 +110,7 @@ const cards = [
 
     if (clientsWord && layoutScrollSmoother.smoother) {
       layoutScrollSmoother.smoother.effects(clientsWord, {
-        speed: 1.4,
+        speed: 1.5,
         lag: 0.3,
       });
     }
@@ -264,7 +264,7 @@ const cards = [
                 ease: 'power2.inOut',
               });
             }
-          }, 800);
+          }, 1000);
 
           const onMouseEnter = () => {
             isHovered = true;
@@ -375,12 +375,12 @@ const cards = [
       opacity: 0.1;
 
       @media #{$tablet} {
-        top: 5%;
+        top: -5%;
         width: rem(68);
       }
 
       @media #{$desktop-lg} {
-        top: -10%;
+        top: -15%;
         right: calc(50% - 960px + #{var(--container-padding)});
       }
     }
