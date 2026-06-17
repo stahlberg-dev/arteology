@@ -231,7 +231,7 @@ const tabs = [
 </section>
 
 <script>
-  import { gsap, ScrollTrigger } from '../scripts/helpers/gsap.js';
+  import { gsap } from '../scripts/helpers/gsap.js';
   import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
 
   function servicesSectionAnimations() {
@@ -261,6 +261,7 @@ const tabs = [
     const mm = gsap.matchMedia();
 
     function sectionAnimationsHandler() {
+      const cleanups = [];
       const servicesSection = document.querySelector('.js-services-section');
       const servicesPanelContainer = servicesSection?.querySelector('.js-services-panel-container');
 
@@ -308,30 +309,30 @@ const tabs = [
           },
         );
 
-        tab.addEventListener('click', () => {
+        const tabClickHandler = () => {
           if (isAnimating || tab.classList.contains('js-tab-active')) {
             return;
           }
-
+  
           const currentTab = servicesSection.querySelector('.js-tab-active');
           let currentPanel = null;
-
+  
           if (currentTab) {
             const currentTabAttributeValue = currentTab.getAttribute('data-services-tab');
             currentPanel = servicesSection.querySelector(`[data-services-panel="${currentTabAttributeValue}"]`)
           }
-
+  
           const currentPanelElements = gsap.utils.toArray('.js-services-info-panel-element', currentPanel);
-
+  
           isAnimating = true;
-
+  
           const panelTimeline = gsap.timeline({
             onComplete: () => {
               isAnimating = false;
-              //ScrollTrigger.refresh();
+              panelTimeline.kill();
             },
           });
-
+  
           panelTimeline.to(currentPanelElements, {
             opacity: 0,
             y: '-5rem',
@@ -342,7 +343,7 @@ const tabs = [
             currentTab?.classList.remove('js-tab-active');
             tab.classList.add('js-tab-active');
             panel.style.zIndex = '2';
-
+  
             if (currentPanel) {
               currentPanel.style.zIndex = '1';
             }
@@ -365,8 +366,40 @@ const tabs = [
             },
             0.2
           );
+        };
+
+        tab.addEventListener('click', tabClickHandler);
+
+        cleanups.push(() => {
+          tab.removeEventListener('click', tabClickHandler);
         });
       });
+
+      function updatePanelContainerHeight() {
+        const activeTab = servicesSection.querySelector('.js-tab-active');
+
+        if (!activeTab) return;
+
+        const activeTabValue = activeTab.getAttribute('data-services-tab');
+        const activePanel = servicesSection.querySelector(
+          `[data-services-panel="${activeTabValue}"]`
+        );
+
+        if (!activePanel) return;
+
+        const height = activePanel.offsetHeight;        
+        servicesPanelContainer.style.height = `${height}px`;
+      }
+
+      window.addEventListener('resize', updatePanelContainerHeight);
+
+      cleanups.push(() => {
+        window.removeEventListener('resize', updatePanelContainerHeight);
+      });
+
+      return () => {
+        cleanups.forEach((cleanup) => cleanup());
+      };
     }
     
     mm.add('(max-width: 767.98px)', sectionAnimationsHandler);
