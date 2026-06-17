@@ -580,7 +580,7 @@ const classes = ['expertise-section', className];
       aspect-ratio: 1 / 1;
       width: rem(264);
       will-change: transform;
-      perspective: 1100px;
+      perspective: 1000px;
       perspective-origin: center;
       transform-style: preserve-3d;
       contain: layout style;
@@ -588,6 +588,7 @@ const classes = ['expertise-section', className];
 
       @media #{$tablet} {
         width: rem(312);
+        perspective: 1100px;
       }
 
       @media #{$desktop-sm} {
@@ -829,6 +830,7 @@ const classes = ['expertise-section', className];
       @include text2;
 
       flex-shrink: 0;
+      user-select: none;
 		}
   }
 </style>

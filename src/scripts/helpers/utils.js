@@ -32,3 +32,7 @@ export function throttle(func, delay) {
 		}, delay);
 	}
 }
+
+export function formatNumber(num) {
+  return String(num + 1).padStart(2, '0');
+};

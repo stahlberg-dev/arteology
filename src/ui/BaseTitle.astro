@@ -53,9 +53,16 @@ const classes = [
             trigger: title,
             start: "bottom bottom",
           },
+          onStart: () => {
+            title.style.pointerEvents = 'none';
+          },
           onComplete() {
+            title.style.pointerEvents = '';
             tween.scrollTrigger?.kill();
             tween.kill();
+          },
+          onInterrupt: () => {
+            title.style.pointerEvents = '';
           },
         });
       });
@@ -78,9 +85,16 @@ const classes = [
             trigger: title,
             start: "bottom bottom",
           },
+          onStart: () => {
+            title.style.pointerEvents = 'none';
+          },
           onComplete() {
+            title.style.pointerEvents = '';
             tween.scrollTrigger?.kill();
             tween.kill();
+          },
+          onInterrupt: () => {
+            title.style.pointerEvents = '';
           },
         });
       });
@@ -113,11 +127,7 @@ const classes = [
     }
 
     &_size_sm {
-      @include h2-mobile;
-
-      @media #{$tablet} {
-        @include h3-desktop;
-      }
+      @include h3;
     }
   }
 </style>

@@ -16,7 +16,6 @@ const classes = ['partners-section', 'js-write-section', className];
     <div class="partners-section__top">
       <BaseTitle 
         class="partners-section__title"
-        size="sm"
       >
         Официальный партнер ВТБ&nbsp;Private
       </BaseTitle>
@@ -185,10 +184,6 @@ const classes = ['partners-section', 'js-write-section', className];
     cursor: none;
     pointer-events: none;
 
-    @media #{$tablet} {
-      padding: rem(80) 0;
-    }
-
     @media #{$desktop-sm} {
       padding: rem(120) 0;
     }
@@ -219,6 +214,8 @@ const classes = ['partners-section', 'js-write-section', className];
 
 		&__title {
       @media #{$tablet} {
+        @include h3-desktop;
+
         flex-shrink: 0;
         width: rem(460);
       }

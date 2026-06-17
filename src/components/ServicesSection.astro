@@ -1,0 +1,596 @@
+---
+import { BASE } from '../scripts/helpers/constants.js';
+import { formatNumber } from '../scripts/helpers/utils.js';
+import BaseTitle from '../ui/BaseTitle.astro';
+
+const { class: className, ...attrs } = Astro.props;
+
+const classes = ['services-section', 'js-services-section', className];
+
+const tabs = [
+  {
+    tab: 'Сопровождение сделок',
+    panel: {
+      topText: `
+        Профессиональное сопровождение транзакций
+        на&nbsp;первичном и &nbsp;вторичном рынках.
+      `,
+      panelSections: [
+        {
+          title: 'Покупка',
+          text: `
+            Доступ к&nbsp;произведениям музейного
+            уровня и&nbsp;представительство интересов
+            на&nbsp;ведущих аукционах (Sotheby’s, Christie’s, Phillips).
+          `,
+        },
+        {
+          title: 'Продажа',
+          text: `
+            Разработка сценария выхода из&nbsp;актива
+            с&nbsp;максимальной финансовой отдачей.
+          `,
+        },
+        {
+          title: 'Аудит',
+          text: `
+            Анализ провенанса, выявление «белых пятен»
+            в&nbsp;истории и&nbsp;организация технологической экспертизы.
+          `,
+        },
+      ],
+    },
+  },
+  {
+    tab: 'Инвестиционная стратегия',
+    panel: {
+      topText: `Диверсификация, защита капитала и&nbsp;наследственное планирование.`,
+      panelSections: [
+        {
+          title: 'Размещение активов',
+          text: `Определение оптимальной доли искусства в&nbsp;портфеле.`,
+        },
+        {
+          title: 'Управление рисками',
+          text: `Исключение неликвида и&nbsp;переоцененных трендов.`,
+        },
+        {
+          title: 'Тайминг рынка',
+          text: `Макроэкономический анализ для&nbsp;выбора момента входа/выхода.`,
+        },
+      ],
+    },
+  },
+  {
+    tab: 'Оценка и&nbsp;аналитика',
+    panel: {
+      topText: `Независимая оценка для&nbsp;финансовых, страховых и&nbsp;юридических целей.`,
+      panelSections: [
+        {
+          title: 'Fair Market Value&nbsp;(FMV)',
+          text: `Справедливая рыночная стоимость (для&nbsp;сделок, налогов, трастов).`,
+        },
+        {
+          title: 'Retail Replacement Value&nbsp;(RRV)',
+          text: `Стоимость замещения (для&nbsp;страхового покрытия).`,
+        },
+        {
+          title: 'Marketable Cash Value&nbsp;(MCV)',
+          text: `Ликвидационная стоимость (для&nbsp;банковских залогов и&nbsp;Art-secured lending).`,
+        },
+      ],
+    },
+  },
+  {
+    tab: 'Управление коллекцией',
+    panel: {
+      topText: `Превращение набора предметов в&nbsp;структурированный портфель активов.`,
+      panelSections: [
+        {
+          title: 'Инвентаризация',
+          text: `
+            Создание защищенных цифровых реестров и&nbsp;систематизация архивов.
+          `,
+        },
+        {
+          title: 'Логистика и&nbsp;хранение',
+          text: `
+            Транспортировка и&nbsp;климат-контроль (Freeports, спецхранилища).
+          `,
+        },
+        {
+          title: 'Страхование',
+          text: `Программы «All Risks» через&nbsp;международных брокеров.`,
+        },
+        {
+          title: 'Сохранность',
+          text: `Мониторинг состояния и&nbsp;превентивная реставрация.`,
+        },
+      ],
+    },
+  },
+  {
+    tab: 'Культурный код',
+    panel: {
+      topText: `
+        Мы предлагаем продюсирование вашей
+        коллекции для повышения её&nbsp;статуса и&nbsp;стоимости (Museum Premium).
+      `,
+      panelSections: [
+        {
+          title: 'Династическая стратегия',
+          text: `Планирование на&nbsp;20-50+ лет. Интеграция в&nbsp;семейные трасты.`,
+        },
+        {
+          title: 'Институционализация',
+          text: `Создание частных музеев, фондов, передача работ в&nbsp;госмузеи.`,
+        },
+        {
+          title: 'Планирование наследования',
+          text: `Юридически выверенная передача наследникам, минимизация налогов.`,
+        },
+        {
+          title: 'Капитализация репутации',
+          text: `
+            Интеграция работ в&nbsp;музеи и&nbsp;биеннале,
+            выпуск каталогов (Catalogues Raisonnés) и&nbsp;монографий,
+            создание онлайн-каталогов и&nbsp;виртуальных туров.
+          `,
+        },
+      ],
+    },
+  },
+];
+---
+
+<section
+  class:list={classes}
+  {...attrs}
+>
+  <img
+    class="services-section__word js-services-word"
+    src={`${BASE}images/services-section/services-word.svg`}
+    alt="Услуги"
+    loading="lazy"
+  />
+
+  <div class="services-section__container">
+    <BaseTitle 
+      class="services-section__title"
+      size="sm"
+    >
+      {tabs.map((tab, index) => (
+        <Fragment>
+          <span 
+            class="services-section__title-tab"
+            data-services-tab={`tab-${index}`}
+            set:html={`${tab.tab}&nbsp;<span class="services-section__title-tab-number">(${formatNumber(index)})</span>`}
+          />{(index < tabs.length - 1) && <span>&nbsp;/</span>}
+        </Fragment>
+      ))}
+    </BaseTitle>
+
+    <div class="services-section__body">
+      <div class="services-section__info js-services-panel-container">
+        {tabs.map((tab, index) => (
+          <div 
+            class="services-section__info-panel"
+            data-services-panel={`tab-${index}`}
+          >
+            {
+              tab.panel?.topText 
+                && <p 
+                  class="services-section__info-panel-top-text js-services-info-panel-element"
+                  set:html={tab.panel.topText}
+                />
+            }
+            {
+              tab.panel?.panelSections && tab.panel.panelSections.map((panelSection) => (
+                <Fragment>
+                  {
+                    panelSection.title
+                      && <h3 
+                            class="services-section__info-panel-subtitle js-services-info-panel-element"
+                            set:html={panelSection.title}
+                          />
+                  }
+
+                  {
+                    panelSection.text
+                      && <h3 
+                            class="services-section__info-panel-text js-services-info-panel-element"
+                            set:html={panelSection.text}
+                          />
+                  }
+                </Fragment> 
+              ))
+            }
+          </div>
+        ))}
+      </div>
+
+      <div class="services-section__image-wrapper">
+        <picture class="services-section__photo-wrapper js-services-photo">
+          <source
+            srcset={`${BASE}images/services-section/services-image-desktop.webp`}
+            media="(min-width: 768px)"
+          />
+
+          <img
+            class="services-section__photo"
+            src={`${BASE}images/services-section/services-image-mobile.webp`}
+            alt="изображение"
+            loading="lazy"
+          />
+        </picture>
+
+        <div class="services-section__image-ball js-services-image-ball"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap, ScrollTrigger } from '../scripts/helpers/gsap.js';
+  import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
+
+  function servicesSectionAnimations() {
+    const servicesWord = document.querySelector('.js-services-word');
+    const servicesPhoto = document.querySelector('.js-services-photo');
+    const servicesImageBall = document.querySelector('.js-services-image-ball');
+
+    if (servicesPhoto && servicesImageBall && layoutScrollSmoother.smoother) {
+      layoutScrollSmoother.smoother.effects(servicesPhoto, {
+        speed: 1.04,
+        lag: 0.1,
+      });
+  
+      layoutScrollSmoother.smoother.effects(servicesImageBall, {
+        speed: 0.95,
+        lag: 0.1,
+      });
+    }
+
+    if (servicesWord && layoutScrollSmoother.smoother) {
+      layoutScrollSmoother.smoother.effects(servicesWord, {
+        speed: 1.4,
+        lag: 0.5,
+      });
+    }
+
+    const mm = gsap.matchMedia();
+
+    function sectionAnimationsHandler() {
+      const servicesSection = document.querySelector('.js-services-section');
+      const servicesPanelContainer = servicesSection?.querySelector('.js-services-panel-container');
+
+      if (!servicesSection || !servicesPanelContainer) {
+        return;
+      }
+
+      const tabs = gsap.utils.toArray('[data-services-tab]', servicesSection);
+      let isAnimating = false;
+
+      tabs.forEach((tab, index) => {
+        const tabAttributeValue = tab.getAttribute('data-services-tab');
+        const panel = servicesSection.querySelector(`[data-services-panel="${tabAttributeValue}"]`);
+
+        if (!panel) {
+          return;
+        }
+
+        const panelElements = gsap.utils.toArray('.js-services-info-panel-element', panel);
+        
+        if (index === 0) {
+          tab.classList.add('js-tab-active');
+          servicesPanelContainer.style.height = `${panel.offsetHeight}px`;
+          panel.style.zIndex = '2';
+        }
+
+        const panelStartTween = gsap.fromTo(panelElements,
+          {
+            opacity: 0,
+            y: '5rem',
+          },
+          {
+            opacity: (index === 0) ? 1 : 0,
+            y: 0,
+            stagger: 0.2,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: servicesPanelContainer,
+              start: "top center",
+            },
+            onComplete() {
+              panelStartTween.scrollTrigger?.kill();
+              panelStartTween.kill();
+            },
+          },
+        );
+
+        tab.addEventListener('click', () => {
+          if (isAnimating || tab.classList.contains('js-tab-active')) {
+            return;
+          }
+
+          const currentTab = servicesSection.querySelector('.js-tab-active');
+          let currentPanel = null;
+
+          if (currentTab) {
+            const currentTabAttributeValue = currentTab.getAttribute('data-services-tab');
+            currentPanel = servicesSection.querySelector(`[data-services-panel="${currentTabAttributeValue}"]`)
+          }
+
+          const currentPanelElements = gsap.utils.toArray('.js-services-info-panel-element', currentPanel);
+
+          isAnimating = true;
+
+          const panelTimeline = gsap.timeline({
+            onComplete: () => {
+              isAnimating = false;
+              //ScrollTrigger.refresh();
+            },
+          });
+
+          panelTimeline.to(currentPanelElements, {
+            opacity: 0,
+            y: '-5rem',
+            duration: 0.3,
+            ease: "power4.in",
+          }, 0)
+          .add(() => {
+            currentTab?.classList.remove('js-tab-active');
+            tab.classList.add('js-tab-active');
+            panel.style.zIndex = '2';
+
+            if (currentPanel) {
+              currentPanel.style.zIndex = '1';
+            }
+          }, 0.3)
+          .to(servicesPanelContainer, {
+            height: () => `${panel.offsetHeight}px`,
+            duration: 0.6,
+            ease: "power4",
+          }, 0)
+          .fromTo(panelElements, 
+            {
+              opacity: 0,
+              y: '5rem',
+            },
+            {
+              opacity: 1,
+              y: 0,
+              stagger: 0.1,
+              ease: "power2.out",
+            },
+            0.2
+          );
+        });
+      });
+    }
+    
+    mm.add('(max-width: 767.98px)', sectionAnimationsHandler);
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimationsHandler);
+    mm.add('(min-width: 1200px)', sectionAnimationsHandler);
+
+    document.addEventListener('astro:before-swap', () => {
+      mm.revert();
+    }, { once: true });
+  }
+
+  servicesSectionAnimations();
+</script>
+
+<style lang="scss" is:global>
+  .services-section {
+    $element: &;
+
+    position: relative;
+    padding: rem(80) 0;
+    background-color: $dark;
+    color: $light;
+
+    @media #{$desktop-sm} {
+      padding: rem(120) 0;
+    }
+
+    &__word {
+      display: block;
+      position: absolute;
+      top: 20%;
+      right: var(--container-padding);
+      z-index: 1;
+      width: rem(48);
+      opacity: 0.12;
+
+      @media #{$tablet} {
+        top: 25%;
+        width: rem(68);
+      }
+
+      @media #{$desktop-lg} {
+        top: 30%;
+        right: calc(50% - 960px + #{var(--container-padding)});
+      }
+    }
+
+    &__container {
+      @include base-container;
+    }
+
+		&__title {
+      letter-spacing: -1.5%;
+      line-height: 170%;
+      color: $light-60;
+      
+      @media #{$tablet} {
+        @include h2-desktop;
+
+        width: rem(860);
+      }
+      
+      @media #{$desktop-sm} {
+        width: rem(1084);
+      }
+		}
+    
+    &__title-tab {
+      cursor: pointer;
+      transition: color $default-transition;
+      -webkit-tap-highlight-color: transparent;
+
+      @media #{$is-hover} {
+        &:hover {
+          color: $primary;
+        }
+      }
+
+      &:active,
+      &:focus-visible {
+        color: $primary;
+      }
+
+      &.js-tab-active {
+        color: $light;
+        pointer-events: none;
+      }
+    }
+
+    &__title-tab-number {
+      display: inline-block;
+      transform: translateY(-80%);
+      font-size: rem(10);
+      line-height: 1;
+
+      @media #{$tablet} {
+        font-size: rem(20);
+      }
+    }
+
+    &__body {
+      display: flex;
+      flex-direction: column;
+      gap: rem(60);
+      margin-top: rem(60);
+
+      @media #{$tablet} {
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: rem(180);
+        margin-top: rem(80);
+      }
+
+      @media #{$desktop-sm} {
+        justify-content: flex-end;
+        gap: rem(394);
+      }
+    }
+
+		&__info {
+      position: relative;
+      overflow: hidden;
+
+      @media #{$tablet} {
+        flex-shrink: 0;
+        width: rem(470);
+      }
+
+      @media #{$desktop-sm} {
+        width: rem(444);
+      }
+		}
+
+		&__info-panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+		}
+
+		&__info-panel-top-text {
+      @include text1;
+		}
+
+		&__info-panel-subtitle {
+      @include h4;
+
+      margin-top: rem(48);
+
+      @media #{$tablet} {
+        margin-top: rem(40);
+      }
+		}
+
+		&__info-panel-text {
+      @include text2;
+
+      margin-top: rem(16);
+		}
+
+		&__image-wrapper {
+      position: relative;
+      flex-shrink: 0;
+      width: 100%;
+      height: rem(440);
+      overflow: hidden;
+
+      @media #{$tablet} {
+        width: rem(304);
+        height: rem(342);
+      }
+
+      @media #{$desktop-sm} {
+        height: rem(382);
+      }
+		}
+
+		&__photo-wrapper {
+      display: block;
+      position: absolute;
+      top: rem(-50);
+      width: 100%;
+      height: rem(540);
+      object-fit: cover;
+
+      @media #{$tablet} {
+        top: rem(-50);
+        height: rem(500);
+      }
+
+      @media #{$desktop-sm} {
+        top: rem(-40);
+      }
+		}
+
+		&__photo {
+      display: block;
+      width: 100%;
+      height: 100%;
+		}
+
+		&__image-ball {
+      position: absolute;
+      top: rem(40);
+      left: rem(30);
+      z-index: 1;
+      width: rem(210);
+      height: rem(210);
+      border-radius: 50%;
+      background-color: $secondary;
+      mix-blend-mode: hard-light;
+
+      @media #{$tablet} {
+        top: rem(30);
+        left: rem(64);
+        width: rem(154);
+        height: rem(154);
+      }
+
+      @media #{$desktop-sm} {
+        top: rem(20);
+      }
+		}
+  }
+</style>

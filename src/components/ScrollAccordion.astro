@@ -1,4 +1,6 @@
 ---
+import { formatNumber } from '../scripts/helpers/utils.js';
+
 const { 
   class: className,
   'accordion-list': accordionList,
@@ -8,10 +10,6 @@ const {
 const validAccordionList = Array.isArray(accordionList) ? accordionList : [];
 
 const classes = ['scroll-accordion', className];
-
-const formatNumber = (num) => {
-  return String(num + 1).padStart(2, '0');
-};
 ---
 
 {
@@ -42,6 +40,7 @@ const formatNumber = (num) => {
 <script>
   import { gsap, SplitText } from '../scripts/helpers/gsap.js';
   import { throttle } from '../scripts/helpers/utils.js';
+  import { getMediaQueries } from '../scripts/helpers/constants.js';
 
   function scrollAccordionAnimation() {
     const accordions = document.querySelectorAll('.js-scroll-accordion');
@@ -62,7 +61,10 @@ const formatNumber = (num) => {
           scrollTrigger: {
             trigger: accordionContainer,
             start: 'bottom bottom',
-            end: () => `${window.innerWidth * 0.5 * totalItems}px`,
+            end: () => {
+              const scrollCoefficient = getMediaQueries().isHover.matches ? 0.2 : 0.5;
+              return `${window.innerWidth * scrollCoefficient * totalItems}px`;
+            },
             pin: true,
             onUpdate: throttle((self) => {
               const progress = self.progress;
