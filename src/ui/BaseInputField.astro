@@ -1,0 +1,185 @@
+---
+const {
+  class: className,
+  'error-text': errorText,
+  placeholder,
+  'input-name': inputName,
+  type,
+  required = false,
+  error = false,
+  disabled = false,
+  ...attrs
+} = Astro.props;
+
+const classes = [
+  'base-input-field',
+  'js-base-input-field',
+  type ? `js-base-input-field-${type}` : '',
+  required ? 'base-input-field_required js-required' : '',
+  error ? 'error' : '',
+  className,
+];
+---
+
+<div
+  class:list={classes}
+  aria-disabled={disabled ? true : undefined}
+  {...attrs}
+>
+  <input
+    class="base-input-field__input"
+    type="text"
+    name={inputName}
+    placeholder={`${placeholder}${required ? ' *' : ''}`}
+    disabled={disabled ? true : undefined}
+  />
+
+  {errorText && <div class="base-input-field__error-text">{errorText}</div>}
+</div>
+
+<script>
+  import IMask from 'imask';
+
+  function initInput() {
+    const inputFields = document.querySelectorAll('.js-base-input-field');
+
+    inputFields.forEach(inputField => {
+      const inputElement = inputField.querySelector('input');
+      const isRequired = inputField.classList.contains('js-required');
+      const isPhone = inputField.classList.contains('js-base-input-field-phone');
+
+      if (!inputElement) {
+        return;
+      }
+
+      if(isPhone) {
+        const maskOptions = {
+          mask: [
+            {
+              mask: '+{7} (000) 000-00-00',
+              startsWith: '7',
+              type: 'ru',
+            },
+            {
+              mask: '+{00} 0000000000',
+              startsWith: null,
+              type: 'intl',
+            },
+            {
+              mask: /^\d+$/,
+              startsWith: null,
+              type: 'digits',
+            },
+          ],
+          dispatch(appended, dynamicMasked) {
+            const value = dynamicMasked.value + appended;
+            const digits = value.replace(/\D/g, '');
+
+            const isInternational = value.includes('+');
+
+            if (digits.startsWith('7')) {
+              return dynamicMasked.compiledMasks.find(mask => mask.type === 'ru');
+            }
+
+            if (isInternational) {
+              return dynamicMasked.compiledMasks.find(mask => mask.type === 'intl');
+            }
+
+            return dynamicMasked.compiledMasks.find(mask => mask.type === 'digits');
+          },
+        };
+
+        const phoneMask = IMask(inputElement, maskOptions);
+      }
+
+      if (isRequired && !inputElement.value.trim()) {
+        inputField.classList.add('invalid');
+      }
+
+      inputElement.addEventListener('input', () => {
+        if (inputElement.value.trim()) {
+          inputField.classList.remove('error');
+        }
+
+        if (isRequired && !inputElement.value.trim()) {
+          inputField.classList.add('invalid');
+        } else {
+          inputField.classList.remove('invalid');
+        }
+      });
+
+      inputField.addEventListener('custom-reset', () => {
+        inputField.classList.remove('error');
+        inputElement.value = '';
+
+        if (isRequired) {
+          inputField.classList.add('invalid');
+        }
+      });
+    });
+  }
+
+  initInput();
+</script>
+
+<style lang="scss" is:global>
+  .base-input-field {
+    $element: &;
+
+    &[aria-disabled='true'] {
+      pointer-events: none;
+    }
+
+    &__input {
+      @include resetinput;
+      @include text3-desktop;
+
+      display: block;
+      width: 100%;
+      padding: 0 rem(36) rem(6) 0;
+      border-bottom: 1px solid $dark;
+      color: $dark;
+      transition: 
+        border-color $default-transition,
+        opacity $default-transition;
+      -webkit-tap-highlight-color: transparent;
+
+      &[disabled] {
+        opacity: 0.4;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      &::placeholder {
+        color: $dark;
+        transition: color $default-transition;
+      }
+
+      &:focus-visible::placeholder {
+        color: transparent;
+      }
+
+      .error & {
+        border-color: $error;
+      }
+
+      .error &:focus-visible {
+        border-color: $dark;
+      }
+    }
+
+    &__error-text {
+      @include text4;
+
+      padding-top: rem(6);
+      color: $error;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity $default-transition;
+
+      .error & {
+        opacity: 1;
+      }
+    }
+  }
+</style>

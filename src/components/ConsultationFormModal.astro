@@ -1,5 +1,6 @@
 ---
 import BaseModal from '../ui/BaseModal.astro';
+import ConsultationForm from '../components/ConsultationForm.astro';
 
 const {
   class: className,
@@ -19,6 +20,8 @@ const classes = ['consultation-form-modal', className];
   <h2 class="consultation-form-modal__title">
     Конфиденциальная консультация
   </h2>
+
+  <ConsultationForm class="consultation-form-modal__form" />
 </BaseModal>
 
 <style lang="scss" is:global>
@@ -30,6 +33,15 @@ const classes = ['consultation-form-modal', className];
 
       @media #{$tablet} {
         max-width: calc(100% - #{rem(90)});
+      }
+    }
+
+    &__form {
+      margin-top: rem(48);
+      padding-right: rem(8);
+
+      @media #{$tablet} {
+        padding-right: 0;
       }
     }
   }

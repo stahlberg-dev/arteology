@@ -1,0 +1,162 @@
+---
+const {
+  class: className,
+  'error-text': errorText,
+  placeholder,
+  'textarea-name': textareaName,
+  required = false,
+  error = false,
+  disabled = false,
+  ...attrs
+} = Astro.props;
+
+const classes = [
+  'base-textarea-field',
+  'js-base-textarea-field',
+  required ? 'base-textarea-field_required js-required' : '',
+  error ? 'error' : '',
+  className,
+];
+---
+
+<div
+  class:list={classes}
+  aria-disabled={disabled ? true : undefined}
+  {...attrs}
+>
+  <textarea
+    class="base-textarea-field__textarea"
+    name={textareaName}
+    placeholder={`${placeholder}${required ? ' *' : ''}`}
+    maxlength="500"
+    disabled={disabled ? true : undefined}
+  ></textarea>
+
+  {errorText && <div class="base-textarea-field__error-text">{errorText}</div>}
+</div>
+
+<script>
+  function initTextarea() {
+    const textareaFields = document.querySelectorAll('.js-base-textarea-field');
+
+    textareaFields.forEach(textareaField => {
+      const textareaElement = textareaField.querySelector('textarea');
+      const isRequired = textareaField.classList.contains('js-required');
+
+      if (!textareaElement) {
+        return;
+      }
+
+      if (isRequired && !textareaElement.value.trim()) {
+        textareaField.classList.add('invalid');
+      }
+
+      textareaElement.addEventListener('input', () => {
+        if (textareaElement.value.trim()) {
+          textareaField.classList.remove('error');
+        }
+
+        if (isRequired && !textareaElement.value.trim()) {
+          textareaField.classList.add('invalid');
+        } else {
+          textareaField.classList.remove('invalid');
+        }
+      });
+
+      textareaField.addEventListener('custom-reset', () => {
+        textareaField.classList.remove('error');
+        textareaElement.value = '';
+
+        if (isRequired) {
+          textareaField.classList.add('invalid');
+        }
+      });
+    });
+  }
+
+  initTextarea();
+</script>
+
+<style lang="scss" is:global>
+  .base-textarea-field {
+    $element: &;
+
+    &[aria-disabled='true'] {
+      pointer-events: none;
+    }
+
+    &__textarea {
+      @include resetinput;
+      @include text3-desktop;
+
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: rem(30);
+      max-height: rem(30);
+      field-sizing: content;
+      padding: 0 rem(36) rem(6) 0;
+      border-bottom: 1px solid $dark;
+      color: $dark;
+      transition: 
+        border-color $default-transition,
+        opacity $default-transition,
+        min-height 0.3s ease 0.1s,
+        max-height 0.3s ease 0.1s;
+      resize: none;
+      -webkit-tap-highlight-color: transparent;
+
+      &:focus-visible,
+      &:focus-visible:not(:placeholder-shown) {
+        min-height: rem(76);
+        max-height: rem(76);
+        transition:
+          border-color $default-transition,
+          min-height $default-transition,
+          max-height $default-transition;
+      }
+
+      &:not(:placeholder-shown) {
+        min-height: rem(30);
+        max-height: rem(76);
+      }
+
+      &[disabled] {
+        opacity: 0.4;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      &::placeholder {
+        color: $dark;
+        transition: color $default-transition;
+      }
+
+      &:focus-visible::placeholder {
+        color: transparent;
+      }
+
+      .error & {
+        border-color: $error;
+      }
+
+      .error &:focus-visible {
+        border-color: $dark;
+      }
+    }
+
+    &__error-text {
+      @include text4;
+
+      padding-top: rem(6);
+      color: $error;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity $default-transition;
+
+      .error & {
+        opacity: 1;
+      }
+    }
+  }
+</style>

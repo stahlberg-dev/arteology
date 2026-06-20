@@ -1,0 +1,202 @@
+---
+import { BASE } from '../scripts/helpers/constants.js';
+import BaseTitle from '../ui/BaseTitle.astro';
+import ConsultationForm from '../components/ConsultationForm.astro';
+
+const { class: className, ...attrs } = Astro.props;
+
+const classes = ['consultation-section', className];
+---
+
+<section
+  class:list={classes}
+  {...attrs}
+>
+  <div class="consultation-section__container">
+    <div class="consultation-section__image-wrapper">
+      <img
+        class="consultation-section__photo js-consultation-photo"
+        src={`${BASE}images/consultation-section/consultation-image.webp`}
+        alt="фото"
+        loading="lazy"
+      />
+
+      <div class="consultation-section__image-ball js-consultation-image-ball"></div>
+    </div>
+
+    <div class="consultation-section__content">
+      <BaseTitle class="consultation-section__title">
+        Конфиденциальная консультация
+      </BaseTitle>
+
+      <ConsultationForm class="consultation-section__form js-consultation-section-form" />
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from '../scripts/helpers/gsap.js';
+  import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
+
+  function consultationSectionAnimations() {
+    const consultationPhoto = document.querySelector('.js-consultation-photo');
+    const consultationImageBall = document.querySelector('.js-consultation-image-ball');
+
+    if (consultationPhoto && consultationImageBall && layoutScrollSmoother.smoother) {
+      layoutScrollSmoother.smoother.effects(consultationPhoto, {
+        speed: 1.04,
+        lag: 0.1,
+      });
+
+      layoutScrollSmoother.smoother.effects(consultationImageBall, {
+        speed: 0.9,
+        lag: 0.1,
+      });
+    }
+
+    const mm = gsap.matchMedia();
+
+    function sectionAnimationsHandler() {
+      const consultationForm = document.querySelector('.js-consultation-section-form');
+
+      if (consultationForm) {
+        const tween = gsap.from(consultationForm, {
+          opacity: 0,
+          y: '5rem',
+          duration: 1,
+          ease: 'power4.out',
+          scrollTrigger: {
+            trigger: consultationForm,
+            start: 'center bottom',
+          },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+          },
+        });
+      }
+    }
+
+    mm.add('(max-width: 767.98px)', sectionAnimationsHandler);
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimationsHandler);
+    mm.add('(min-width: 1200px)', sectionAnimationsHandler);
+
+    document.addEventListener('astro:before-swap', () => {
+      mm.revert();
+    }, { once: true });
+  }
+
+  consultationSectionAnimations();
+</script>
+
+<style lang="scss" is:global>
+  .consultation-section {
+    $element: &;
+
+    position: relative;
+    padding: rem(60) 0;
+    background-color: $light;
+    color: $dark;
+
+    @media #{$tablet} {
+      padding: rem(80) 0;
+    }
+
+    @media #{$desktop-sm} {
+      padding: rem(74) 0;
+    }
+
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+      top: rem(-4);
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: rem(8);
+      background-color: $light;
+    }
+
+    &__container {
+      @include base-container;
+
+      @media #{$tablet} {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: rem(20);
+      }
+      
+      @media #{$desktop-sm} {
+        gap: rem(252);
+      }
+    }
+
+		&__image-wrapper {
+      display: none;
+      
+      @media #{$tablet} {
+        display: block;
+        position: relative;
+        flex-shrink: 0;
+        width: rem(460);
+        height: rem(562);
+        overflow: hidden;
+      }
+
+      @media #{$desktop-sm} {
+        width: rem(446);
+      }
+		}
+    
+		&__photo {
+      @media #{$tablet} {
+        display: block;
+        position: absolute;
+        bottom: rem(-70);
+        width: 100%;
+        height: rem(682);
+        max-height: none;
+      }
+      
+      @media #{$desktop-sm} {
+        bottom: rem(-50);
+        height: rem(662);
+      }
+		}
+
+		&__image-ball {
+      position: absolute;
+      top: rem(32);
+      right: rem(21);
+      z-index: 1;
+      width: rem(190);
+      height: rem(190);
+      border-radius: 50%;
+      background-color: $secondary;
+      mix-blend-mode: hard-light;
+
+      @media #{$desktop-sm} {
+        top: rem(32);
+        right: rem(20);
+        width: rem(180);
+        height: rem(180);
+      }
+		}
+
+    &__content {
+      @media #{$tablet} {
+        flex-grow: 1;
+      }
+    }
+
+    &__form {
+      margin-top: rem(52);
+
+      @media #{$desktop-sm} {
+        max-width: rem(446);
+      }
+    }
+  }
+</style>

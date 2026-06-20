@@ -325,9 +325,13 @@ const classes = ['expertise-section', className];
     $element: &;
 
     position: relative;
-    padding: 0 0 rem(80);
+    padding: 0 0 rem(60);
     background-color: $dark;
     color: $light;
+
+    @media #{$tablet} {
+      padding: 0 0 rem(80);
+    }
 
     @media #{$desktop-sm} {
       padding: 0 0 rem(120);
@@ -400,7 +404,7 @@ const classes = ['expertise-section', className];
 		}
 
 		&__image-wrapper {
-      margin: rem(60) calc(-1 * var(--container-padding)) 0;
+      margin: rem(40) calc(-1 * var(--container-padding)) 0;
       padding: 0 var(--container-padding) 0;
       overflow: auto;
       scrollbar-width: none;
@@ -427,7 +431,7 @@ const classes = ['expertise-section', className];
       align-items: center;
       gap: rem(8);
       width: max-content;
-      padding-right: rem(12);
+      padding: rem(20) rem(12) rem(20) 0;
 
       @media #{$tablet} {
         justify-content: space-between;
