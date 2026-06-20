@@ -29,7 +29,10 @@ const classes = ['consultation-section', className];
         Конфиденциальная консультация
       </BaseTitle>
 
-      <ConsultationForm class="consultation-section__form js-consultation-section-form" />
+      <ConsultationForm 
+        class="consultation-section__form js-consultation-section-form"
+        animated
+      />
     </div>
   </div>
 </section>
@@ -53,37 +56,6 @@ const classes = ['consultation-section', className];
         lag: 0.1,
       });
     }
-
-    const mm = gsap.matchMedia();
-
-    function sectionAnimationsHandler() {
-      const consultationForm = document.querySelector('.js-consultation-section-form');
-
-      if (consultationForm) {
-        const tween = gsap.from(consultationForm, {
-          opacity: 0,
-          y: '5rem',
-          duration: 1,
-          ease: 'power4.out',
-          scrollTrigger: {
-            trigger: consultationForm,
-            start: 'center bottom',
-          },
-          onComplete() {
-            tween.scrollTrigger?.kill();
-            tween.kill();
-          },
-        });
-      }
-    }
-
-    mm.add('(max-width: 767.98px)', sectionAnimationsHandler);
-    mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimationsHandler);
-    mm.add('(min-width: 1200px)', sectionAnimationsHandler);
-
-    document.addEventListener('astro:before-swap', () => {
-      mm.revert();
-    }, { once: true });
   }
 
   consultationSectionAnimations();

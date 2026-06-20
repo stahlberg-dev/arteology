@@ -1,0 +1,227 @@
+---
+import BaseIcon from '../ui/BaseIcon.astro';
+
+const {
+  class: className,
+  'error-text': errorText,
+  'input-name': inputName,
+  required = false,
+  error = false,
+  disabled = false,
+  ...attrs
+} = Astro.props;
+
+const classes = [
+  'base-checkbox',
+  'js-base-checkbox',
+  required ? 'js-required' : '',
+  error ? 'error' : '',
+  className,
+];
+---
+
+<div
+  class:list={classes}
+  aria-disabled={disabled ? true : undefined}
+  {...attrs}
+>
+  <label class="base-checkbox__label">
+    <input
+      class="base-checkbox__input"
+      type="checkbox"
+      name={inputName}
+      disabled={disabled ? true : undefined}
+    />
+
+    <span class="base-checkbox__badge">
+      <BaseIcon
+        class="base-checkbox__badge-icon"
+        name="tick"
+      />
+    </span>
+
+    {
+      Astro.slots.has('default') && (
+        <div class="base-checkbox__label-text">
+          <slot />
+        </div>
+      )
+    }
+  </label>
+
+  {
+    errorText && (
+      <div class="base-checkbox__error-text-wrapper">
+        <div class="base-checkbox__error-text">{errorText}</div>
+      </div>
+    )
+  }
+</div>
+
+<script>
+  function initCheckbox() {
+    const checkboxes = document.querySelectorAll('.js-base-checkbox');
+
+    checkboxes.forEach(checkbox => {
+      const inputElement = checkbox.querySelector('input');
+      const isRequired = checkbox.classList.contains('js-required');
+
+      if (!inputElement) {
+        return;
+      }
+
+      if (isRequired && !inputElement.checked) {
+        checkbox.classList.add('invalid');
+      }
+
+      inputElement.addEventListener('change', () => {
+        if (inputElement.checked) {
+          checkbox.classList.remove('error');
+        }
+
+        if (isRequired && !inputElement.checked) {
+          checkbox.classList.add('invalid');
+        } else {
+          checkbox.classList.remove('invalid');
+        }
+      });
+
+      checkbox.addEventListener('custom-reset', () => {
+        checkbox.classList.remove('error');
+        inputElement.checked = false;
+
+        if (isRequired) {
+          checkbox.classList.add('invalid');
+        }
+      });
+    });
+  }
+
+  initCheckbox();
+</script>
+
+<style lang="scss" is:global>
+  .base-checkbox {
+    $element: &;
+
+    &[aria-disabled='true'] {
+      pointer-events: none;
+    }
+
+    &__label {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: rem(4);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+
+      @media #{$tablet} {
+        gap: rem(12);
+      }
+    }
+
+    &__input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+    }
+
+    &__badge {
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+      width: rem(24);
+      height: rem(24);
+      border-radius: 50%;
+      border: 1px solid $primary;
+      background-color: $light;
+      transition:
+        opacity $default-transition,
+        background-color $default-transition;
+
+
+      #{$element}__input:checked ~ & {
+        background-color: $primary;
+      }
+
+      #{$element}[aria-disabled='true'] & {
+        opacity: 0.4;
+        user-select: none;
+      }
+
+      .error & {
+        border-color: $error;
+      }
+    }
+
+    &__badge-icon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      color: $light;
+      object-fit: cover;
+    }
+
+    &__label-text {
+      @include text3;
+
+      transform: translateY(#{rem(4)});
+      color: $dark;
+      transition: opacity $default-transition;
+
+      @media #{$tablet} {
+        transform: translateY(0);
+      }
+
+      #{$element}[aria-disabled='true'] & {
+        opacity: 0.4;
+        user-select: none;
+      }
+
+      a {
+        @include reseta;
+
+        text-decoration: underline;
+        transition: color $default-transition;
+
+        @media #{$is-hover} {
+          &:hover {
+            color: $primary;
+          }
+        }
+
+        &:active,
+        &:focus-visible {
+          color: $primary;
+        }
+      }
+    }
+
+    &__error-text-wrapper {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition:
+        max-height 0.5s ease,
+        opacity 0.5s ease;
+
+      .error & {
+        max-height: rem(32);
+        opacity: 1;
+      }
+    }
+
+    &__error-text {
+      @include text4;
+
+      padding-top: rem(6);
+      color: $error;
+      pointer-events: none;
+    }
+  }
+</style>

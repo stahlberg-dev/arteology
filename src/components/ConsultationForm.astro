@@ -1,12 +1,22 @@
 ---
+import { BASE } from '../scripts/helpers/constants.js';
 import BaseInputField from '../ui/BaseInputField.astro';
 import BaseTextareaField from '../ui/BaseTextareaField.astro';
-//import BaseCheckbox from '../ui/BaseCheckbox.astro';
+import BaseCheckbox from '../ui/BaseCheckbox.astro';
 import BaseButton from '../ui/BaseButton.astro';
 
-const { class: className, ...attrs } = Astro.props;
+const { 
+  class: className,
+  animated = false,
+  ...attrs
+} = Astro.props;
 
-const classes = ['consultation-form', 'js-consultation-form', className];
+const classes = [
+  'consultation-form',
+  'js-consultation-form',
+  animated ? 'js-consultation-form-animated' : '',
+  className
+];
 ---
 
 <form
@@ -45,16 +55,18 @@ const classes = ['consultation-form', 'js-consultation-form', className];
     textarea-name="message"
   />
 
-  <!-- <BaseCheckbox
-    class="ui-kit-section__form-element js-form-field"
-    label-text="Я ознакомлен(-а) с политикой конфиденциальности"
+  <BaseCheckbox
+    class="consultation-form__form-checkbox js-form-field"
     error-text="Необходимо ознакомиться с политикой конфиденциальности"
     input-name="checkbox"
     required
-  /> -->
+  >
+    Я&nbsp;соглашаюсь
+    с&nbsp;<a href={`${BASE}documents/privacy-policy.pdf`} target="_blank">Политикой конфиденциальности</a>.
+  </BaseCheckbox>
 
   <BaseButton
-    class="consultation-form__submit-button"
+    class="consultation-form__submit-button js-form-button"
     theme="dark"
     text="Отправить запрос"
     type="submit"
@@ -63,13 +75,14 @@ const classes = ['consultation-form', 'js-consultation-form', className];
 
 <script>
   import { Form } from '../scripts/helpers/commonForm.js';
+  import { gsap } from '../scripts/helpers/gsap.js';
 
   function initConsultationForm() {
-    const questionForms = document.querySelectorAll('.js-consultation-form');
+    const consultationForms = document.querySelectorAll('.js-consultation-form');
 
-    questionForms.forEach(questionForm => {
+    consultationForms.forEach(consultationForm => {
       new Form({
-        formElement: questionForm,
+        formElement: consultationForm,
         formFieldClass: '.js-form-field',
         invalidFieldClass: '.invalid',
         errorFieldClass: '.error',
@@ -77,6 +90,47 @@ const classes = ['consultation-form', 'js-consultation-form', className];
         errorModalSelector: '[data-modal="error-modal"]',
       }).init();
     });
+
+    const consultationAnimatedForms = document
+      .querySelectorAll('.js-consultation-form.js-consultation-form-animated');
+
+    if (!consultationAnimatedForms.length) {
+      return;
+    }
+
+    const mm = gsap.matchMedia();
+
+    function formAnimationsHandler() {
+      consultationAnimatedForms.forEach((consultationAnimatedForm) => {
+        const animatedElements = gsap.utils
+          .toArray('.js-form-field, .js-form-button', consultationAnimatedForm);
+          
+        animatedElements.forEach((item) => {
+          const tween = gsap.from(item, {
+            opacity: 0,
+            y: '5rem',
+            duration: 1,
+            ease: 'power4.out',
+            scrollTrigger: {
+              trigger: item,
+              start: "bottom bottom",
+            },
+            onComplete() {
+              tween.scrollTrigger?.kill();
+              tween.kill();
+            },
+          });
+        });
+      });
+    }
+
+    mm.add('(max-width: 767.98px)', formAnimationsHandler);
+    mm.add('(min-width: 768px) and (max-width: 1199.98px)', formAnimationsHandler);
+    mm.add('(min-width: 1200px)', formAnimationsHandler);
+
+    document.addEventListener('astro:before-swap', () => {
+      mm.revert();
+    }, { once: true });
   }
 
   initConsultationForm();
@@ -87,11 +141,15 @@ const classes = ['consultation-form', 'js-consultation-form', className];
     $element: &;
 
     &__form-field {
-      margin-top: rem(40);
+      margin-top: rem(22);
 
       &:first-child {
         margin-top: 0;
       }
+    }
+
+    &__form-checkbox {
+      margin-top: rem(30);
     }
 
     &__submit-button {
