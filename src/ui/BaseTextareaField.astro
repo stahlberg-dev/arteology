@@ -91,40 +91,43 @@ const classes = [
 
       display: block;
       width: 100%;
-      height: auto;
       min-height: rem(30);
-      max-height: rem(30);
+      max-height: rem(31);
       field-sizing: content;
+      resize: none;
       padding: 0 rem(36) rem(6) 0;
       border-bottom: 1px solid $dark;
       color: $dark;
+      scrollbar-width: thin;
+      scrollbar-color: $dark transparent;
       transition: 
         border-color $default-transition,
-        opacity $default-transition,
-        min-height 0.3s ease 0.1s,
-        max-height 0.3s ease 0.1s;
-      resize: none;
+        opacity $default-transition;
       -webkit-tap-highlight-color: transparent;
-
-      &:focus-visible,
-      &:focus-visible:not(:placeholder-shown) {
-        min-height: rem(76);
-        max-height: rem(76);
-        transition:
-          border-color $default-transition,
-          min-height $default-transition,
-          max-height $default-transition;
-      }
 
       &:not(:placeholder-shown) {
         min-height: rem(30);
-        max-height: rem(76);
+        max-height: rem(77);
       }
 
       &[disabled] {
         opacity: 0.4;
         pointer-events: none;
         user-select: none;
+      }
+
+      &::-webkit-scrollbar {
+        width: rem(4);
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: rem(12);
+        background-color: $dark;
       }
 
       &::placeholder {

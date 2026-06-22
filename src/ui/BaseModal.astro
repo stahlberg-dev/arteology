@@ -230,8 +230,8 @@ const classes = [
       min-height: 0;
       padding-bottom: rem(24);
       overflow-y: auto;
-      //scrollbar-width: thin;
-      //scrollbar-color: $dark transparent;
+      scrollbar-width: thin;
+      scrollbar-color: $dark transparent;
 
       &::-webkit-scrollbar {
         width: rem(4);
@@ -253,6 +253,15 @@ const classes = [
         #{$element}_theme_secondary & {
           background-color: $light;
         }
+      }
+
+      #{$element}_theme_light & {
+        scrollbar-color: $dark transparent;
+      }
+
+      #{$element}_theme_primary &,
+      #{$element}_theme_secondary & {
+        scrollbar-color: $light transparent;
       }
 
       #{$element}_size_sm & {

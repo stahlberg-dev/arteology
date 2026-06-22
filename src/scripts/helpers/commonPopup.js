@@ -13,18 +13,23 @@ export class Popup {
     const activePopups = document.querySelectorAll('.popup-active');
 
     layoutScrollSmoother.smoother.paused(true);
-
+    
     activePopups.forEach(activePopup => {
       activePopup.classList.remove('popup-active');
     });
-
+    
     currentPopup.classList.add('popup-active');
+    currentPopup.style.pointerEvents = 'none';
 
     callBacks.forEach(callBack => {
       if (typeof callBack === 'function') {
         callBack();
       }
     });
+
+    setTimeout(() => {
+      currentPopup.style.pointerEvents = '';
+    }, this.animationTime * 2);
   }
 
   close(currentPopup, ...callBacks) {
@@ -43,11 +48,16 @@ export class Popup {
     currentPopup.classList.remove('popup-active');
 
     layoutScrollSmoother.smoother.paused(false);
+    document.body.style.pointerEvents = 'none';
 
     callBacks.forEach(callBack => {
       if (typeof callBack === 'function') {
         callBack();
       }
     });
+
+    setTimeout(() => {
+      document.body.style.pointerEvents = '';
+    }, this.animationTime * 2);
   }
 }

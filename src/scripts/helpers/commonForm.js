@@ -19,7 +19,7 @@ export class Form {
     if (this.invalidFieldClass && this.errorFieldClass) {
       const invalidFormElements = formElement.querySelectorAll(this.invalidFieldClass);
 
-      invalidFormElements.forEach(invalidFormElement => {
+      invalidFormElements.forEach((invalidFormElement) => {
         invalidFormElement.classList.add(this.errorFieldClass.slice(1));
       });
 

@@ -133,9 +133,11 @@ const classes = [
         {
           onStart: () => {
             layoutScrollSmoother.smoother.paused(true);
+            document.body.style.pointerEvents = 'none';
           },
           onComplete: () => {
             layoutScrollSmoother.smoother.paused(false);
+            document.body.style.pointerEvents = '';
 
             const scrollTimeLine = gsap.timeline({
               scrollTrigger: {

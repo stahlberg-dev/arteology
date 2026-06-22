@@ -1,0 +1,151 @@
+---
+import BaseModal from '../ui/BaseModal.astro';
+import BaseButton from '../ui/BaseButton.astro';
+
+const {
+  class: className,
+  name,
+  content,
+  ...attrs
+} = Astro.props;
+
+const classes = ['team-modal', className];
+---
+
+<BaseModal
+  class:list={classes}
+  name={name}
+  theme="primary"
+  size="lg"
+  {...attrs}
+>
+  <div class="team-modal__inner">
+    {
+      content?.imageUrl && (
+        <div class="team-modal__image">
+          <img
+            class="team-modal__photo"
+            src={content.imageUrl}
+            alt="фото"
+            loading="lazy"
+          />
+        </div>
+      )
+    }
+    <div class="team-modal__info">
+      {content?.title && <h2 class="team-modal__title">{content.title}</h2>}
+
+      {content?.subtitle && <h3 class="team-modal__subtitle" set:html={content.subtitle} />}
+
+      {content?.text && <p class="team-modal__text" set:html={content.text} />}
+
+      {content?.paragraphs?.length > 0 && (
+        content.paragraphs.map((paragraph) => (
+          <Fragment>
+            {paragraph?.title && <h4 class="team-modal__paragraph-title" set:html={paragraph.title} />}
+  
+            {paragraph?.text && <p class="team-modal__paragraph-text" set:html={paragraph.text} />}
+          </Fragment>
+        ))
+      )}
+
+      <BaseButton
+        class="team-modal__button"
+        text="Записаться на консультацию"
+        data-modal-open="consultation-modal"
+      />
+    </div>
+  </div>
+</BaseModal>
+
+<style lang="scss" is:global>
+  .team-modal {
+    $element: &;
+
+		&__inner {
+      display: flex;
+      flex-direction: column;
+      gap: rem(12);
+
+      @media #{$tablet} {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: rem(20);
+      }
+
+      @media #{$desktop-sm} {
+        gap: rem(52);
+      }
+		}
+
+		&__image {
+      flex-shrink: 0;
+      width: rem(200);
+      height: rem(260);
+
+      @media #{$tablet} {
+        width: rem(280);
+        height: rem(416);
+      }
+
+      @media #{$desktop-sm} {
+        width: rem(446);
+        height: rem(562);
+      }
+		}
+
+    &__photo {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+		&__info {
+      @media #{$tablet} {
+        flex-grow: 1;
+      }
+
+      @media #{$desktop-sm} {
+        flex-grow: 0;
+        width: rem(618);
+      }
+		}
+
+		&__title {
+		}
+
+		&__subtitle {
+      @include h4;
+		}
+
+    &__text {
+      margin-top: rem(48);
+
+      @media #{$tablet} {
+        margin-top: rem(72);
+      }
+    }
+
+		&__paragraph-title {
+      margin-top: rem(24);
+
+      @media #{$tablet} {
+        margin-top: rem(32);
+      }
+		}
+
+		&__paragraph-text {
+      margin-top: rem(16);
+		}
+
+    &__button {
+      margin-top: rem(48);
+      width: 100%;
+
+      @media #{$tablet} {
+        margin-top: rem(72);
+      }
+    }
+  }
+</style>

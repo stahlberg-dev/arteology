@@ -4,7 +4,7 @@ const {
   'error-text': errorText,
   placeholder,
   'input-name': inputName,
-  type,
+  type = 'text',
   required = false,
   error = false,
   disabled = false,
@@ -14,7 +14,7 @@ const {
 const classes = [
   'base-input-field',
   'js-base-input-field',
-  type ? `js-base-input-field-${type}` : '',
+  `js-base-input-field-${type}`,
   required ? 'base-input-field_required js-required' : '',
   error ? 'error' : '',
   className,
@@ -47,6 +47,8 @@ const classes = [
       const inputElement = inputField.querySelector('input');
       const isRequired = inputField.classList.contains('js-required');
       const isPhone = inputField.classList.contains('js-base-input-field-phone');
+      const isEmail = inputField.classList.contains('js-base-input-field-email');
+      const emailRegex = /^[\p{L}\p{N}._%+-]+@[\p{L}\p{N}.-]+\.[\p{L}]{2,}$/u;
 
       if (!inputElement) {
         return;
@@ -101,7 +103,10 @@ const classes = [
           inputField.classList.remove('error');
         }
 
-        if (isRequired && !inputElement.value.trim()) {
+        if (
+            isRequired && !inputElement.value.trim()
+            || isEmail && inputElement.value.trim() && !emailRegex.test(inputElement.value)
+          ) {
           inputField.classList.add('invalid');
         } else {
           inputField.classList.remove('invalid');

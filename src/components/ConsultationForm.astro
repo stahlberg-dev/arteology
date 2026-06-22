@@ -26,7 +26,7 @@ const classes = [
 >
   <BaseInputField
     class="consultation-form__form-field js-form-field"
-    error-text="Необходимо указать своё имя"
+    error-text="Укажите Ваше имя"
     placeholder="Имя"
     input-name="name"
     required
@@ -34,7 +34,8 @@ const classes = [
 
   <BaseInputField
     class="consultation-form__form-field js-form-field"
-    error-text="Необходимо указать адрес электронной почты"
+    type="email"
+    error-text="Укажите корректный адрес электронной почты"
     placeholder="Электронная почта"
     input-name="email"
     required
@@ -43,21 +44,20 @@ const classes = [
   <BaseInputField
     class="consultation-form__form-field js-form-field"
     type="phone"
-    error-text="Необходимо указать номер телефона"
+    error-text="Укажите номер телефона"
     placeholder="Телефон"
     input-name="phone"
   />
 
   <BaseTextareaField
     class="consultation-form__form-field js-form-field"
-    error-text="Необходимо описать ваш вопрос или ситуацию"
     placeholder="Сообщение"
     textarea-name="message"
   />
 
   <BaseCheckbox
     class="consultation-form__form-checkbox js-form-field"
-    error-text="Необходимо ознакомиться с политикой конфиденциальности"
+    error-text="Ознакомьтесь с политикой конфиденциальности"
     input-name="checkbox"
     required
   >
@@ -141,7 +141,7 @@ const classes = [
     $element: &;
 
     &__form-field {
-      margin-top: rem(22);
+      margin-top: rem(28);
 
       &:first-child {
         margin-top: 0;
