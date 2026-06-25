@@ -82,6 +82,24 @@ const buttonAttributes = {
       }
     }
 
+    &_theme_primary {
+      background-color: $primary;
+      color: $light;
+
+      @media #{$is-hover} {
+        &:hover {
+          background-color: $light;
+          color: $primary;
+        }
+      }
+
+      &:active,
+      &:focus-visible {
+        background-color: $light;
+        color: $primary;
+      }
+    }
+
     &:disabled,
     &[aria-disabled='true'] {
       opacity: 0.4;

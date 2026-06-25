@@ -178,29 +178,32 @@ const tabs = [
             data-services-panel={`tab-${index}`}
           >
             {
-              tab.panel?.topText 
-                && <p 
+              tab.panel?.topText && (
+                <p 
                   class="services-section__info-panel-top-text js-services-info-panel-element"
                   set:html={tab.panel.topText}
                 />
+              )
             }
             {
               tab.panel?.panelSections && tab.panel.panelSections.map((panelSection) => (
                 <Fragment>
                   {
-                    panelSection.title
-                      && <h3 
-                            class="services-section__info-panel-subtitle js-services-info-panel-element"
-                            set:html={panelSection.title}
-                          />
+                    panelSection.title && (
+                      <h3 
+                        class="services-section__info-panel-subtitle js-services-info-panel-element"
+                        set:html={panelSection.title}
+                      />
+                    )
                   }
 
                   {
-                    panelSection.text
-                      && <h3 
-                            class="services-section__info-panel-text js-services-info-panel-element"
-                            set:html={panelSection.text}
-                          />
+                    panelSection.text && (
+                      <h3 
+                        class="services-section__info-panel-text js-services-info-panel-element"
+                        set:html={panelSection.text}
+                      />
+                    )
                   }
                 </Fragment> 
               ))

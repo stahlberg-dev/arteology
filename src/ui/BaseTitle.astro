@@ -2,7 +2,6 @@
 const {
   tag = 'h2',
   class: className,
-  'animation-type': animationType = 'char',
   size = 'md',
   ...attrs
 } = Astro.props;
@@ -13,7 +12,7 @@ const Tag = allowedTags.includes(tag) ? tag : 'h2';
 const classes = [
   'base-title',
   `base-title_size_${size}`,
-  `js-title-${animationType}-animation`,
+  'js-title',
   className,
 ];
 ---
@@ -26,61 +25,18 @@ const classes = [
 </Tag>
 
 <script>
-  import { gsap, SplitText } from '../scripts/helpers/gsap.js';
+  import { gsap } from '../scripts/helpers/gsap.js';
 
   function titleAnimation() {
     const mm = gsap.matchMedia();
 
     function titleAnimationHandler() {
-      const splitTitles = [];
-
-      gsap.utils.toArray('.js-title-char-animation').forEach((title) => {
-        const splitTitle = SplitText.create(title, { 
-          type: 'chars,words',
-          reduceWhiteSpace: false,
-        });
-
-        splitTitles.push(splitTitle);
-
-        const tween = gsap.from(splitTitle.chars, {
-          opacity: 0,
-          x: '3rem',
-          y: '-2rem',
-          duration: 0.4,
-          ease: 'power4.out',
-          stagger: 0.05,
-          scrollTrigger: {
-            trigger: title,
-            start: "bottom bottom",
-          },
-          onStart: () => {
-            title.style.pointerEvents = 'none';
-          },
-          onComplete() {
-            title.style.pointerEvents = '';
-            tween.scrollTrigger?.kill();
-            tween.kill();
-          },
-          onInterrupt: () => {
-            title.style.pointerEvents = '';
-          },
-        });
-      });
-
-      gsap.utils.toArray('.js-title-line-animation').forEach((title) => {
-        const splitTitle = SplitText.create(title, { 
-          type: 'words,lines',
-          reduceWhiteSpace: false,
-        });
-
-        splitTitles.push(splitTitle);
-
-        const tween = gsap.from(splitTitle.lines, {
+      gsap.utils.toArray('.js-title').forEach((title) => {
+        const tween = gsap.from(title, {
           opacity: 0,
           y: '5rem',
-          duration: 1,
+          duration: 2,
           ease: 'power4.out',
-          stagger: 0.1,
           scrollTrigger: {
             trigger: title,
             start: "bottom bottom",
@@ -98,10 +54,6 @@ const classes = [
           },
         });
       });
-
-      return () => {
-        splitTitles.forEach((splitTitle) => splitTitle.revert());
-      };
     }
 
     mm.add('(max-width: 767.98px)', titleAnimationHandler);

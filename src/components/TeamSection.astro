@@ -1,0 +1,457 @@
+---
+import { BASE } from '../scripts/helpers/constants.js';
+import BaseButton from '../ui/BaseButton.astro';
+
+const { class: className, ...attrs } = Astro.props;
+
+const classes = ['team-section', 'js-team-section', className];
+
+const teamCardsList = [
+  {
+    desktopImageUrl: `${BASE}images/team-section/portraits/portrait-1-desktop.webp`,
+    mobileImageUrl: `${BASE}images/team-section/portraits/portrait-1-mobile.webp`,
+    name: 'Залина Самсонова',
+    position: 'Founder&nbsp;& Creative Director',
+    modalName: 'team-member-1',
+    modalLinkText: 'Читать о Залине',
+  },
+  {
+    desktopImageUrl: `${BASE}images/team-section/portraits/portrait-2-desktop.webp`,
+    mobileImageUrl: `${BASE}images/team-section/portraits/portrait-2-mobile.webp`,
+    name: 'Александр Балашов',
+    position: 'Co-Founder&nbsp;& Chief Curator',
+    modalName: 'team-member-2',
+    modalLinkText: 'Читать об Александре',
+  },
+  {
+    desktopImageUrl: `${BASE}images/team-section/portraits/portrait-3-desktop.webp`,
+    mobileImageUrl: `${BASE}images/team-section/portraits/portrait-3-mobile.webp`,
+    name: 'Денис Самсонов',
+    position: 'Managing Partner&nbsp;& Chief Development&nbsp;Officer',
+    modalName: 'team-member-3',
+    modalLinkText: 'Читать о Денисе',
+  },
+];
+---
+
+<section
+  class:list={classes}
+  {...attrs}
+>
+  <img
+    class="team-section__word js-team-word"
+    src={`${BASE}images/team-section/team-word.svg`}
+    alt="Команда"
+    loading="lazy"
+  />
+
+  <div class="team-section__container">
+    <div class="team-section__slider-container">
+      <div class="team-section__slider swiper js-team-slider">
+        <div class="team-section__slider-wrapper swiper-wrapper">
+          {teamCardsList.map((card) => (
+            <div class="team-section__slide swiper-slide js-team-slide">
+              <div class="team-section__slide-info">
+                <div class="team-section__slide-info-top">
+                  {
+                    card?.name && (
+                      <div
+                        class="team-section__slide-name"
+                        set:html={card.name}
+                      />
+                    )
+                  }
+                  {
+                    card?.position && (
+                      <div
+                        class="team-section__slide-position"
+                        set:html={card.position}
+                      />
+                    )
+                  }
+                </div>
+                {
+                  card?.modalName && card?.modalLinkText && (
+                    <button
+                      class="team-section__slide-details-mobile"
+                      type="button"
+                      data-modal-open={card.modalName}
+                    >
+                      {card.modalLinkText}
+                    </button>
+                  )
+                }
+                {
+                  card?.modalName && (
+                    <BaseButton
+                      class="team-section__slide-details-desktop"
+                      theme="primary"
+                      text="Подробнее"
+                      data-modal-open={card.modalName}
+                    />
+                  )
+                }
+              </div>
+              {
+                card?.desktopImageUrl && card?.mobileImageUrl && (
+                  <picture class="team-section__slide-photo-wrapper">
+                    <source
+                      srcset={card.desktopImageUrl}
+                      media="(min-width: 768px)"
+                    />
+      
+                    <img
+                      class="team-section__slide-photo"
+                      src={card.mobileImageUrl}
+                      alt="фото"
+                      loading="lazy"
+                    />
+                  </picture>
+                )
+              }
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="team-section__slider-scrollbar js-team-slider-scrollbar"></div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from '../scripts/helpers/gsap.js';
+  import { layoutScrollSmoother } from '../scripts/layoutScrollSmoother.js';
+  import Swiper from 'swiper';
+  import { Scrollbar } from 'swiper/modules';
+
+  function teamSectionAnimations() {
+    const teamWord = document.querySelector('.js-team-word');
+
+    if (teamWord && layoutScrollSmoother.smoother) {
+      layoutScrollSmoother.smoother.effects(teamWord, {
+        speed: 1.4,
+        lag: 0.5,
+      });
+    }
+
+    const mm = gsap.matchMedia();
+
+    function sectionMobileAnimationsHandler() {
+      const tweens = [];
+
+      gsap.utils.toArray('.js-team-slide').forEach((item) => {
+        const tween = gsap.from(item, {
+          opacity: 0,
+          y: '5rem',
+          duration: 1,
+          ease: 'power4.out',
+          scrollTrigger: {
+            trigger: item,
+            start: "bottom bottom",
+          },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+          },
+        });
+
+        tweens.push(tween);
+      });
+
+      return () => {
+        tweens.forEach((tween) => {
+          tween.scrollTrigger?.kill();
+          tween.kill();
+        });
+      };
+    }
+
+    function teamSliderHandler() {
+      const swiperTeamSliders = [];
+      const teamSections = document.querySelectorAll('.js-team-section');
+      
+      teamSections.forEach((teamSection) => {
+        const teamSlider = teamSection.querySelector('.js-team-slider');
+        const scrollbarElement = teamSection.querySelector('.js-team-slider-scrollbar');
+
+        if (!teamSlider || !scrollbarElement) {
+
+        }
+
+        const swiperTeamSlider = new Swiper(teamSlider, {
+          modules: [Scrollbar],
+          observer: true,
+          observeParents: true,
+          observeSlideChildren: true,
+          slidesPerView: 'auto',
+          watchOverflow: true,
+          centeredSlides: true,
+          speed: 600,
+          initialSlide: 1,
+          //loop: true,
+          scrollbar: {
+            el: scrollbarElement,
+            draggable: true,
+          },
+        });
+
+        swiperTeamSliders.push(swiperTeamSlider);
+      });
+
+      return () => {
+        swiperTeamSliders.forEach((swiperTeamSlider) => {
+          swiperTeamSlider.destroy(true, true);
+        });
+      };
+    }
+
+
+    mm.add('(max-width: 767.98px)', sectionMobileAnimationsHandler);
+    mm.add('(min-width: 768px)', teamSliderHandler);
+
+    document.addEventListener('astro:before-swap', () => {
+      mm.revert();
+    }, { once: true });
+  }
+
+  teamSectionAnimations();
+</script>
+
+<style lang="scss" is:global>
+  .team-section {
+    $element: &;
+
+    position: relative;
+    padding: rem(80) 0 0;
+    background-color: $dark;
+    color: $light;
+
+    @media #{$tablet} {
+      padding: rem(80) 0;
+    }
+
+    @media #{$desktop-sm} {
+      padding: rem(120) 0;
+    }
+
+    &__word {
+      display: block;
+      position: absolute;
+      top: 30%;
+      right: var(--container-padding);
+      z-index: 1;
+      width: rem(48);
+      opacity: 0.12;
+
+      @media #{$tablet} {
+        top: 15%;
+        width: rem(68);
+      }
+
+      @media #{$desktop-lg} {
+        top: 20%;
+        right: calc(50% - 960px + #{var(--container-padding)});
+      }
+    }
+
+    &__container {
+      @include base-container;
+    }
+    
+    &__slider-container {
+      @media #{$tablet} {
+        width: rem(860);
+        overflow: hidden;
+      }
+
+      @media #{$desktop-sm} {
+        width: 100%;
+      }
+    }
+
+		&__slider {
+      overflow: visible;
+
+      @media #{$tablet} {
+        margin-left: 0;
+        width: rem(798);
+        height: rem(594);
+      }
+      
+      @media #{$desktop-sm} {
+        width: rem(1142);
+        height: rem(854);
+        overflow: hidden;
+      }
+		}
+
+		&__slider-wrapper {
+      display: flex;
+      flex-direction: column;
+
+      @media #{$tablet} {
+        flex-direction: row;
+      }
+		}
+
+		&__slide {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: rem(32);
+      padding: rem(24) 0;
+      border-bottom: 1px solid $light-30;
+
+      @media #{$tablet} {
+        display: block;
+        position: relative;
+        width: rem(490);
+        height: auto;
+        padding: 0 rem(10);
+        border: none;
+      }
+
+      @media #{$desktop-sm} {
+        width: rem(698);
+      }
+
+      &:last-child {
+        border: none;
+      }
+
+      &.swiper-slide-active {
+        @media #{$tablet} {
+          z-index: 1;
+        }
+      }
+		}
+
+		&__slide-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: rem(12);
+      align-self: stretch;
+
+      @media #{$tablet} {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: calc(100% + #{rem(10)});
+        z-index: 1;
+        width: rem(220);
+        height: auto;
+        opacity: 0;
+        transition: opacity $default-transition;
+      }
+
+      .swiper-slide-active & {
+        @media #{$tablet} {
+          opacity: 1;
+        }
+      }
+		}
+
+    &__slide-name {
+      @include h3;
+    }
+
+		&__slide-position {
+      @include text2;
+
+      margin-top: rem(12);
+
+      @media #{$tablet} {
+        margin-top: rem(24);
+      }
+		}
+
+		&__slide-details-mobile {
+      @include resetbtn;
+      align-self: flex-start;
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+      color: $light;
+
+      @media #{$tablet} {
+        display: none;
+      }
+		}
+
+		&__slide-details-desktop {
+      display: none;
+
+      @media #{$tablet} {
+        display: flex;
+        margin-top: rem(40);
+        width: rem(170);
+      }
+		}
+
+		&__slide-photo-wrapper {
+      display: block;
+      flex-shrink: 0;
+      width: rem(92);
+      height: rem(116);
+
+      @media #{$tablet} {
+        width: 100%;
+        height: 100%;
+        transform-origin: center center;
+        transform: scale(0.3);
+        transition: transform 0.6s ease-in-out;
+      }
+
+      @media #{$desktop-sm} {
+        transform: scale(0.31);
+      }
+
+      .swiper-slide-active & {
+        transform: scale(1);
+      }
+
+      .swiper-slide-prev & {
+        @media #{$tablet} {
+          transform-origin: top right;
+        }
+      }
+
+      .swiper-slide-next & {
+        @media #{$tablet} {
+          transform-origin: bottom left;
+        }
+      }
+		}
+
+		&__slide-photo {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+		}
+
+    &__slider-scrollbar {
+      display: none;
+
+      @media #{$tablet} {
+        display: block;
+        margin-top: rem(40);
+        border-radius: rem(12);
+        width: 100%;
+        height: rem(4);
+        background-color: $light-60;
+      }
+
+      @media #{$is-hover} {
+        display: none;
+      }
+
+      .swiper-scrollbar-drag {
+        height: 100%;
+        border-radius: rem(12);
+        background-color: $primary;
+      }
+    }
+  }
+</style>
