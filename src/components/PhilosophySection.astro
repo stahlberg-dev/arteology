@@ -216,13 +216,6 @@ const infoList = [
         }
       });
 
-      const splitInfoTexts = infoTexts.map((infoText) => {
-        return SplitText.create(infoText, { 
-          type: 'words',
-          reduceWhiteSpace: false,
-        });
-      });
-
       infoTexts.forEach((infoText, index) => {   
         if (index > 0) {
           const prevText = infoTexts[index - 1];
@@ -235,24 +228,13 @@ const infoList = [
           }, `position-${index}+=0.5`);
         }
         
-        infoTimeline.from(splitInfoTexts[index].words, {
-          opacity: 0,
-          duration: 0.02,
-          stagger: {
-            amount: 1,
-          }
-        }, `position-${index}+=0.4`)
-        .from(infoText, {
+        infoTimeline.from(infoText, {
           height: 0,
           paddingTop: 0,
           duration: 0.8,
           ease: 'power1',
         }, `position-${index}+=0.5`);
       });
-
-      return () => {
-        splitInfoTexts.forEach((splitInfoText) => splitInfoText.revert());
-      };
     });
 
     mm.add('(min-width: 768px) and (max-width: 1199.98px)', sectionAnimationsHandler);

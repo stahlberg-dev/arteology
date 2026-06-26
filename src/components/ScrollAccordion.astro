@@ -85,8 +85,6 @@ const classes = ['scroll-accordion', className];
     }
     
     mm.add('(max-width: 767.98px)', () => {
-      const allSplitTexts = [];
-
       accordions.forEach((accordion) => {
         const accordionContainer = accordion.closest('.js-scroll-accordion-container') ?? accordion;
         const accordionItems = gsap.utils.toArray('.js-scroll-accordion-item', accordion);
@@ -105,14 +103,6 @@ const classes = ['scroll-accordion', className];
           }
         });
 
-        const splitTexts = accordionTexts.map((accordionText) => {
-          return SplitText.create(accordionText, { 
-            type: 'words',
-            reduceWhiteSpace: false,
-          });
-        });
-        allSplitTexts.concat(splitTexts);
-
         accordionTexts.forEach((accordionText, index) => {   
           if (index > 0) {
             const prevText = accordionTexts[index - 1];
@@ -125,14 +115,7 @@ const classes = ['scroll-accordion', className];
             }, `position-${index}+=0.5`);
           }
           
-          accordionTimeline.from(splitTexts[index].words, {
-            opacity: 0,
-            duration: 0.02,
-            stagger: {
-              amount: 1,
-            }
-          }, `position-${index}+=0.4`)
-          .from(accordionText, {
+          accordionTimeline.from(accordionText, {
             height: 0,
             paddingTop: 0,
             duration: 0.8,
@@ -140,10 +123,6 @@ const classes = ['scroll-accordion', className];
           }, `position-${index}+=0.5`);
         });
       });
-
-      return () => {
-        allSplitTexts.forEach((split) => split.revert());
-      };
     });
 
     mm.add('(min-width: 768px) and (max-width: 1199.98px)', desktopAccordionAnimation);
