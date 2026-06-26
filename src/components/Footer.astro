@@ -25,28 +25,24 @@ const classes = ['footer', className];
     <div class="footer__contacts">
       <div class="footer__contacts-item footer__contacts-item_type_phone js-footer-contact-item">
         <div class="footer__contacts-item-title">
-          Телефон
+          Телефоны
         </div>
 
-        <a
-          class="footer__contacts-item-link"
-          href="tel:+74951500119"
-        >
-          +7&nbsp;(495)&nbsp;150-01-19
-        </a>
-      </div>
-
-      <div class="footer__contacts-item footer__contacts-item_type_email js-footer-contact-item">
-        <div class="footer__contacts-item-title">
-          E-mail
+        <div class="footer__contacts-item-links">
+          <a
+            class="footer__contacts-item-link"
+            href="tel:+74951500119"
+          >
+            +7&nbsp;(495)&nbsp;150-01-19
+          </a>
+  
+          <a
+            class="footer__contacts-item-link"
+            href="tel:+74951500119"
+          >
+            +7&nbsp;(903)&nbsp;293-88-44
+          </a>
         </div>
-
-        <a
-          class="footer__contacts-item-link"
-          href="mailto:info@arteology.com"
-        >
-          info@arteology.com
-        </a>
       </div>
 
       <div class="footer__contacts-item footer__contacts-item_type_messengers js-footer-contact-item">
@@ -71,14 +67,17 @@ const classes = ['footer', className];
         </div>
       </div>
 
-      <div class="footer__contacts-item footer__contacts-item_type_office js-footer-contact-item">
+      <div class="footer__contacts-item footer__contacts-item_type_email js-footer-contact-item">
         <div class="footer__contacts-item-title">
-          Офис
+          E-mail
         </div>
 
-        <div class="footer__contacts-item-text">
-          Москва, пр-т&nbsp;Вернадского, 29
-        </div>
+        <a
+          class="footer__contacts-item-link"
+          href="mailto:info@arteology.com"
+        >
+          info@arteology.io
+        </a>
       </div>
     </div>
 
@@ -237,17 +236,17 @@ const classes = ['footer', className];
       position: absolute;
       top: 0;
       right: rem(20);
-      width: rem(164);
+      width: rem(180);
       aspect-ratio: 305 / 329;
       color: $light-30;
 
       @media #{$tablet} {
         right: rem(32);
-        width: rem(240);
+        width: rem(220);
       }
 
       @media #{$desktop-sm} {
-        width: rem(304);
+        width: rem(260);
       }
 		}
 
@@ -258,19 +257,18 @@ const classes = ['footer', className];
 		}
 
 		&__contacts {
-      display: grid;
-      grid-template-columns: 1fr;
-      row-gap: rem(24);
+      display: flex;
+      flex-direction: column;
+      gap: rem(24);
 
       @media #{$tablet} {
-        grid-template-columns: rem(282) rem(238);
-        column-gap: rem(112);
-        row-gap: rem(32);
+        flex-direction: row;
+        align-items: flex-start;
+        gap: rem(80);
       }
 
       @media #{$desktop-sm} {
-        grid-template-columns: rem(372) rem(372);
-        column-gap: rem(94);
+        gap: rem(100);
       }
 		}
 
@@ -279,7 +277,7 @@ const classes = ['footer', className];
         max-width: rem(160);
 
         @media #{$tablet} {
-          grid-row: 2;
+          grid-row: 1;
           grid-column: 1;
           max-width: none;
         }
@@ -289,8 +287,8 @@ const classes = ['footer', className];
         max-width: rem(160);
 
         @media #{$tablet} {
-          grid-row: 1;
-          grid-column: 2;
+          grid-row: 2;
+          grid-column: 1;
           max-width: none;
         }
       }
@@ -299,16 +297,9 @@ const classes = ['footer', className];
         max-width: rem(160);
 
         @media #{$tablet} {
-          grid-row: 2;
+          grid-row: 1;
           grid-column: 2;
           max-width: none;
-        }
-      }
-
-      &_type_office {
-        @media #{$tablet} {
-          grid-row: 1;
-          grid-column: 1;
         }
       }
 		}
@@ -327,11 +318,8 @@ const classes = ['footer', className];
 
     &__contacts-item-links {
       display: flex;
-      gap: rem(8);
-
-      @media #{$tablet} {
-        gap: rem(16);
-      }
+      flex-direction: column;
+      gap: rem(4);
     }
 
 		&__contacts-item-link {
