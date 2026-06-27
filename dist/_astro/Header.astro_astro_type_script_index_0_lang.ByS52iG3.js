@@ -1,0 +1,1 @@
+import{t as d}from"./utils.D5NcIzRj.js";function l(){const e=document.querySelector(".js-header");if(!e)return;let t=window.scrollY;const s=d(()=>{const r=window.scrollY;if(r<30)return;const o=r-t;o>5?e.classList.add("js-header-hidden"):o<-5&&e.classList.remove("js-header-hidden"),t=r},100);window.addEventListener("scroll",s)}l();

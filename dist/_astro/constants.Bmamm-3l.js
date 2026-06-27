@@ -1,0 +1,1 @@
+const e="/",i={TABLET:1199.98,MOBILE:767.98},t={TABLET:768,DESKTOP:1200},a=()=>({desktop:window.matchMedia(`(min-width: ${t.DESKTOP}px)`),tablet:window.matchMedia(`(min-width: ${t.TABLET}px) and (max-width: ${i.TABLET}px)`),mobile:window.matchMedia(`(max-width: ${i.MOBILE}px)`),isHover:window.matchMedia("(hover: hover) and (pointer: fine)")});export{e as B,a as g};

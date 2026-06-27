@@ -6,6 +6,7 @@ export class Form {
     this.errorFieldClass = config.errorFieldClass;
     this.successModalSelector = config.successModalSelector;
     this.errorModalSelector = config.errorModalSelector;
+    this.sendPath = config.sendPath ?? '';
     this.formData = null;
   }
 
@@ -28,23 +29,36 @@ export class Form {
       }
     }
 
-    this.formData = new FormData(formElement);
+    const formData = new FormData(formElement);
+
+    this.formData = formData;
     this.reset();
 
     const successModal = document.querySelector(this.successModalSelector);
-    //const errorModal = document.querySelector(this.errorModalSelector);
+    const errorModal = document.querySelector(this.errorModalSelector);
     const submitModalOpenEvent = new CustomEvent('open-modal');
 
-    setTimeout(() => {
-      console.log([...this.formData.entries()]);
+    setTimeout(async () => {
+      try {
+        //console.log([...formData.entries()]);
 
-      if (successModal) {
-        successModal.dispatchEvent(submitModalOpenEvent);
+        const response = await fetch(this.sendPath, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success === true) {
+          successModal?.dispatchEvent(submitModalOpenEvent);
+        } else {
+          errorModal?.dispatchEvent(submitModalOpenEvent);
+        }
       }
-
-      /* if (errorModal) {
-        errorModal.dispatchEvent(submitModalOpenEvent);
-      } */
+      catch (error) {
+        console.error(error);
+        errorModal?.dispatchEvent(submitModalOpenEvent);
+      }
     }, 0);
   }
 

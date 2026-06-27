@@ -1,0 +1,1 @@
+import{l as e}from"./layoutScrollSmoother.BgLYB8IZ.js";import"./gsap.Bkt_MwD_.js";import"./constants.Bmamm-3l.js";function t(){const o=document.querySelector(".js-competencies-word");o&&e.smoother&&e.smoother.effects(o,{speed:1.3,lag:.1})}t();

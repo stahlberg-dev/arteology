@@ -1,0 +1,1 @@
+import"./gsap.Bkt_MwD_.js";import{l as o}from"./layoutScrollSmoother.BgLYB8IZ.js";import"./constants.Bmamm-3l.js";function n(){const t=document.querySelector(".js-consultation-photo"),e=document.querySelector(".js-consultation-image-ball");t&&e&&o.smoother&&(o.smoother.effects(t,{speed:1.04,lag:.1}),o.smoother.effects(e,{speed:.9,lag:.1}))}n();
