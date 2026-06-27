@@ -109,7 +109,7 @@ try {
 
   $mail->AltBody = implode("\n\n", $altParts);
 
-  $mail->send();
+  /* $mail->send(); */
 
   echo json_encode([
     'success' => true,
