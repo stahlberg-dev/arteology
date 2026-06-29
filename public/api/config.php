@@ -14,9 +14,9 @@ return [
     'from_name' => 'Arteology',
     'recipients' => [
       ['email' => 'denis.s@arteology.io', 'name' => 'Denis'],
-      ['email' => 'Zalina.c@gmail.com', 'name' => 'Denis'],
+      ['email' => 'denis.s@yahoo.com', 'name' => 'Denis'],
       ['email' => 'zalina.s@arteology.io', 'name' => 'Zalina'],
-      ['email' => 'Zalina.c@gmail.com', 'name' => 'Zalina'],
+      ['email' => 'zalina.c@gmail.com', 'name' => 'Zalina'],
     ],
     'subject' => 'Запрос на конфиденциальную консультацию',
   ],

@@ -10,7 +10,7 @@ export class Form {
     this.formData = null;
   }
 
-  submit() {
+  async submit() {
     const formElement = this.formElement;
 
     if (!(formElement instanceof HTMLElement)) {
@@ -30,36 +30,31 @@ export class Form {
     }
 
     const formData = new FormData(formElement);
-
     this.formData = formData;
-    this.reset();
-
+    
     const successModal = document.querySelector(this.successModalSelector);
     const errorModal = document.querySelector(this.errorModalSelector);
     const submitModalOpenEvent = new CustomEvent('open-modal');
-
-    setTimeout(async () => {
-      try {
-        //console.log([...formData.entries()]);
-
-        const response = await fetch(this.sendPath, {
-          method: 'POST',
-          body: formData,
-        });
-
-        const result = await response.json();
-
-        if (response.ok && result.success === true) {
-          successModal?.dispatchEvent(submitModalOpenEvent);
-        } else {
-          errorModal?.dispatchEvent(submitModalOpenEvent);
-        }
-      }
-      catch (error) {
-        console.error(error);
+    
+    try {
+      const response = await fetch(this.sendPath, {
+        method: 'POST',
+        body: formData,
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok && result.success === true) {
+        successModal?.dispatchEvent(submitModalOpenEvent);
+      } else {
         errorModal?.dispatchEvent(submitModalOpenEvent);
       }
-    }, 0);
+    }
+    catch {
+      errorModal?.dispatchEvent(submitModalOpenEvent);
+    }
+
+    this.reset();
   }
 
   reset() {
@@ -69,19 +64,17 @@ export class Form {
       return;
     }
 
-    const resetFormEvent = new CustomEvent('custom-reset', { detail: this.formData });
+    const resetFormEvent = new CustomEvent('custom-reset');
 
     if (this.formFieldClass) {
       const formFields = formElement.querySelectorAll(this.formFieldClass);
 
-      formFields.forEach(formField => {
+      formFields.forEach((formField) => {
         formField.dispatchEvent(resetFormEvent);
       });
     }
 
-    setTimeout(() => {
-      this.formData = null;
-    }, 100);
+    this.formData = null;
   }
 
   init() {
@@ -91,12 +84,12 @@ export class Form {
       return;
     }
 
-    formElement.addEventListener('submit', event => {
+    formElement.addEventListener('submit', (event) => {
       event.preventDefault();
       this.submit();
     });
 
-    formElement.addEventListener('reset', event => {
+    formElement.addEventListener('reset', (event) => {
       event.preventDefault();
       this.reset();
     });

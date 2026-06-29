@@ -10,18 +10,18 @@ const teamCardsList = [
   {
     desktopImageUrl: `${BASE}images/team-section/portraits/portrait-1-desktop.webp`,
     mobileImageUrl: `${BASE}images/team-section/portraits/portrait-1-mobile.webp`,
-    name: 'Залина Самсонова',
-    position: 'Founder&nbsp;& Creative Director',
+    name: 'Александр Балашов',
+    position: 'Co-Founder&nbsp;& Chief Curator',
     modalName: 'team-member-1',
-    modalLinkText: 'Читать о Залине',
+    modalLinkText: 'Читать об Александре',
   },
   {
     desktopImageUrl: `${BASE}images/team-section/portraits/portrait-2-desktop.webp`,
     mobileImageUrl: `${BASE}images/team-section/portraits/portrait-2-mobile.webp`,
-    name: 'Александр Балашов',
-    position: 'Co-Founder&nbsp;& Chief Curator',
+    name: 'Залина Самсонова',
+    position: 'Founder&nbsp;& Creative Director',
     modalName: 'team-member-2',
-    modalLinkText: 'Читать об Александре',
+    modalLinkText: 'Читать о Залине',
   },
   {
     desktopImageUrl: `${BASE}images/team-section/portraits/portrait-3-desktop.webp`,
@@ -193,7 +193,6 @@ const teamCardsList = [
           speed: 600,
           initialSlide: 1,
           grabCursor: true,
-          //loop: true,
           scrollbar: {
             el: scrollbarElement,
             draggable: true,
@@ -319,6 +318,14 @@ const teamCardsList = [
 
       @media #{$desktop-sm} {
         width: rem(698);
+      }
+
+      &:nth-child(2) {
+        order: -1;
+
+        @media #{$tablet} {
+          order: 0;
+        }
       }
 
       &:last-child {
