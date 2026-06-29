@@ -421,9 +421,8 @@ const classes = ['expertise-section', className];
       margin: rem(40) calc(-1 * var(--container-padding)) 0;
       padding: 0 var(--container-padding) 0;
       overflow: auto;
-      background: linear-gradient($light-30, $light-30) left bottom / 100% 4px no-repeat;
       scrollbar-width: thin;
-      scrollbar-color: $primary transparent;
+      scrollbar-color: $primary $light-30;
 
       @media #{$tablet} {
         margin: rem(80) 0 0;
@@ -437,8 +436,8 @@ const classes = ['expertise-section', className];
       }
 
       &::-webkit-scrollbar {
-        height: 4px;
-        background: transparent;
+        height: rem(4);
+        background: $light-30;
       }
 
       &::-webkit-scrollbar-thumb {
