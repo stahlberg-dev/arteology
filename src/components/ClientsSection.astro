@@ -157,12 +157,12 @@ const cards = [
             card.style.pointerEvents = 'none';
           },
           onComplete: () => {
-            card.style.pointerEvents = '';
+            card.style.pointerEvents = 'auto';
             cardTimeline.scrollTrigger?.kill();
             cardTimeline.kill();
           },
           onInterrupt: () => {
-            card.style.pointerEvents = '';
+            card.style.pointerEvents = 'auto';
           },
         });
 
@@ -417,6 +417,7 @@ const cards = [
       @media #{$desktop-sm} {
         width: calc(25% - rem(12));
         min-height: rem(494);
+        pointer-events: none;
       }
     }
 

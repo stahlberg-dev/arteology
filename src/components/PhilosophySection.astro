@@ -185,7 +185,7 @@ const infoList = [
           opacity: 0,
           duration: 0.01,
           ease: 'power4.out',
-          stagger: 0.02,
+          stagger: 0.01,
         }, 0.5)
         .from(infoItem, {
           '--x-scale': "0%",
@@ -205,35 +205,21 @@ const infoList = [
         return;
       }
 
-      const infoTexts = gsap.utils.toArray('.js-philosophy-info-item-text', info);
-
-      const infoTimeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: info,
-          start: 'top 60%',
-          end: 'bottom 40%',
-          scrub: 1,
-        }
-      });
-
-      infoTexts.forEach((infoText, index) => {   
-        if (index > 0) {
-          const prevText = infoTexts[index - 1];
-
-          infoTimeline.to(prevText, {
-            height: 0,
-            paddingTop: 0,
-            duration: 0.8,
-            ease: 'power1',
-          }, `position-${index}+=0.5`);
-        }
-        
-        infoTimeline.from(infoText, {
-          height: 0,
-          paddingTop: 0,
-          duration: 0.8,
-          ease: 'power1',
-        }, `position-${index}+=0.5`);
+      gsap.utils.toArray('.js-philosophy-info-item', info).forEach((item) => {
+        const tween = gsap.from(item, {
+          opacity: 0,
+          y: '5rem',
+          duration: 1,
+          ease: 'power4.out',
+          scrollTrigger: {
+            trigger: item,
+            start: "bottom bottom",
+          },
+          onComplete() {
+            tween.scrollTrigger?.kill();
+            tween.kill();
+          },
+        });
       });
     });
 
