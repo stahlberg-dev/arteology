@@ -41,34 +41,34 @@ const buttonAttributes = {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: rem(300);
     height: rem(60);
     padding: rem(8);
+    border-radius: rem(300);
     transition:
       background-color $default-transition,
       color $default-transition;
 
     &_theme_light {
-      background-color: $light;
       color: $primary;
+      background-color: $light;
 
       @media #{$is-hover} {
         &:hover {
-          background-color: $dark;
           color: $light;
+          background-color: $dark;
         }
       }
 
       &:active,
       &:focus-visible {
-        background-color: $dark;
         color: $light;
+        background-color: $dark;
       }
     }
 
     &_theme_dark {
-      background-color: $dark;
       color: $light;
+      background-color: $dark;
 
       @media #{$is-hover} {
         &:hover {
@@ -83,20 +83,20 @@ const buttonAttributes = {
     }
 
     &_theme_primary {
-      background-color: $primary;
       color: $light;
+      background-color: $primary;
 
       @media #{$is-hover} {
         &:hover {
-          background-color: $light;
           color: $primary;
+          background-color: $light;
         }
       }
 
       &:active,
       &:focus-visible {
-        background-color: $light;
         color: $primary;
+        background-color: $light;
       }
     }
 

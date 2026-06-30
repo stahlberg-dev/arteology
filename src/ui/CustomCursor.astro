@@ -106,28 +106,28 @@ const classes = [
     position: fixed;
     top: 0;
     left: 0;
-    pointer-events: none;
     z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: rem(4);
-    border-radius: 50%;
-    border: 1px solid;
     width: rem(140);
     height: rem(140);
+    border: 1px solid;
+    border-radius: 50%;
     opacity: 0;
     transition:
       transform 0.15s ease,
       border-color $default-transition,
       background-color $default-transition,
       color $default-transition;
+    pointer-events: none;
+    gap: rem(4);
 
     &.js-cursor-scroll {
       @media #{$is-hover} {
         border-color: $light;
-        background-color: transparent;
         color: $light;
+        background-color: transparent;
         opacity: 1;
         mix-blend-mode: difference;
       }
@@ -137,19 +137,19 @@ const classes = [
     &.js-cursor-read {
       @media #{$is-hover} {
         border-color: $primary;
-        background-color: $primary;
         color: $light;
+        background-color: $primary;
         opacity: 1;
       }
     }
 
     &::after {
-      content: "";
-      transform: translateY(-150%);
-      border-radius: 50%;
       width: rem(6);
       height: rem(6);
+      border-radius: 50%;
       background-color: $light;
+      transform: translateY(-150%);
+      content: "";
     }
 
     &__text {

@@ -423,19 +423,19 @@ const tabs = [
 
     position: relative;
     padding: rem(80) 0;
-    background-color: $dark;
     color: $light;
+    background-color: $dark;
 
     @media #{$desktop-sm} {
       padding: rem(120) 0;
     }
 
     &__word {
-      display: block;
       position: absolute;
       top: 20%;
       right: var(--container-padding);
       z-index: 1;
+      display: block;
       width: rem(48);
       opacity: 0.12;
 
@@ -455,9 +455,9 @@ const tabs = [
     }
 
 		&__title {
-      letter-spacing: -1.5%;
       line-height: 170%;
       color: $light-60;
+      letter-spacing: -1.5%;
       
       @media #{$tablet} {
         @include h2-desktop;
@@ -471,8 +471,8 @@ const tabs = [
 		}
     
     &__title-tab {
-      cursor: pointer;
       transition: color $default-transition;
+      cursor: pointer;
       -webkit-tap-highlight-color: transparent;
 
       @media #{$is-hover} {
@@ -494,9 +494,9 @@ const tabs = [
 
     &__title-tab-number {
       display: inline-block;
-      transform: translateY(-80%);
       font-size: rem(10);
       line-height: 1;
+      transform: translateY(-80%);
 
       @media #{$tablet} {
         font-size: rem(20);
@@ -511,10 +511,10 @@ const tabs = [
 
       @media #{$tablet} {
         flex-direction: row-reverse;
-        justify-content: space-between;
         align-items: flex-end;
-        gap: rem(180);
+        justify-content: space-between;
         margin-top: rem(80);
+        gap: rem(180);
       }
 
       @media #{$desktop-sm} {
@@ -583,9 +583,9 @@ const tabs = [
 		}
 
 		&__photo-wrapper {
-      display: block;
       position: absolute;
       top: rem(-50);
+      display: block;
       width: 100%;
       height: rem(540);
       object-fit: cover;

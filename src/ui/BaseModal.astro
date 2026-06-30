@@ -131,7 +131,6 @@ const classes = [
     left: 0;
     z-index: 200;
     width: 100vw;
-    height: 100vh;
     height: 100dvh;
     background-color: $dark-60;
     opacity: 0;
@@ -175,39 +174,39 @@ const classes = [
     }
 
     &__container {
+      position: relative;
       display: flex;
       flex-direction: column;
-      position: relative;
-      border-top-left-radius: rem(12);
-      border-top-right-radius: rem(12);
       width: 100%;
       max-height: 100%;
       padding: rem(12) rem(4) 0 rem(12);
-      transform: translateY(100%);
       transition: transform 0.5s ease;
+      transform: translateY(100%);
+      border-top-left-radius: rem(12);
+      border-top-right-radius: rem(12);
       will-change: transform;
 
       #{$element}_theme_light & {
-        background-color: $light;
         color: $dark;
+        background-color: $light;
       }
 
       #{$element}_theme_primary & {
-        background-color: $primary;
         color: $light;
+        background-color: $primary;
       }
 
       #{$element}_theme_secondary & {
-        background-color: $secondary;
         color: $light;
+        background-color: $secondary;
       }
 
       #{$element}_size_sm & {
         @media #{$tablet} {
-          border-radius: rem(12);
           width: rem(738);
           max-height: none;
           padding: rem(60);
+          border-radius: rem(12);
           transform: scale(0);
         }
       }
@@ -292,12 +291,12 @@ const classes = [
       right: rem(12);
       z-index: 10;
       display: flex;
-      justify-content: center;
       align-items: center;
-      border-radius: 50%;
-      border: 1px solid;
+      justify-content: center;
       width: rem(44);
       height: rem(44);
+      border: 1px solid;
+      border-radius: 50%;
       transition:
         border-color $default-transition,
         background-color $default-transition,
@@ -312,58 +311,58 @@ const classes = [
 
       #{$element}_theme_light & {
         border-color: $dark;
-        background-color: $light;
         color: $dark;
+        background-color: $light;
 
         @media #{$is-hover} {
           &:hover {
-            background-color: $dark;
             color: $light;
+            background-color: $dark;
           }
         }
 
         &:active,
         &:focus-visible {
-          background-color: $dark;
           color: $light;
+          background-color: $dark;
         }
       }
 
       #{$element}_theme_primary & {
         border-color: $light;
-        background-color: $primary;
         color: $light;
+        background-color: $primary;
 
         @media #{$is-hover} {
           &:hover {
-            background-color: $light;
             color: $primary;
+            background-color: $light;
           }
         }
 
         &:active,
         &:focus-visible {
-          background-color: $light;
           color: $primary;
+          background-color: $light;
         }
       }
 
       #{$element}_theme_secondary & {
         border-color: $light;
-        background-color: $secondary;
         color: $light;
+        background-color: $secondary;
 
         @media #{$is-hover} {
           &:hover {
-            background-color: $light;
             color: $primary;
+            background-color: $light;
           }
         }
 
         &:active,
         &:focus-visible {
-          background-color: $light;
           color: $primary;
+          background-color: $light;
         }
       }
 

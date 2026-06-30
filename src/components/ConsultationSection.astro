@@ -67,8 +67,8 @@ const classes = ['consultation-section', className];
 
     position: relative;
     padding: rem(60) 0;
-    background-color: $light;
     color: $dark;
+    background-color: $light;
 
     @media #{$tablet} {
       padding: rem(80) 0;
@@ -79,15 +79,15 @@ const classes = ['consultation-section', className];
     }
 
     &::after {
-      content: "";
-      display: block;
       position: absolute;
       top: rem(-4);
       left: 0;
       z-index: 1;
+      display: block;
       width: 100%;
       height: rem(8);
       background-color: $light;
+      content: "";
     }
 
     &__container {
@@ -95,8 +95,8 @@ const classes = ['consultation-section', className];
 
       @media #{$tablet} {
         display: flex;
-        justify-content: space-between;
         align-items: flex-end;
+        justify-content: space-between;
         gap: rem(20);
       }
       
@@ -109,8 +109,8 @@ const classes = ['consultation-section', className];
       display: none;
       
       @media #{$tablet} {
-        display: block;
         position: relative;
+        display: block;
         flex-shrink: 0;
         width: rem(460);
         height: rem(562);
@@ -124,9 +124,9 @@ const classes = ['consultation-section', className];
     
 		&__photo {
       @media #{$tablet} {
-        display: block;
         position: absolute;
         bottom: rem(-70);
+        display: block;
         width: 100%;
         height: rem(682);
         max-height: none;

@@ -5,7 +5,7 @@ import BaseTitle from '../ui/BaseTitle.astro';
 
 const { class: className, ...attrs } = Astro.props;
 
-const classes = ['expertise-section', className];
+const classes = ['expertise-section', 'js-expertise-section', className];
 ---
 
 <section
@@ -236,6 +236,10 @@ const classes = ['expertise-section', className];
         </div>
       </div>
     </div>
+
+    <div class="expertise-section__image-scrollbar">
+      <div class="expertise-section__image-scrollbar-thumb js-image-scrollbar-thumb"></div>
+    </div>
   </div>
 </section>
 
@@ -256,17 +260,44 @@ const classes = ['expertise-section', className];
     const mm = gsap.matchMedia();
 
     function sectionAnimationsHandler(mobileMode) {
-      if (mobileMode) {
-        const imageWrappers = document.querySelectorAll('.js-image-wrapper');
-        imageWrappers.forEach((imageWrapper) => {
-          const logoBlock = imageWrapper.querySelector('.js-logo-block');
+      const cleanups = [];
 
-          if (!logoBlock) {
+      if (mobileMode) {
+        const expertiseSections = document.querySelectorAll('.js-expertise-section');
+
+        expertiseSections.forEach((expertiseSection) => {
+          const imageWrapper = expertiseSection.querySelector('.js-image-wrapper');
+          const logoBlock = expertiseSection.querySelector('.js-logo-block');
+          const scrollbarThumb = expertiseSection.querySelector('.js-image-scrollbar-thumb');
+
+          if (!imageWrapper || !logoBlock || !scrollbarThumb) {
             return;
           }
 
+          function updateScrollbar() {
+            const visible = imageWrapper.clientWidth;
+            const total = imageWrapper.scrollWidth;
+            const scroll = imageWrapper.scrollLeft;
+
+            const thumbWidth = visible / total * visible;
+            const maxThumbOffset = visible - thumbWidth;
+            const thumbOffset = scroll / (total - visible) * maxThumbOffset;
+
+            scrollbarThumb.style.width = `${thumbWidth}px`;
+            scrollbarThumb.style.transform = `translateX(${thumbOffset}px)`;
+          }
+
+          imageWrapper.addEventListener('scroll', updateScrollbar);
+          window.addEventListener('resize', updateScrollbar);
+          updateScrollbar();
+
           imageWrapper.scrollLeft = logoBlock.offsetLeft
             - (imageWrapper.offsetWidth - logoBlock.offsetWidth) / 2;
+
+          cleanups.push(() => {
+            imageWrapper.removeEventListener('scroll', updateScrollbar);
+            window.removeEventListener('resize', updateScrollbar);
+          });
         });
       }
 
@@ -315,6 +346,8 @@ const classes = ['expertise-section', className];
       });
 
       return () => {
+        cleanups.forEach((cleanup) => cleanup());
+        
         splitTexts.forEach((splitText) => {
           splitText.revert();
         });
@@ -339,8 +372,8 @@ const classes = ['expertise-section', className];
 
     position: relative;
     padding: 0 0 rem(60);
-    background-color: $dark;
     color: $light;
+    background-color: $dark;
 
     @media #{$tablet} {
       padding: 0 0 rem(80);
@@ -351,11 +384,11 @@ const classes = ['expertise-section', className];
     }
 
     &__word {
-      display: block;
       position: absolute;
       top: 10%;
       right: var(--container-padding);
       z-index: 1;
+      display: block;
       width: rem(48);
       opacity: 0.12;
 
@@ -388,9 +421,9 @@ const classes = ['expertise-section', className];
       }
 
       @media #{$desktop-sm} {
+        max-width: rem(446);
         margin-top: rem(72);
         margin-left: rem(698);
-        max-width: rem(446);
       }
 		}
 
@@ -421,14 +454,13 @@ const classes = ['expertise-section', className];
       margin: rem(40) calc(-1 * var(--container-padding)) 0;
       padding: 0 var(--container-padding) 0;
       overflow: auto;
-      scrollbar-width: thin;
-      scrollbar-color: $primary $light-30;
+      scrollbar-width: none;
 
       @media #{$tablet} {
         margin: rem(80) 0 0;
         padding: 0;
-        overflow: visible;
         background: transparent;
+        overflow: visible;
       }
 
       @media #{$desktop-sm} {
@@ -436,15 +468,27 @@ const classes = ['expertise-section', className];
       }
 
       &::-webkit-scrollbar {
-        height: rem(4);
-        background: $light-30;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        border-radius: rem(12);
-        background: $primary;
+        display: none;
       }
 		}
+
+    &__image-scrollbar {
+      height: rem(4);
+      margin: 0 calc(-1 * var(--container-padding));
+      border-radius: rem(12);
+      background-color: $light-30;
+
+      @media #{$tablet} {
+        display: none;
+      }
+    }
+
+    &__image-scrollbar-thumb {
+      width: 50%;
+      height: 100%;
+      border-radius: rem(12);
+      background-color: $primary;
+    }
 
 		&__image {
       display: flex;
@@ -569,9 +613,9 @@ const classes = ['expertise-section', className];
       position: absolute;
       top: 100%;
       left: 50%;
-      transform: translateX(-50%);
       padding-top: rem(12);
       text-align: center;
+      transform: translateX(-50%);
 
       @media #{$tablet} {
         padding-top: rem(16);
@@ -617,16 +661,16 @@ const classes = ['expertise-section', className];
 		}
 
 		&__logo-icon {
-      display: block;
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      display: block;
       width: rem(48);
-      aspect-ratio: 70 / 75;
       color: $light-60;
       opacity: 0.12;
+      transform: translate(-50%, -50%);
       animation: logo-animation 7s ease-in-out infinite;
+      aspect-ratio: 70 / 75;
 
       @media #{$tablet} {
         width: rem(56);
@@ -736,12 +780,12 @@ const classes = ['expertise-section', className];
       }
 
       &::before {
-        content: "";
         flex-shrink: 0;
-        border-radius: 50%;
-        border: 1px solid $light;
         width: rem(16);
         height: rem(16);
+        border: 1px solid $light;
+        border-radius: 50%;
+        content: "";
 
         @media #{$tablet} {
           width: rem(20);
@@ -766,11 +810,11 @@ const classes = ['expertise-section', className];
 			}
 
       &_name_diligence {
-        flex-direction: row-reverse;
         top: 72%;
         right: 4%;
-        transform-origin: 90% center;
+        flex-direction: row-reverse;
         animation: label-diligence 7s linear infinite -1s;
+        transform-origin: 90% center;
 
         &::before {
           background-color: $secondary;
@@ -789,11 +833,11 @@ const classes = ['expertise-section', className];
       }
 
       &_name_financial {
-        flex-direction: row-reverse;
         top: -2%;
         right: 24%;
-        transform-origin: center center;
+        flex-direction: row-reverse;
         animation: label-financial 5s linear infinite -4s;
+        transform-origin: center center;
 
         @media #{$desktop-sm} {
           top: 0%;

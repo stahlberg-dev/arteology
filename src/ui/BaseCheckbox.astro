@@ -134,8 +134,8 @@ const classes = [
       flex-shrink: 0;
       width: rem(24);
       height: rem(24);
-      border-radius: 50%;
       border: 1px solid $primary;
+      border-radius: 50%;
       background-color: $light;
       transition:
         opacity $default-transition,
@@ -169,10 +169,10 @@ const classes = [
 
     &__label-text {
       @include text3;
-
-      transform: translateY(#{rem(4)});
       color: $dark;
       transition: opacity $default-transition;
+
+      transform: translateY(#{rem(4)});
 
       @media #{$tablet} {
         transform: translateY(0);
@@ -205,10 +205,10 @@ const classes = [
     &__error-text-wrapper {
       max-height: 0;
       opacity: 0;
-      overflow: hidden;
       transition:
         max-height 0.5s ease,
         opacity 0.5s ease;
+      overflow: hidden;
 
       .error & {
         max-height: rem(32);

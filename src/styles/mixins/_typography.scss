@@ -206,9 +206,9 @@
 
 @mixin text4 {
   font-family: $ff-default;
+  font-size: rem(10);
   font-weight: 100;
+  line-height: 125%;
   text-transform: none;
   letter-spacing: -1%;
-  font-size: rem(10);
-  line-height: 125%;
 }

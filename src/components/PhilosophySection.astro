@@ -240,8 +240,8 @@ const infoList = [
 
     position: relative;
     padding: rem(60) 0 ;
-    background-color: $light;
     color: $dark;
+    background-color: $light;
 
     @media #{$tablet} {
       padding: rem(80) 0;
@@ -252,11 +252,11 @@ const infoList = [
     }
 
     &__word {
-      display: block;
       position: absolute;
       top: 20%;
       right: var(--container-padding);
       z-index: 1;
+      display: block;
       width: rem(48);
       opacity: 0.12;
 
@@ -305,15 +305,15 @@ const infoList = [
       }
 
       &::after {
-        content: "";
-        display: block;
         position: absolute;
         bottom: 0;
         left: 0;
+        display: block;
         width: 100%;
         height: 1px;
-        transform: scaleX(var(--x-scale));
         background-color: $dark;
+        transform: scaleX(var(--x-scale));
+        content: "";
 
         @media #{$tablet} {
           transform-origin: left center;
@@ -354,9 +354,9 @@ const infoList = [
 
 		&__image-wrapper {
       position: relative;
-      margin-top: rem(48);
       width: 100%;
       height: rem(176);
+      margin-top: rem(48);
       overflow: hidden;
 
       @media #{$tablet} {
@@ -365,9 +365,9 @@ const infoList = [
 		}
 
 		&__photo-wrapper {
-      display: block;
       position: absolute;
       bottom: rem(-60);
+      display: block;
       width: 100%;
       height: rem(296);
       object-fit: cover;

@@ -216,8 +216,8 @@ const classes = ['ethics-section', className];
 
     position: relative;
     padding: rem(60) 0 rem(34);
-    background-color: $light;
     color: $dark;
+    background-color: $light;
 
     @media #{$tablet} {
       padding: rem(80) 0;
@@ -228,11 +228,11 @@ const classes = ['ethics-section', className];
     }
 
     &__word {
-      display: block;
       position: absolute;
       top: 13%;
       right: var(--container-padding);
       z-index: 1;
+      display: block;
       width: rem(48);
       opacity: 0.12;
 
@@ -263,12 +263,12 @@ const classes = ['ethics-section', className];
       display: none;
 
       @media #{$tablet} {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         position: absolute;
         top: rem(140);
         left: rem(194);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: rem(540);
         height: rem(540);
         background-color: transparent;
@@ -281,10 +281,10 @@ const classes = ['ethics-section', className];
     }
 
     &__logo-circle {
-      display: block;
       position: absolute;
       top: 0;
       left: 0;
+      display: block;
       width: 100%;
       height: 100%;
       color: $dark-30;
@@ -321,10 +321,10 @@ const classes = ['ethics-section', className];
     &__info-bottom {
       @media #{$tablet} {
         display: flex;
-        justify-content: space-between;
         align-items: flex-end;
-        gap: rem(184);
+        justify-content: space-between;
         margin-top: rem(200);
+        gap: rem(184);
       }
 
       @media #{$desktop-sm} {
@@ -401,9 +401,9 @@ const classes = ['ethics-section', className];
 		}
 
 		&__photo-wrapper {
-      display: block;
       position: absolute;
       bottom: rem(-40);
+      display: block;
       width: 100%;
       height: rem(520);
       object-fit: cover;

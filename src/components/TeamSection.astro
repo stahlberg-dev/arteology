@@ -227,8 +227,8 @@ const teamCardsList = [
 
     position: relative;
     padding: rem(80) 0 0;
-    background-color: $dark;
     color: $light;
+    background-color: $dark;
 
     @media #{$tablet} {
       padding: rem(80) 0;
@@ -239,11 +239,11 @@ const teamCardsList = [
     }
 
     &__word {
-      display: block;
       position: absolute;
       top: 30%;
       right: var(--container-padding);
       z-index: 1;
+      display: block;
       width: rem(48);
       opacity: 0.12;
 
@@ -277,9 +277,9 @@ const teamCardsList = [
       overflow: visible;
 
       @media #{$tablet} {
-        margin-left: 0;
         width: rem(798);
         height: rem(594);
+        margin-left: 0;
       }
       
       @media #{$desktop-sm} {
@@ -300,16 +300,16 @@ const teamCardsList = [
 
 		&__slide {
       display: flex;
-      justify-content: space-between;
       align-items: flex-start;
-      gap: rem(32);
+      justify-content: space-between;
       padding: rem(24) 0;
       border-bottom: 1px solid $light-30;
+      gap: rem(32);
       user-select: none;
 
       @media #{$tablet} {
-        display: block;
         position: relative;
+        display: block;
         width: rem(490);
         height: auto;
         padding: 0 rem(10);
@@ -342,30 +342,30 @@ const teamCardsList = [
 		&__slide-info {
       display: flex;
       flex-direction: column;
+      align-self: stretch;
       justify-content: space-between;
       gap: rem(12);
-      align-self: stretch;
 
       @media #{$tablet} {
-        display: block;
         position: absolute;
         top: 0;
         left: calc(100% + #{rem(10)});
         z-index: 1;
-        transform-origin: top left;
-        transform: scale(0) translateX(-100%);
+        display: block;
         width: rem(220);
         height: auto;
         opacity: 0;
         transition:
           transform 0.6s ease-in-out,
           opacity 0.3s ease-in-out;
+        transform: scale(0) translateX(-100%);
+        transform-origin: top left;
       }
 
       .swiper-slide-active & {
         @media #{$tablet} {
-          transform: scale(1) translateX(0);
           opacity: 1;
+          transform: scale(1) translateX(0);
         }
       }
 		}
@@ -387,9 +387,9 @@ const teamCardsList = [
 		&__slide-details-mobile {
       @include resetbtn;
       align-self: flex-start;
+      color: $light;
       text-decoration: underline;
       text-underline-offset: 0.2em;
-      color: $light;
 
       @media #{$tablet} {
         display: none;
@@ -401,8 +401,8 @@ const teamCardsList = [
 
       @media #{$tablet} {
         display: flex;
-        margin-top: rem(40);
         width: rem(170);
+        margin-top: rem(40);
       }
 
       @media #{$is-hover} {
@@ -420,9 +420,9 @@ const teamCardsList = [
       @media #{$tablet} {
         width: 100%;
         height: 100%;
-        transform-origin: center center;
-        transform: scale(0.3);
         transition: transform 0.6s ease-in-out;
+        transform: scale(0.3);
+        transform-origin: center center;
       }
 
       @media #{$desktop-sm} {
@@ -463,10 +463,10 @@ const teamCardsList = [
 
       @media #{$tablet} {
         display: block;
-        margin-top: rem(40);
-        border-radius: rem(12);
         width: 100%;
         height: rem(4);
+        margin-top: rem(40);
+        border-radius: rem(12);
         background-color: $light-60;
       }
 
